@@ -1,0 +1,260 @@
+# ============================================================
+# BookMyJuice CI/CD Pipeline
+# ============================================================
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, staging ]
+  pull_request:
+    branches: [ main, develop ]
+
+# ============================================================
+# Environment Variables
+# ============================================================
+env:
+  JAVA_VERSION: '17'
+  FLUTTER_VERSION: '3.24.3'
+  NODE_VERSION: '18'
+
+# ============================================================
+# Jobs
+# ============================================================
+jobs:
+  # ============================================================
+  # Backend Tests
+  # ============================================================
+  backend-test:
+    name: Backend - Build & Test
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test_root_password
+          MYSQL_DATABASE: bmj_test_db
+          MYSQL_USER: bmj_test
+          MYSQL_PASSWORD: test_password
+        options: >-
+          --health-cmd "mysqladmin ping -h localhost"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 3306:3306
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Create .env file for tests
+        run: |
+          cd bmjServer
+          cat > .env << EOF
+          DB_HOSTNAME=localhost
+          DB_PORT=3306
+          DB_NAME=bmj_test_db
+          DB_USERNAME=bmj_test
+          DB_PASSWORD=test_password
+          CHARGEBEE_SITE=test
+          CHARGEBEE_API_KEY=test_key
+          JWT_SECRET=TestJWTSecretKeyForCI minimum 32 characters required
+          JWT_EXPIRATION_MS=86400000
+          EOF
+
+      - name: Build with Maven
+        run: |
+          cd bmjServer
+          mvn clean compile -DskipTests
+
+      - name: Run unit tests
+        run: |
+          cd bmjServer
+          mvn test
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-test-results
+          path: bmjServer/target/surefire-reports/
+          retention-days: 7
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: bmjServer/target/site/jacoco/
+          retention-days: 7
+
+  # ============================================================
+  # Frontend Tests
+  # ============================================================
+  frontend-test:
+    name: Frontend - Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Get Flutter dependencies
+        run: |
+          cd lush
+          flutter pub get
+
+      - name: Run Flutter analyzer
+        run: |
+          cd lush
+          flutter analyze
+
+      - name: Run unit tests
+        run: |
+          cd lush
+          flutter test --coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          file: lush/coverage/lcov.info
+          flags: frontend
+          name: frontend-coverage
+
+  # ============================================================
+  # Security Scan
+  # ============================================================
+  security-scan:
+    name: Security - OWASP Dependency Check
+    runs-on: ubuntu-latest
+    needs: [backend-test]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'BookMyJuice'
+          path: 'bmjServer/'
+          format: 'HTML'
+          out: 'reports/'
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: reports/
+          retention-days: 30
+
+  # ============================================================
+  # Build APK
+  # ============================================================
+  build-apk:
+    name: Build - Flutter APK
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-test]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Get dependencies
+        run: |
+          cd lush
+          flutter pub get
+
+      - name: Build Debug APK
+        run: |
+          cd lush
+          flutter build apk --debug --dart-define=API_BASE_URL=http://localhost:8080
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug.apk
+          path: lush/build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 7
+
+  # ============================================================
+  # Deploy to Staging
+  # ============================================================
+  deploy-staging:
+    name: Deploy - Staging
+    runs-on: ubuntu-latest
+    needs: [build-apk]
+    if: github.ref == 'refs/heads/staging'
+    environment:
+      name: staging
+      url: https://staging.bookmyjuice.co.in
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Staging Server
+        run: |
+          echo "Deploying to staging environment..."
+          # Add deployment commands here
+          # Example: SSH, Docker deploy, etc.
+
+      - name: Health check
+        run: |
+          echo "Running health checks on staging..."
+          # curl -f https://staging.bookmyjuice.co.in/api/health || exit 1
+
+  # ============================================================
+  # Deploy to Production
+  # ============================================================
+  deploy-production:
+    name: Deploy - Production
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://bookmyjuice.co.in
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Production Server
+        run: |
+          echo "Deploying to production environment..."
+          # Add deployment commands here
+
+      - name: Health check
+        run: |
+          echo "Running health checks on production..."
+          # curl -f https://bookmyjuice.co.in/api/health || exit 1
+
+      - name: Notify on deployment
+        run: |
+          echo "Production deployment completed!"

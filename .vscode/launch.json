@@ -1,0 +1,65 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Spring Boot Backend (Debug)",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "com.bookmyjuice.bmjServer.BmjServerApplication",
+      "projectName": "com.bookmyjuice.bmjServer",
+      "cwd": "${workspaceFolder}/bmjServer",
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "dev",
+      },
+      "args": "",
+      "preLaunchTask": "maven: verify (bmjServer)",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Flutter App (Debug)",
+      "type": "dart",
+      "request": "launch",
+      "program": "${workspaceFolder}/lush/lib/main.dart",
+      "cwd": "${workspaceFolder}/lush",
+      "args": [
+        "--dart-define=API_BASE_URL=http://localhost:8080"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Flutter App (E2E Tests)",
+      "type": "dart",
+      "request": "launch",
+      "program": "${workspaceFolder}/lush/integration_test/fullstack_auth_and_pricing_test.dart",
+      "cwd": "${workspaceFolder}/lush",
+      "args": [
+        "--dart-define=API_BASE_URL=http://localhost:8080",
+        "--dart-define=E2E=true",
+        "--dart-define=E2E_USER=9876543210",
+        "--dart-define=E2E_PASS=TestPass@123"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Backend Unit Tests",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "com.bookmyjuice.bmjServer.BmjServerApplication",
+      "projectName": "com.bookmyjuice.bmjServer",
+      "cwd": "${workspaceFolder}/bmjServer",
+      "preLaunchTask": "maven: test (bmjServer)",
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack (Backend + Frontend)",
+      "configurations": [
+        "Spring Boot Backend (Debug)",
+        "Flutter App (Debug)"
+      ],
+      "stopOnEntry": false,
+      "preLaunchTask": "Start MySQL (if needed)"
+    }
+  ]
+}

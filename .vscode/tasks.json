@@ -1,0 +1,311 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Backend: Clean Build",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/bmjServer && ./mvnw clean verify",
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": ["$maven"],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Backend: Run Tests",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/bmjServer && ./mvnw test",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": ["$maven"],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Backend: Run Spring Boot",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/bmjServer && ./mvnw spring-boot:run",
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": {
+					"regexp": "^.*$",
+					"file": 1,
+					"location": 2,
+					"message": 3
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "^.*Started.*",
+					"endsPattern": "^.*Tomcat started.*"
+				}
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Flutter: Get Dependencies",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/lush && flutter pub get",
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Flutter: Analyze",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/lush && flutter analyze",
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Flutter: Run (Debug)",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/lush && flutter run --dart-define=API_BASE_URL=http://localhost:8080",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"isBackground": false,
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Flutter: Run Tests",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/lush && flutter test --dart-define=API_BASE_URL=http://localhost:8080",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Flutter: E2E Tests",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/lush && flutter test integration_test --dart-define=API_BASE_URL=http://localhost:8080 --dart-define=E2E=true --dart-define=E2E_USER=9876543210 --dart-define=E2E_PASS=TestPass@123",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "E2E: Run All Tests",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && npm run e2e",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "E2E: Run on Physical Device",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && npm run e2e:physical",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "E2E: Run on Emulator",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && npm run e2e:emulator",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "E2E: Run with Video",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && npm run e2e:video",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "E2E: Run with Reporting",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && npm run e2e:report",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "E2E: Clean Reports",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && npm run e2e:clean",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "E2E: Complete Flow Test",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && npm run e2e:full",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "E2E: Checkout Flow",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && npm run e2e:checkout",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Make: Test E2E",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && make test-e2e",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Make: Test Physical Device",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && make test-physical",
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Flutter: Build APK",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/lush && flutter build apk --dart-define=API_BASE_URL=https://api.bookmyjuice.co.in",
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Database: Check Connection",
+			"type": "shell",
+			"command": "mysql -h localhost -u bmj -prEMEMBER$8 bmj_db -e 'SELECT 1 AS connection_ok;'",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			}
+		}
+	]
+}

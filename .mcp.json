@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "PerplexityMCP": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["exec", "-i", "perplexity-mcp", "node", "dist/index.js"]
+    }
+  }
+}

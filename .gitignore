@@ -1,0 +1,337 @@
+# ============================================================
+# BookMyJuice Root .gitignore
+# Aggregated ignore rules for fullstack project
+# ============================================================
+
+# ============ E2E TESTING ============
+.e2e-reports/
+*.mp4
+*.webm
+*.png
+test-results.json
+patrol*.log
+
+# ============ NODE/NPM ============
+node_modules/
+package-lock.json
+npm-debug.log
+
+# ============ OS GENERATED FILES ============
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+*.tmp
+*.temp
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+## Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============ IDE & EDITOR ============
+## VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/mcp.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+## IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+*.idea/
+
+## Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.bin/
+
+## NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+## Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ============ JAVA & MAVEN (Backend) ============
+## Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+## Gradle (if used)
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+## Java compiled files
+**/*.class
+**/*.jar
+**/*.ear
+**/*.war
+
+## Logs
+*.log
+logs/
+spring.log
+application.log
+
+## Environment files (keep secrets out of git)
+.env
+.env.local
+.env.*.local
+*.env
+
+## Keystore files (for Android signing - should be secured)
+*.jks
+*.keystore
+keystore_name.jks
+clientkeystore
+
+# ============ FLUTTER & DART (Frontend) ============
+## Flutter/Dart
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/build/
+**/pubspec.lock
+
+## Flutter generated files
+**/ios/Flutter/.last_build_id
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/android/app/generated*
+
+## Flutter web
+**/web/manifest.json
+
+## Flutter Linux/macOS/Windows
+**/linux/flutter/ephemeral/
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugin_registrant.h
+**/linux/flutter/generated_plugins.cmake
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/Flutter/ephemeral/
+**/windows/flutter/ephemeral/
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+
+## Android Studio (Flutter specific)
+**/android/.gradle/
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.*
+
+## iOS (Flutter specific)
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+## Symbolication and obfuscation
+**/app.*.symbols
+**/app.*.map.json
+
+# ============ NODE & NPM (If used for tooling) ============
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+
+# ============ DATABASE ============
+## MySQL dumps (should not be in git unless seed data)
+*.sql
+!bmjServer/src/main/resources/db/migration/*.sql
+!scripts/seed*.sql
+
+## Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# ============ TESTING & COVERAGE ============
+## Test coverage
+coverage/
+*.lcov
+.nyc_output/
+.dart_tool/test/
+
+## Test artifacts
+test-results/
+test-output/
+
+# ============ CI/CD & BUILD ARTIFACTS ============
+## GitHub Actions
+.github/workflows/*.log
+.github/workflows/*.tmp
+
+## Docker
+*.pid
+*.seed
+*.pid.lock
+
+## Deployment artifacts
+dist/
+out/
+release/
+version/
+
+# ============ SECRETS & CREDENTIALS ============
+## NEVER commit these
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+secrets/
+credentials/
+*.secret
+*.password
+*.token
+admin API access token.txt
+
+# ============ LOGS & DEBUG ============
+## Application logs
+*.log
+logs/
+*.pid
+
+## Debug files
+*.swp
+*.swo
+*~
+
+## Profiling
+*.hprof
+*.heap
+*.dump
+
+# ============ MISCELLANEOUS ============
+## Temporary files
+tmp/
+temp/
+.cache/
+*.tmp
+*.bak
+*.old
+
+## Documentation build
+docs/_build/
+docs/.doctrees/
+
+## Jupyter Notebook
+.ipynb_checkpoints
+
+## pyenv
+.python-version
+
+## Backup files
+*.backup
+*.bck
+*~
+
+# ============ PROJECT SPECIFIC (BookMyJuice) ============
+## Local configuration overrides
+bmjServer/.env.local
+bmjServer/application-local.properties
+bmjServer/application-dev-local.properties
+
+## Flutter local config
+lush/assets/application.properties.local
+lush/.flutter-plugins-dependencies.local
+
+## Test data (unless it's seed data)
+test-data/
+fixtures/local/
+
+## Performance profiles
+*.prof
+*.trace
+
+## Crash logs
+hs_err_pid*.log
+replay_pid*.log
+
+## Database backups
+*.mwb.bak
+*.sql.bak
+
+## Redis binaries (if downloaded locally)
+Redis-*.msi
+Redis-*.exe
+
+## JAR files (unless they're dependencies)
+*.jar
+!bmjServer/target/dependency/*.jar
+
+# ============ END OF GITIGNORE ============

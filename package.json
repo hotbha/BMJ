@@ -1,0 +1,40 @@
+{
+  "name": "bookmyjuice-e2e",
+  "version": "1.0.0",
+  "description": "BookMyJuice E2E Testing Framework",
+  "scripts": {
+    "e2e": "patrol test --dart-define=E2E=true",
+    "e2e:ci": "patrol test --dart-define=E2E=true --headless",
+    "e2e:video": "patrol test --dart-define=E2E=true --video",
+    "e2e:device": "patrol test --dart-define=E2E=true --device-id=${npm_config_device:-emulator-5554}",
+    "e2e:physical": "npm run e2e:device --device=25053PC47I",
+    "e2e:emulator": "npm run e2e:device --device=emulator-5554",
+    "e2e:checkout": "patrol test integration_test/e2e_checkout_test.dart --dart-define=E2E=true",
+    "e2e:signup": "patrol test integration_test/e2e_signup_test.dart --dart-define=E2E=true",
+    "e2e:cart": "patrol test integration_test/e2e_cart_test.dart --dart-define=E2E=true",
+    "e2e:orders": "patrol test integration_test/e2e_orders_test.dart --dart-define=E2E=true",
+    "e2e:full": "patrol test integration_test/e2e_suite.dart --dart-define=E2E=true",
+    "e2e:report": "patrol test --dart-define=E2E=true --reporter=json --reporter-path=./.e2e-reports/results.json",
+    "e2e:clean": "rimraf ./.e2e-reports/*",
+    "e2e:all": "npm run e2e:clean && npm run e2e:report"
+  },
+  "keywords": [
+    "bookmyjuice",
+    "e2e",
+    "testing",
+    "patrol",
+    "flutter"
+  ],
+  "author": "BookMyJuice Team",
+  "license": "MIT",
+  "devDependencies": {
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "config": {
+    "device": "emulator-5554"
+  }
+}

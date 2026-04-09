@@ -1,0 +1,216 @@
+# ============================================================
+# Docker Compose for BookMyJuice Local Development
+# ============================================================
+# Usage:
+#   docker-compose up -d              # Start all services
+#   docker-compose down               # Stop all services
+#   docker-compose logs -f            # View logs
+#   docker-compose ps                 # Check status
+# ============================================================
+
+version: '3.8'
+
+services:
+  # ============================================================
+  # MySQL Database
+  # ============================================================
+  mysql:
+    image: mysql:8.0
+    container_name: bmj-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_change_in_production
+      MYSQL_DATABASE: bmj_db
+      MYSQL_USER: bmj
+      MYSQL_PASSWORD: rEMEMBER$8
+      TZ: UTC
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./bmjServer/src/main/resources/db/migration:/docker-entrypoint-initdb.d:ro
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/99-init.sql:ro
+    networks:
+      - bmj-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bmj", "-prEMEMBER$8"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max-connections=200
+      --innodb-buffer-pool-size=512M
+
+  # ============================================================
+  # Redis (For caching and rate limiting)
+  # ============================================================
+  redis:
+    image: redis:7-alpine
+    container_name: bmj-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - bmj-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+  # ============================================================
+  # Spring Boot Backend
+  # ============================================================
+  backend:
+    build:
+      context: ./bmjServer
+      dockerfile: Dockerfile.dev
+    container_name: bmj-backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
+      DB_HOSTNAME: mysql
+      DB_PORT: 3306
+      DB_NAME: bmj_db
+      DB_USERNAME: bmj
+      DB_PASSWORD: rEMEMBER$8
+      CHARGEBEE_SITE: bookmyjuice-test
+      CHARGEBEE_API_KEY: ${CHARGEBEE_API_KEY:-test_key_placeholder}
+      JWT_SECRET: ${JWT_SECRET:-BookMyJuice_SecureJWT_Key_2024_Minimum32Chars}
+      JWT_EXPIRATION_MS: 86400000
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-support@bookmyjuice.co.in}
+      LOGGING_LEVEL: DEBUG
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+    volumes:
+      - ./bmjServer:/app
+      - ./bmjServer/logs:/app/logs
+      - maven_cache:/root/.m2
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - bmj-network
+    command: >
+      sh -c "./mvnw clean spring-boot:run -Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xdebug'"
+
+  # ============================================================
+  # phpMyAdmin (Database Management UI)
+  # ============================================================
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: bmj-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: bmj
+      PMA_PASSWORD: rEMEMBER$8
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - bmj-network
+    profiles:
+      - tools
+
+  # ============================================================
+  # Redis Commander (Redis Management UI)
+  # ============================================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: bmj-redis-commander
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: local:redis:6379
+      HTTP_USER: admin
+      HTTP_PASSWORD: admin_password_change_me
+    ports:
+      - "8082:8081"
+    depends_on:
+      - redis
+    networks:
+      - bmj-network
+    profiles:
+      - tools
+
+  # ============================================================
+  # Mailhog (Email Testing - Dev Only)
+  # ============================================================
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: bmj-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    networks:
+      - bmj-network
+    profiles:
+      - tools
+
+networks:
+  bmj-network:
+    driver: bridge
+    name: bookmyjuice-network
+
+volumes:
+  mysql_data:
+    driver: local
+    name: bmj-mysql-data
+  redis_data:
+    driver: local
+    name: bmj-redis-data
+  maven_cache:
+    driver: local
+    name: bmj-maven-cache
+
+# ============================================================
+# Usage Examples:
+# ============================================================
+# Start all services (including dev tools):
+#   docker-compose --profile tools up -d
+#
+# Start only core services (MySQL, Redis, Backend):
+#   docker-compose up -d
+#
+# View backend logs:
+#   docker-compose logs -f backend
+#
+# Stop all services:
+#   docker-compose down
+#
+# Stop and remove volumes (WARNING: deletes data):
+#   docker-compose down -v
+#
+# Access database:
+#   MySQL: localhost:3306 (user: bmj, pass: rEMEMBER$8)
+#   phpMyAdmin: http://localhost:8081
+#
+# Access Redis:
+#   localhost:6379
+#   Redis Commander: http://localhost:8082 (admin/admin_password_change_me)
+#
+# Access Mailhog (for email testing):
+#   Web UI: http://localhost:8025
+#   SMTP: localhost:1025
+# ============================================================

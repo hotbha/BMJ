@@ -1,0 +1,162 @@
+# GitHub CODEOWNERS for BookMyJuice
+# This file defines who is responsible for reviewing changes in different parts of the codebase
+# Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-codeowners
+
+# ============ GLOBAL DEFAULT ============
+# Default reviewers for all changes (if no specific rule matches)
+* @tech-lead @backend-lead @frontend-lead
+
+# ============ BACKEND ============
+# All backend code changes require backend team review
+bmjServer/ @backend-lead @senior-backend-dev
+
+# Backend critical areas
+bmjServer/src/main/java/com/bookmyjuice/security/ @security-lead @backend-lead
+bmjServer/src/main/java/com/bookmyjuice/controllers/ @backend-lead
+bmjServer/src/main/java/com/bookmyjuice/services/ @backend-lead
+bmjServer/src/main/java/com/bookmyjuice/repository/ @backend-lead
+bmjServer/src/main/java/com/bookmyjuice/models/ @backend-lead
+bmjServer/src/main/java/com/bookmyjuice/dto/ @backend-lead
+
+# Chargebee integration (critical for billing)
+bmjServer/src/main/java/com/bookmyjuice/controllers/webhooks/ @payment-lead @backend-lead
+bmjServer/src/main/java/com/bookmyjuice/services/ChargebeeSyncService.java @payment-lead @tech-lead
+bmjServer/src/main/java/com/bookmyjuice/ChargeBeeConfig.java @payment-lead @tech-lead
+
+# Authentication & Security (requires security review)
+bmjServer/src/main/java/com/bookmyjuice/security/ @security-lead
+bmjServer/src/main/java/com/bookmyjuice/controllers/AuthController.java @security-lead @backend-lead
+
+# Database schema changes
+bmjServer/src/main/resources/db/migration/ @dba-lead @backend-lead
+
+# Configuration files
+bmjServer/pom.xml @backend-lead
+bmjServer/application*.properties @backend-lead @devops-lead
+
+# ============ FRONTEND (Flutter) ============
+# All frontend code changes require frontend team review
+lush/ @frontend-lead @senior-frontend-dev
+
+# Critical frontend areas
+lush/lib/bloc/ @frontend-lead
+lush/lib/services/ @frontend-lead
+lush/lib/views/screens/ @frontend-lead
+lush/lib/views/widgets/ @frontend-lead
+lush/lib/repositories/ @frontend-lead
+
+# Authentication UI (requires security review)
+lush/lib/views/screens/auth/ @security-lead @frontend-lead
+lush/lib/bloc/AuthBloc/ @security-lead @frontend-lead
+
+# Payment/Subscription UI (critical for revenue)
+lush/lib/views/screens/SubscriptionScreen.dart @payment-lead @frontend-lead
+lush/lib/views/screens/CartScreen.dart @payment-lead @frontend-lead
+lush/lib/views/screens/paymentScreen.dart @payment-lead @frontend-lead
+
+# Flutter configuration
+lush/pubspec.yaml @frontend-lead
+lush/android/ @mobile-lead
+lush/ios/ @mobile-lead
+
+# ============ DEVOPS & INFRASTRUCTURE ============
+# CI/CD pipelines
+.github/workflows/ @devops-lead @tech-lead
+
+# Docker & containerization
+Dockerfile* @devops-lead
+docker-compose*.yml @devops-lead
+.devcontainer/ @devops-lead
+
+# Environment configuration
+.env @devops-lead @tech-lead
+.env.example @devops-lead @tech-lead
+
+# ============ DOCUMENTATION ============
+# README and contributing guides
+README.md @tech-lead
+CONTRIBUTING.md @tech-lead
+docs/ @tech-lead @devops-lead
+
+# API documentation
+docs/API.md @backend-lead @frontend-lead
+docs/architecture/ @tech-lead
+
+# ============ TESTING ============
+# Test files (require review from respective domain leads)
+bmjServer/src/test/ @backend-lead @qa-lead
+lush/test/ @frontend-lead @qa-lead
+lush/integration_test/ @frontend-lead @backend-lead @qa-lead
+
+# ============ MOBILE PLATFORM SPECIFIC ============
+# Android-specific code
+lush/android/app/build.gradle @mobile-lead @frontend-lead
+lush/android/app/src/main/AndroidManifest.xml @mobile-lead
+
+# iOS-specific code
+lush/ios/Runner/Info.plist @mobile-lead @frontend-lead
+lush/ios/Podfile @mobile-lead
+
+# ============ SECURITY-SENSITIVE AREAS ============
+# These files require security team review for ANY changes
+**/security/** @security-lead
+**/auth/** @security-lead
+**/*auth* @security-lead
+**/*Auth* @security-lead
+**/webhooks/** @security-lead @payment-lead
+**/payment/** @security-lead @payment-lead
+
+# Environment and secrets (should rarely change)
+.env @tech-lead @security-lead
+**/.env @tech-lead @security-lead
+**/secrets/** @security-lead
+
+# ============ UI/UX COMPONENTS ============
+# Design system and theme files
+lush/lib/theme.dart @ux-lead @frontend-lead
+lush/lib/views/extensions/ @ux-lead @frontend-lead
+lush/assets/ @ux-lead @frontend-lead
+
+# ============ AUTOMATIC REVIEWERS BY FILE TYPE ============
+# Java files
+*.java @backend-lead
+
+# Dart/Flutter files
+*.dart @frontend-lead
+
+# SQL migration files
+*.sql @dba-lead @backend-lead
+
+# YAML configuration
+*.yaml @devops-lead
+*.yml @devops-lead
+
+# Documentation
+*.md @tech-lead
+
+# ============ NOTES ============
+# 
+# Team Aliases (to be configured in GitHub team settings):
+# - @tech-lead: Technical lead / Architect
+# - @backend-lead: Backend team lead
+# - @frontend-lead: Frontend team lead
+# - @senior-backend-dev: Senior backend developers
+# - @senior-frontend-dev: Senior frontend developers
+# - @security-lead: Security team lead
+# - @payment-lead: Payment integration lead
+# - @devops-lead: DevOps lead
+# - @mobile-lead: Mobile platform lead
+# - @qa-lead: QA lead
+# - @dba-lead: Database administrator lead
+# - @ux-lead: UX design lead
+#
+# Review Requirements:
+# - At least 1 approval required for merge to staging
+# - At least 2 approvals for merge to main (production)
+# - Security-sensitive files require @security-lead approval
+# - Payment-related files require @payment-lead approval
+#
+# How to Update:
+# 1. Modify this file to add/remove reviewers
+# 2. Ensure team aliases are configured in GitHub organization settings
+# 3. Test with a PR to verify CODEOWNERS is working

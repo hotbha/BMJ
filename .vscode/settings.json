@@ -1,0 +1,82 @@
+{
+    "zencoder.enableRepoIndexing": true,
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable",
+    "CodeGPT.apiKey": "Ollama",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    
+    "// ============ JAVA & SPRING BOOT ============": null,
+    "[java]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "redhat.java",
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+        }
+    },
+    "java.test.defaultConfig": "TestNG",
+    "java.maven.view": "flat",
+    "maven.executable.path": "${workspaceFolder}\\bmjServer\\mvnw.cmd",
+    "maven.terminal.useJavaHome": true,
+    
+    "// ============ DART & FLUTTER ============": null,
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.dart": "explicit",
+            "source.organizeImports": "explicit"
+        },
+        "editor.defaultFormatter": "Dart-Code.dart"
+    },
+    "dart.flutterSdkPath": "${env:FLUTTER_HOME}",
+    "dart.deviceSelector": "chrome",
+    "dart.lineLength": 100,
+    
+    "// ============ DATABASE ============": null,
+    "sqltools.connections": [
+        {
+            "name": "BookMyJuice DB",
+            "driver": "MySQL",
+            "server": "localhost",
+            "port": 3306,
+            "database": "bmj_db",
+            "username": "bmj",
+            "password": "rEMEMBER$8",
+            "askForPassword": false
+        }
+    ],
+    "sqltools.defaultConnection": "BookMyJuice DB",
+    
+    "// ============ EDITOR SETTINGS ============": null,
+    "editor.rulers": [80, 120],
+    "editor.formatOnPaste": true,
+    "files.exclude": {
+        "**/.gradle": true,
+        "**/build": true,
+        "**/.dart_tool": true,
+        "**/.flutter-plugins": true,
+        "**/target": true,
+        "**/.classpath": true,
+        "**/.project": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/.dart_tool": true,
+        "**/build": true
+    },
+    
+    "// ============ EXTENSIONS ============": null,
+    "zencoder.mcpServers": {
+        "custom_perplexity": {
+            "command": "docker",
+            "args": [
+                "exec",
+                "-i",
+                "interesting_nash",
+                "node",
+                "dist/index.js"
+            ]
+        }
+    },
+    "snyk.advanced.autoSelectOrganization": true
+}

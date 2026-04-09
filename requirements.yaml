@@ -1,0 +1,1477 @@
+# ============================================================
+# BookMyJuice - MVP Requirements (Subscription-First Approach)
+# ============================================================
+project: BookMyJuice
+version: 2.2.0-MVP
+last_updated: 2026-03-27
+goal: Launch MVP with subscription-first focus for beta testing
+
+# ============================================================
+# DEVELOPMENT GUARDRAILS - CHARGEBEE MCP INTEGRATION
+# ============================================================
+# Critical: Use Chargebee MCP in VSCode to understand Chargebee
+# ============================================================
+
+development_guardrails:
+  Chargebee_MCP_Usage: |
+    MANDATORY: Use Chargebee MCP (Model Context Protocol) in VSCode for:
+    - Understanding Chargebee architecture
+    - Accessing Chargebee API documentation
+    - Testing Chargebee API calls
+    - Debugging Chargebee integration issues
+    - Creating webhooks and understanding webhook payloads
+    
+    Why: Most functionalities are managed by Chargebee, not custom-built.
+    
+  Chargebee_Managed_Features: |
+    The following are MANAGED BY CHARGEBEE (not custom-built):
+    
+    1. Checkout Page
+       - Flutter app ONLY calls checkout URL
+       - Provides: customer_id, items, pricing
+       - Chargebee handles: Payment UI, payment processing, invoices
+    
+    2. Subscription Management
+       - Flutter app ONLY calls subscription URL
+       - Chargebee handles: Plan selection, billing cycles, proration
+    
+    3. Customer Portal
+       - Flutter app ONLY redirects to portal URL
+       - Chargebee handles: Subscription updates, payment method updates
+    
+    4. Payment Processing
+       - Flutter app NEVER handles payment details
+       - Chargebee handles: PCI compliance, payment gateways, fraud detection
+    
+    5. Invoicing
+       - Flutter app ONLY displays invoice data from local cache
+       - Chargebee handles: Invoice generation, tax calculation, delivery
+    
+  bmjServer_Responsibilities: |
+    The bmjServer ONLY manages:
+    
+    1. Authentication
+       - User signup/login
+       - JWT token generation
+       - Session management
+    
+    2. Chargebee Integration
+       - Create hosted page URLs (checkout, subscription, portal)
+       - Sync data from Chargebee (webhooks + batch sync)
+       - Cache Chargebee data locally (fast reads)
+    
+    3. Local Cache
+       - Products, plans, prices (from Chargebee)
+       - Subscriptions, invoices, orders (from Chargebee)
+       - Customer billing details (from Chargebee)
+    
+  Flutter_App_Responsibilities: |
+    The Flutter app ONLY:
+    
+    1. Displays Data
+       - Fetch from bmjServer local cache (fast)
+       - NEVER call Chargebee API directly
+    
+    2. Redirects to Chargebee
+       - Checkout: Call /api/test/cartCheckout → Get URL → Open WebView
+       - Subscription: Call /api/test/generate_pricing_page_session_url → Get URL → Open WebView
+       - Portal: Call /api/test/portal → Get URL → Open WebView
+    
+    3. Local State Management
+       - Cart management (local storage)
+       - User session (JWT tokens)
+       - UI state (BLoC pattern)
+    
+  Development_Workflow: |
+    When implementing ANY Chargebee-related feature:
+    
+    1. Use Chargebee MCP in VSCode
+       - Ask: "How does Chargebee handle [feature]?"
+       - Ask: "What API endpoint for [operation]?"
+       - Ask: "What webhook events for [scenario]?"
+    
+    2. Check Chargebee Documentation
+       - API Reference: https://www.chargebee.com/docs/2.0/api.html
+       - Webhooks: https://www.chargebee.com/docs/2.0/webhooks.html
+    
+    3. Test in Chargebee Test Site
+       - Site: bookmyjuice-test
+       - NEVER test on production site
+    
+    4. Implement bmjServer Endpoint
+       - Call Chargebee API
+       - Return URL or data to Flutter app
+    
+    5. Implement Flutter Redirect
+       - Call bmjServer endpoint
+       - Open URL in WebView or external browser
+    
+    6. Handle Webhooks
+       - Chargebee → Webhook → bmjServer → Update local cache
+
+# ============================================================
+# PRODUCT CATALOG STRUCTURE
+# ============================================================
+# Three Categories with Size Options
+# ============================================================
+
+product_categories:
+  Delight:
+    description: Entry-level fresh juices
+    position: 1  # First category (lowest price)
+    sizes:
+      - 200ml
+      - 300ml
+      - 500ml
+    pricing:
+      200ml:
+        regular: 129
+        weekly: 75
+        monthly: 69
+        weekly_total: 450
+        monthly_total: 1656
+        monthly_savings: 114  # vs regular price
+      300ml:
+        regular: 159
+        weekly: 99
+        monthly: 89
+        weekly_total: 594
+        monthly_total: 2136
+        monthly_savings: 168
+      500ml:
+        regular: 220
+        weekly: 169
+        monthly: 149
+        weekly_total: 1014
+        monthly_total: 3576
+        monthly_savings: 444
+    target: "Price-conscious customers, trial users"
+    
+  Signature:
+    description: Premium blended juices
+    position: 2  # Second category (mid-range price)
+    sizes:
+      - 200ml
+      - 300ml
+      - 500ml
+    pricing:
+      200ml:
+        regular: 141.90
+        weekly: 80
+        monthly: 75
+        weekly_total: 480
+        monthly_total: 1800
+        monthly_savings: 139.20
+      300ml:
+        regular: 174.90
+        weekly: 105
+        monthly: 95
+        weekly_total: 630
+        monthly_total: 2280
+        monthly_savings: 199.20
+      500ml:
+        regular: 242
+        weekly: 173
+        monthly: 169
+        weekly_total: 1038
+        monthly_total: 4056
+        monthly_savings: 456
+    target: "Regular customers, quality seekers"
+    
+  Premium:
+    description: Cold-pressed premium juices
+    position: 3  # Third category (highest price)
+    sizes:
+      - 200ml
+      - 300ml
+      - 500ml
+    pricing:
+      200ml:
+        regular: 156.09
+        weekly: 90
+        monthly: 83
+        weekly_total: 540
+        monthly_total: 1992
+        monthly_savings: 144.84
+      300ml:
+        regular: 192.39
+        weekly: 109
+        monthly: 99
+        weekly_total: 654
+        monthly_total: 2376
+        monthly_savings: 193.44
+      500ml:
+        regular: 266.20
+        weekly: 183
+        monthly: 179
+        weekly_total: 1098
+        monthly_total: 4296
+        monthly_savings: 496.80
+    target: "Health enthusiasts, premium segment"
+
+pricing_notes:
+  - "Weekly subscription: 6 bottles (6 days)"
+  - "Monthly subscription: 24 bottles (4 weeks x 6 days)"
+  - "Monthly plans offer 15-20% savings vs weekly"
+  - "All prices in INR (₹)"
+  - "2% overhead applied to subscription totals"
+
+size_options:
+  - size: 200ml
+    description: Small (Single serving)
+    best_for: "Trial, kids, light drinkers"
+  - size: 300ml
+    description: Medium (Regular serving)
+    best_for: "Daily consumption, adults"
+  - size: 500ml
+    description: Large (Family serving)
+    best_for: "Sharing, heavy drinkers, families"
+
+# ============================================================
+# SUBSCRIPTION PLAN STRUCTURE
+# ============================================================
+# Weekly (6 days) and Monthly (24 bottles) Options in All Categories
+# ============================================================
+
+subscription_plans:
+  Weekly:
+    duration: 6 days (1 week)
+    deliveries: 6 bottles
+    categories:
+      - Delight
+      - Signature
+      - Premium
+    pricing_note: "Standard pricing, flexible commitment"
+    best_for: "First-time subscribers, trial period"
+    example_pricing:
+      Delight_200ml: 75 per bottle (₹450 total)
+      Signature_200ml: 80 per bottle (₹480 total)
+      Premium_200ml: 90 per bottle (₹540 total)
+    
+  Monthly:
+    duration: 24 days (4 weeks x 6 days)
+    deliveries: 24 bottles
+    categories:
+      - Delight
+      - Signature
+      - Premium
+    pricing_note: "15-20% discount vs weekly (more cost-effective per bottle)"
+    best_for: "Regular customers, committed users"
+    savings: "Save ₹100-500 vs weekly plans depending on category/size"
+    example_pricing:
+      Delight_200ml: 69 per bottle (₹1656 total, save ₹114)
+      Signature_200ml: 75 per bottle (₹1800 total, save ₹139)
+      Premium_200ml: 83 per bottle (₹1992 total, save ₹145)
+
+# ============================================================
+# BUSINESS STRATEGY - SUBSCRIPTION FIRST
+# ============================================================
+# Primary Focus: Recurring revenue through subscriptions
+# Secondary: One-time orders as entry point to subscriptions
+# ============================================================
+
+business_priorities:
+  Primary: |
+    SUBSCRIPTIONS - 80% focus
+    - Easy subscription signup
+    - Multiple plan tiers (Delight, Signature, Premium)
+    - Weekly & Monthly plans (monthly more cost-effective)
+    - Size options (200ml, 300ml, 500ml) in all categories
+    - Auto-debit convenience
+    - Subscription management portal
+    - Clear visualization of category + size + plan options
+
+  Secondary: |
+    ONE-TIME ORDERS - 20% focus
+    - Try before subscribing
+    - Gift purchases
+    - Top-up orders
+    - Convert to subscription after trial
+
+# ============================================================
+# MVP SCOPE - MINIMUM VIABLE PRODUCT
+# ============================================================
+# Focus: Subscription-first with one-time as secondary
+# ============================================================
+
+mvp_priorities:
+  P0: |
+    MUST HAVE for beta launch - Blocker if not working
+    - User registration/login (email + Google)
+    - View subscription plans (Delight, Signature, Premium)
+    - Subscription purchase via Chargebee
+    - View active subscription status
+    - Subscription management portal access
+    - Product catalog (juices with 200ml, 300ml, 500ml sizes)
+    - One-time checkout (secondary flow)
+    - Basic profile management
+
+  P1: |
+    SHOULD HAVE - Can launch without but needed soon
+    - Phone OTP login
+    - Subscription pause/resume
+    - Plan upgrade/downgrade
+    - Order history
+    - Address management
+    - Subscription gift cards
+
+  P2: |
+    NICE TO HAVE - Post-MVP features
+    - Dark mode
+    - Offline support
+    - Push notifications (subscription reminders)
+    - Analytics dashboard
+    - Referral program
+    - Loyalty points
+
+# ============================================================
+# MVP FEATURE CHECKLIST
+# ============================================================
+mvp_features:
+
+  # ============================================================
+  # AUTHENTICATION - P0
+  # ============================================================
+  - id: MVP-AUTH-001
+    title: Email Login/Signup
+    priority: P0
+    status: implemented
+    notes: |
+      Unified signup flow with email-first or phone-first options:
+      - Email signup: Email → Verify Email → Phone → Verify OTP → Address → Password
+      - Phone signup: Phone → Verify OTP → Email → Verify Email → Address → Password
+      - Google signup: Google (email verified) → Phone → Verify OTP → Address → Password
+      All flows require mandatory address collection before account creation
+    test_status: pending
+
+  - id: MVP-AUTH-002
+    title: Google Sign-In
+    priority: P0
+    status: implemented
+    notes: |
+      Google signup flow:
+      1. User taps "Sign up with Google" button
+      2. Google account selection screen opens
+      3. User selects Gmail account
+      4. Email, Name, and Photo fetched from Google (email pre-verified)
+      5. Signup form pre-filled with Google data (READ-ONLY fields)
+         - Email (readOnly: true)
+         - First Name (readOnly: true)
+         - Last Name (readOnly: true)
+         - Photo (readOnly: true)
+      6. User enters required details (EDITABLE fields)
+         - Phone number (required, OTP verified)
+         - Address details (required)
+         - Password (required, validated)
+      7. Account created with all mandatory fields
+      8. Email is already verified by Google (no email verification needed)
+    test_status: pending
+
+  - id: MVP-AUTH-003
+    title: Auto-login with JWT
+    priority: P0
+    status: implemented
+    notes: Token persistence in SharedPreferences, 15-minute JWT expiration
+    test_status: pending
+
+  - id: MVP-AUTH-004
+    title: Logout
+    priority: P0
+    status: implemented
+    notes: Clear tokens and navigate to login
+    test_status: pending
+
+  - id: MVP-AUTH-005
+    title: Phone OTP Verification
+    priority: P0
+    status: implemented
+    notes: 6-digit OTP sent via SMS (dev: console), 10-minute expiry
+    test_status: pending
+
+  - id: MVP-AUTH-006
+    title: Email Verification Code
+    priority: P0
+    status: implemented
+    notes: 6-digit verification code sent via email (dev: console), 10-minute expiry
+    test_status: pending
+
+  - id: MVP-AUTH-007
+    title: Unified Signup Flow
+    priority: P0
+    status: implemented
+    notes: |
+      Multi-step signup process with three entry points:
+      
+      Flow A - Email First:
+      1. Signup Method Selection → Choose Email
+      2. Enter Email → Send verification code
+      3. Verify Email Code (6-digit)
+      4. Enter Phone Number → Send OTP
+      5. Verify Phone OTP (6-digit)
+      6. Enter Address (mandatory)
+      7. Create Password
+      8. Account Created
+      
+      Flow B - Phone First:
+      1. Signup Method Selection → Choose Phone
+      2. Enter Phone → Send OTP
+      3. Verify Phone OTP (6-digit)
+      4. Enter Email → Send verification code
+      5. Verify Email Code (6-digit)
+      6. Enter Address (mandatory)
+      7. Create Password
+      8. Account Created
+      
+      Flow C - Google Signup:
+      1. Signup Method Selection → Choose Google
+      2. Google Sign-In (email auto-verified)
+      3. Enter Phone Number → Send OTP
+      4. Verify Phone OTP (6-digit)
+      5. Enter Address (mandatory)
+      6. Create Password
+      7. Account Created
+      
+      Common Requirements:
+      - Email: mandatory (verified via code or Google)
+      - Phone: mandatory (verified via OTP)
+      - Address: mandatory (all flows)
+      - Password: mandatory (8+ chars, uppercase, lowercase, number, special char)
+      - First Name: mandatory
+      - Last Name: mandatory
+    test_status: pending
+
+  # ============================================================
+  # PRODUCTS - P0
+  # ============================================================
+  - id: MVP-PROD-001
+    title: View Product List
+    priority: P0
+    status: planned
+    notes: Fetch from Chargebee via backend
+    test_status: pending
+
+  - id: MVP-PROD-002
+    title: Product Details
+    priority: P0
+    status: planned
+    notes: Images, description, price options
+    test_status: pending
+
+  - id: MVP-PROD-003
+    title: Size/Price Selection
+    priority: P0
+    status: planned
+    notes: Size selection modal working
+    test_status: pending
+
+  - id: MVP-PROD-004
+    title: Category Visualization (NEW)
+    priority: P0
+    status: planned
+    notes: |
+      Must clearly display three categories (Delight, Signature, Premium)
+      in ascending order with visual hierarchy. User must be able to:
+      - See all three categories at once or with easy navigation
+      - Understand price progression (Delight < Signature < Premium)
+      - Select size (200ml, 300ml, 500ml) for each category
+      - Compare prices across categories and sizes
+    ui_requirements:
+      - Category cards with distinct colors/badges
+      - Price displayed prominently for each size
+      - "Best Value" or "Popular" badges for recommended options
+      - Monthly plan shows savings vs weekly
+    test_status: pending
+
+  - id: MVP-PROD-005
+    title: Subscription Plan Comparison (NEW)
+    priority: P0
+    status: planned
+    notes: |
+      Display Weekly vs Monthly plans for each category.
+      Monthly must show cost savings clearly.
+    ui_requirements:
+      - Side-by-side comparison (Weekly vs Monthly)
+      - Per-bottle price calculation shown
+      - Total savings highlighted for monthly
+      - Toggle or tabs for easy switching
+    test_status: pending
+
+  # ============================================================
+  # CART - P0
+  # ============================================================
+  - id: MVP-CART-001
+    title: Add to Cart
+    priority: P0
+    status: implemented
+    notes: Local storage with SharedPreferences, size-based pricing (200/300/500ml)
+    test_status: pending
+
+  - id: MVP-CART-002
+    title: View Cart
+    priority: P0
+    status: implemented
+    notes: Show items with quantity, image, name, size, price per DESIGN_SYSTEM
+    test_status: pending
+
+  - id: MVP-CART-003
+    title: Update Quantity
+    priority: P0
+    status: implemented
+    notes: Increment/decrement with +/- buttons, auto-remove at 0
+    test_status: pending
+
+  - id: MVP-CART-004
+    title: Remove from Cart
+    priority: P0
+    status: implemented
+    notes: Remove via quantity or clear cart dialog
+    test_status: pending
+
+  - id: MVP-CART-005
+    title: Price Breakdown
+    priority: P0
+    status: implemented
+    notes: |
+      Display subtotal, tax (5% GST), delivery fee, and total
+      Free delivery above ₹500
+      Show "Add ₹X more for FREE delivery" prompt
+    test_status: pending
+
+  - id: MVP-CART-006
+    title: Cart Persistence
+    priority: P0
+    status: implemented
+    notes: Cart saved to SharedPreferences, persists across app restarts
+    test_status: pending
+
+  # ============================================================
+  # CHECKOUT - P0
+  # ============================================================
+  - id: MVP-CHECKOUT-001
+    title: One-Time Checkout
+    priority: P0
+    status: implemented
+    notes: |
+      POST /api/test/cartCheckout endpoint
+      Accepts cart items with itemPriceId and quantity
+      Generates Chargebee hosted page URL (test mode)
+      Returns checkout URL for WebView redirect
+    test_status: pending
+
+  - id: MVP-CHECKOUT-002
+    title: Payment Success Callback
+    priority: P0
+    status: implemented
+    notes: Handle return from Chargebee
+    test_status: pending
+
+  - id: MVP-CHECKOUT-003
+    title: Order Confirmation
+    priority: P0
+    status: implemented
+    notes: Show order details after payment
+    test_status: pending
+
+  - id: MVP-CHECKOUT-004
+    title: Cart Checkout API
+    priority: P0
+    status: implemented
+    notes: |
+      Endpoint: POST /api/test/cartCheckout
+      Authentication: JWT required (USER/MODERATOR/ADMIN role)
+      Input: [{itemPriceId, quantity}, ...]
+      Output: {id, url, state, type}
+      Unit Tests: TC-CHK-001 to TC-CHK-005
+    test_status: implemented
+
+  # ============================================================
+  # SUBSCRIPTION - P0 (Basic)
+  # ============================================================
+  - id: MVP-SUB-001
+    title: View Subscription Plans
+    priority: P0
+    status: implemented
+    notes: Fetch plans from Chargebee
+    test_status: pending
+  
+  - id: MVP-SUB-002
+    title: Purchase Subscription
+    priority: P0
+    status: implemented
+    notes: Chargebee hosted page for subscription
+    test_status: pending
+  
+  - id: MVP-SUB-003
+    title: View Active Subscription
+    priority: P0
+    status: implemented
+    notes: Show current subscription status
+    test_status: pending
+
+  # ============================================================
+  # USER PROFILE - P0
+  # ============================================================
+  - id: MVP-PROF-001
+    title: View Profile
+    priority: P0
+    status: implemented
+    notes: Name, email, phone
+    test_status: pending
+  
+  - id: MVP-PROF-002
+    title: Update Profile
+    priority: P0
+    status: implemented
+    notes: Update name, phone
+    test_status: pending
+  
+  - id: MVP-PROF-003
+    title: Add Address
+    priority: P1
+    status: implemented
+    notes: Basic address management
+    test_status: pending
+
+  # ============================================================
+  # ORDERS - P1
+  # ============================================================
+  - id: MVP-ORD-001
+    title: Order History
+    priority: P1
+    status: implemented
+    notes: List past orders
+    test_status: pending
+  
+  - id: MVP-ORD-002
+    title: Order Details
+    priority: P1
+    status: implemented
+    notes: View single order details
+    test_status: pending
+
+  # ============================================================
+  # BACKEND INFRASTRUCTURE - P0
+  # ============================================================
+  - id: MVP-INFRA-001
+    title: Database Schema
+    priority: P0
+    status: implemented
+    notes: MySQL tables for users, orders, subscriptions
+    test_status: pending
+  
+  - id: MVP-INFRA-002
+    title: Chargebee Integration
+    priority: P0
+    status: implemented
+    notes: API sync + webhooks
+    test_status: pending
+  
+  - id: MVP-INFRA-003
+    title: JWT Authentication
+    priority: P0
+    status: implemented
+    notes: Token generation + validation
+    test_status: pending
+
+# ============================================================
+# MVP LAUNCH CHECKLIST
+# ============================================================
+launch_checklist:
+  
+  backend:
+    - [ ] Backend starts without errors
+    - [ ] Database connection working
+    - [ ] Chargebee API connection working
+    - [ ] All P0 endpoints responding
+    - [ ] Health check endpoint: GET /api/health
+    - [ ] Swagger UI accessible: /swagger-ui.html
+  
+  frontend:
+    - [ ] Flutter app builds without errors
+    - [ ] Can login with email
+    - [ ] Can view products
+    - [ ] Can add to cart
+    - [ ] Can checkout (Chargebee)
+    - [ ] Can view subscription
+    - [ ] No crash on navigation
+  
+  testing:
+    - [ ] New user can register
+    - [ ] Registered user can login
+    - [ ] User can view products
+    - [ ] User can add product to cart
+    - [ ] User can complete checkout
+    - [ ] User can purchase subscription
+    - [ ] User can view profile
+  
+  deployment:
+    - [ ] Backend deployed (local server or cloud)
+    - [ ] Flutter APK built
+    - [ ] Test devices identified (2-3 beta users)
+    - [ ] Feedback mechanism ready (WhatsApp/Email)
+
+# ============================================================
+# POST-MVP BACKLOG (P2/P3)
+# ============================================================
+post_mvp_backlog:
+  
+  P2_next_sprint:
+    - Phone OTP authentication
+    - Subscription pause/resume
+    - Order tracking
+    - Push notifications
+    - Dark mode
+    - Analytics integration
+  
+  P3_future:
+    - Offline support
+    - Biometric authentication
+    - Referral program
+    - Loyalty points
+    - Multiple addresses
+    - Scheduled deliveries
+    - Chat support
+
+# ============================================================
+# KNOWN LIMITATIONS (Acceptable for MVP)
+# ============================================================
+mvp_limitations:
+  - Single payment method (via Chargebee)
+  - No order tracking (manual updates via WhatsApp)
+  - No push notifications
+  - Basic error messages
+  - No analytics dashboard
+  - Manual customer support
+  - Single delivery slot (morning only)
+  - No delivery fee calculation
+  - No promo codes
+
+# ============================================================
+# SUCCESS METRICS FOR MVP
+# ============================================================
+success_metrics:
+  - 10+ beta users complete signup
+  - 5+ beta users place an order
+  - 2+ beta users purchase subscription
+  - Zero critical crashes
+  - API response time < 3 seconds
+  - Checkout success rate > 80%
+
+# ============================================================
+# FEEDBACK COLLECTION
+# ============================================================
+feedback_channels:
+  - WhatsApp: +91-XXXXXXXXXX
+  - Email: support@bookmyjuice.co.in
+  - In-app: Profile > Send Feedback
+
+# ============================================================
+# MVP LAUNCH DATE
+# ============================================================
+target_launch: 2026-03-27
+beta_users: 10-20 users
+duration: 1 week
+
+deviceTesting:
+  physical: 25053PC47I
+  baseUrl: http://YOUR_PC_IP:8080
+
+# ============================================================
+# UNIFIED SIGNUP FLOW - COMPLETE DOCUMENTATION
+# ============================================================
+# Version: 3.0.0
+# Last Updated: 2026-03-29
+# ============================================================
+
+unified_signup_flow:
+  
+  # ============================================================
+  # BUSINESS REQUIREMENTS
+  # ============================================================
+  business_requirements:
+    BR-AUTH-001:
+      title: "Mandatory Email Collection"
+      description: "All users must provide a verified email address for account creation, regardless of signup method (Email, Phone, or Google)"
+      priority: P0
+      rationale: "Email is required for order confirmations, subscription notifications, and account recovery"
+
+    BR-AUTH-002:
+      title: "Mandatory Phone Collection"
+      description: "All users must provide a verified phone number for account creation"
+      priority: P0
+      rationale: "Phone is required for delivery coordination, OTP-based order confirmations, and customer support"
+
+    BR-AUTH-003:
+      title: "Mandatory Address Collection"
+      description: "All users must provide complete delivery address before account creation"
+      priority: P0
+      rationale: "Address is required for delivery feasibility check and order fulfillment"
+
+    BR-AUTH-004:
+      title: "Multiple Signup Entry Points"
+      description: "Users must be able to start signup via Email, Phone, or Google"
+      priority: P0
+      rationale: "Accommodates user preferences and increases conversion rates"
+
+    BR-AUTH-005:
+      title: "Email Verification"
+      description: "Email addresses must be verified via 6-digit code before account creation"
+      priority: P0
+      rationale: "Prevents fake accounts and ensures deliverability"
+
+    BR-AUTH-006:
+      title: "Phone Verification"
+      description: "Phone numbers must be verified via 6-digit OTP before account creation"
+      priority: P0
+      rationale: "Prevents fraud and ensures valid contact information"
+
+    BR-AUTH-007:
+      title: "Google Sign-In Integration"
+      description: "Google signup provides pre-verified email; phone verification still required"
+      priority: P0
+      rationale: "Streamlines signup while maintaining security standards"
+
+    BR-AUTH-008:
+      title: "Strong Password Policy"
+      description: "Passwords must meet security requirements (8+ chars, uppercase, lowercase, number, special char)"
+      priority: P0
+      rationale: "Protects user accounts and sensitive data"
+
+  # ============================================================
+  # FUNCTIONAL REQUIREMENTS
+  # ============================================================
+  functional_requirements:
+    
+    FR-AUTH-001:
+      title: "Signup Method Selection"
+      description: "System shall present three signup options: Email, Phone, and Google"
+      acceptance_criteria:
+        - "User sees three clearly labeled signup buttons"
+        - "Each button displays appropriate icon and description"
+        - "User can tap any option to begin that flow"
+      status: implemented
+
+    FR-AUTH-002:
+      title: "Email-First Signup Flow"
+      description: "Users starting with email shall complete: Email → Verify Email → Phone → Verify OTP → Address → Password"
+      acceptance_criteria:
+        - "User enters valid email address"
+        - "System sends 6-digit verification code to email"
+        - "User enters correct code to verify email"
+        - "User enters valid 10-digit phone number"
+        - "System sends 6-digit OTP to phone"
+        - "User enters correct OTP to verify phone"
+        - "User enters complete address details"
+        - "User creates password meeting requirements"
+        - "Account is created with all verified information"
+      status: implemented
+
+    FR-AUTH-003:
+      title: "Phone-First Signup Flow"
+      description: "Users starting with phone shall complete: Phone → Verify OTP → Email → Verify Email → Address → Password"
+      acceptance_criteria:
+        - "User enters valid 10-digit phone number"
+        - "System sends 6-digit OTP to phone"
+        - "User enters correct OTP to verify phone"
+        - "User enters valid email address"
+        - "System sends 6-digit verification code to email"
+        - "User enters correct code to verify email"
+        - "User enters complete address details"
+        - "User creates password meeting requirements"
+        - "Account is created with all verified information"
+      status: implemented
+
+    FR-AUTH-004:
+      title: "Google Signup Flow"
+      description: "Google signup users shall complete: Google Auth → Phone → Verify OTP → Address → Password"
+      acceptance_criteria:
+        - "User taps 'Sign up with Google'"
+        - "Google authentication provides verified email, name, and picture"
+        - "System displays pre-filled email (read-only)"
+        - "User enters valid 10-digit phone number"
+        - "System sends 6-digit OTP to phone"
+        - "User enters correct OTP to verify phone"
+        - "User enters complete address details"
+        - "User creates password meeting requirements"
+        - "Account is created with Google email and verified phone"
+      status: implemented
+
+    FR-AUTH-005:
+      title: "Email Verification Code"
+      description: "System shall generate and send 6-digit verification codes via email"
+      acceptance_criteria:
+        - "Code is exactly 6 digits"
+        - "Code expires after 10 minutes"
+        - "Code can only be used once"
+        - "User can request code resend after 30 seconds"
+        - "Code is logged to console in development mode"
+      status: implemented
+
+    FR-AUTH-006:
+      title: "Phone OTP Verification"
+      description: "System shall generate and send 6-digit OTP via SMS"
+      acceptance_criteria:
+        - "OTP is exactly 6 digits"
+        - "OTP expires after 10 minutes"
+        - "OTP can only be used once"
+        - "User can request OTP resend after 30 seconds"
+        - "OTP is logged to console in development mode"
+      status: implemented
+
+    FR-AUTH-007:
+      title: "Address Collection"
+      description: "System shall collect complete delivery address with validation"
+      acceptance_criteria:
+        - "First Name: required, max 50 chars"
+        - "Last Name: required, max 50 chars"
+        - "Flat/House No: required, max 120 chars"
+        - "Society/Locality: required, max 120 chars"
+        - "Sector/Area: required, max 120 chars"
+        - "City: required, max 120 chars"
+        - "State: required, max 120 chars"
+        - "ZIP Code: required, exactly 6 digits"
+        - "Country: required, 2-letter code (default: IN)"
+      status: implemented
+
+    FR-AUTH-008:
+      title: "Password Creation"
+      description: "System shall enforce strong password policy"
+      acceptance_criteria:
+        - "Minimum 8 characters"
+        - "At least 1 uppercase letter"
+        - "At least 1 lowercase letter"
+        - "At least 2 numbers"
+        - "At least 1 special character"
+        - "Maximum 40 characters"
+        - "No spaces allowed"
+        - "Real-time password strength indicator"
+      status: implemented
+
+    FR-AUTH-009:
+      title: "Unified Signup API"
+      description: "Backend shall provide /api/auth/unified-signup endpoint"
+      acceptance_criteria:
+        - "Accepts email, phone, password, and address"
+        - "Validates all required fields"
+        - "Creates user in local database with BCrypt password"
+        - "Creates customer in Chargebee"
+        - "Returns success message or error details"
+      status: implemented
+
+  # ============================================================
+  # USE CASES
+  # ============================================================
+  use_cases:
+    
+    UC-AUTH-001:
+      title: "Email-First Signup"
+      actor: "New User"
+      precondition: "User has valid email address and phone number"
+      main_flow:
+        - "User opens app and sees login/signup screen"
+        - "User taps 'Sign up with Email'"
+        - "System displays email entry screen"
+        - "User enters email address and taps 'Continue'"
+        - "System sends 6-digit verification code to email"
+        - "System displays code entry screen"
+        - "User enters 6-digit code and taps 'Verify Email'"
+        - "System validates code and displays phone entry screen"
+        - "User enters 10-digit phone number and taps 'Send OTP'"
+        - "System sends 6-digit OTP to phone"
+        - "System displays OTP entry screen"
+        - "User enters 6-digit OTP and taps 'Verify OTP'"
+        - "System validates OTP and displays address entry screen"
+        - "User enters all address fields and taps 'Continue'"
+        - "System displays password creation screen"
+        - "User enters password twice and taps 'Create Account'"
+        - "System creates account and logs user in"
+        - "System navigates to dashboard"
+      alternate_flows:
+        - "A1: Invalid email format - System shows error, user re-enters"
+        - "A2: Email already registered - System shows error, user can login"
+        - "A3: Wrong verification code - System shows error, user retries"
+        - "A4: Code expired - User taps 'Resend Code', new code sent"
+        - "A5: Invalid phone format - System shows error, user re-enters"
+        - "A6: Wrong OTP - System shows error, user retries"
+        - "A7: Weak password - System shows requirements, user re-enters"
+      postcondition: "User account created with verified email, verified phone, and address"
+
+    UC-AUTH-002:
+      title: "Phone-First Signup"
+      actor: "New User"
+      precondition: "User has valid phone number and email address"
+      main_flow:
+        - "User opens app and sees login/signup screen"
+        - "User taps 'Sign up with Phone'"
+        - "System displays phone entry screen"
+        - "User enters 10-digit phone number and taps 'Send OTP'"
+        - "System sends 6-digit OTP to phone"
+        - "System displays OTP entry screen"
+        - "User enters 6-digit OTP and taps 'Verify OTP'"
+        - "System validates OTP and displays email entry screen"
+        - "User enters email address and taps 'Continue'"
+        - "System sends 6-digit verification code to email"
+        - "System displays code entry screen"
+        - "User enters 6-digit code and taps 'Verify Email'"
+        - "System validates code and displays address entry screen"
+        - "User enters all address fields and taps 'Continue'"
+        - "System displays password creation screen"
+        - "User enters password twice and taps 'Create Account'"
+        - "System creates account and logs user in"
+        - "System navigates to dashboard"
+      alternate_flows:
+        - "A1: Invalid phone format - System shows error, user re-enters"
+        - "A2: Phone already registered - System shows error, user can login"
+        - "A3: Wrong OTP - System shows error, user retries"
+        - "A4: OTP expired - User taps 'Resend OTP', new OTP sent"
+        - "A5: Invalid email format - System shows error, user re-enters"
+        - "A6: Wrong verification code - System shows error, user retries"
+      postcondition: "User account created with verified phone, verified email, and address"
+
+    UC-AUTH-003:
+      title: "Google Signup"
+      actor: "New User with Google Account"
+      precondition: "User has valid Google account and phone number"
+      main_flow:
+        - "User opens app and sees login/signup screen"
+        - "User taps 'Sign up with Google'"
+        - "System opens Google authentication"
+        - "User selects Google account"
+        - "Google returns verified email, name, and picture"
+        - "System displays phone entry screen with pre-filled email (read-only)"
+        - "User enters 10-digit phone number and taps 'Send OTP'"
+        - "System sends 6-digit OTP to phone"
+        - "System displays OTP entry screen"
+        - "User enters 6-digit OTP and taps 'Verify OTP'"
+        - "System validates OTP and displays address entry screen"
+        - "User enters all address fields and taps 'Continue'"
+        - "System displays password creation screen"
+        - "User enters password twice and taps 'Create Account'"
+        - "System creates account and logs user in"
+        - "System navigates to dashboard"
+      alternate_flows:
+        - "A1: Google auth cancelled - User returns to signup selection"
+        - "A2: Phone already registered - System shows error, user can login"
+        - "A3: Wrong OTP - System shows error, user retries"
+        - "A4: Weak password - System shows requirements, user re-enters"
+      postcondition: "User account created with Google email, verified phone, and address"
+
+  # ============================================================
+  # TEST CASES
+  # ============================================================
+  test_cases:
+    
+    # Email-First Flow Tests
+    TC-AUTH-EF-001:
+      title: "Email-First: Successful Signup"
+      type: "Positive"
+      steps:
+        - "Navigate to signup method selection"
+        - "Select 'Sign up with Email'"
+        - "Enter valid email: test@example.com"
+        - "Enter valid 6-digit email code: 123456"
+        - "Enter valid phone: 9876543210"
+        - "Enter valid 6-digit OTP: 123456"
+        - "Enter complete address details"
+        - "Enter valid password: SecurePass123!"
+        - "Confirm password"
+      expected_result: "Account created successfully, user logged in"
+      status: "Automated in physical_device_template_test.dart"
+
+    TC-AUTH-EF-002:
+      title: "Email-First: Invalid Email Format"
+      type: "Negative"
+      steps:
+        - "Select 'Sign up with Email'"
+        - "Enter invalid email: invalid-email"
+        - "Tap Continue"
+      expected_result: "Error message: 'Please enter a valid email'"
+      status: "Manual"
+
+    TC-AUTH-EF-003:
+      title: "Email-First: Duplicate Email"
+      type: "Negative"
+      steps:
+        - "Select 'Sign up with Email'"
+        - "Enter existing email: existing@example.com"
+        - "Enter valid code"
+      expected_result: "Error message: 'Email is already registered'"
+      status: "Manual"
+
+    TC-AUTH-EF-004:
+      title: "Email-First: Wrong Verification Code"
+      type: "Negative"
+      steps:
+        - "Enter valid email"
+        - "Enter wrong code: 000000"
+        - "Tap Verify Email"
+      expected_result: "Error message: 'Invalid or expired verification code'"
+      status: "Manual"
+
+    TC-AUTH-EF-005:
+      title: "Email-First: Expired Code"
+      type: "Negative"
+      steps:
+        - "Enter valid email"
+        - "Wait 11 minutes"
+        - "Enter correct code"
+        - "Tap Verify Email"
+      expected_result: "Error message: 'Invalid or expired verification code'"
+      status: "Manual"
+
+    TC-AUTH-EF-006:
+      title: "Email-First: Resend Code"
+      type: "Positive"
+      steps:
+        - "Enter valid email"
+        - "Wait 30 seconds"
+        - "Tap 'Resend Code'"
+      expected_result: "New code sent, message: 'Verification code resent'"
+      status: "Manual"
+
+    # Phone-First Flow Tests
+    TC-AUTH-PF-001:
+      title: "Phone-First: Successful Signup"
+      type: "Positive"
+      steps:
+        - "Navigate to signup method selection"
+        - "Select 'Sign up with Phone'"
+        - "Enter valid phone: 9876543210"
+        - "Enter valid 6-digit OTP: 123456"
+        - "Enter valid email: test@example.com"
+        - "Enter valid 6-digit email code: 123456"
+        - "Enter complete address details"
+        - "Enter valid password: SecurePass123!"
+        - "Confirm password"
+      expected_result: "Account created successfully, user logged in"
+      status: "Automated in physical_device_template_test.dart"
+
+    TC-AUTH-PF-002:
+      title: "Phone-First: Invalid Phone Format"
+      type: "Negative"
+      steps:
+        - "Select 'Sign up with Phone'"
+        - "Enter invalid phone: 12345"
+        - "Tap Send OTP"
+      expected_result: "Error message: 'Please enter a valid 10-digit phone number'"
+      status: "Manual"
+
+    TC-AUTH-PF-003:
+      title: "Phone-First: Wrong OTP"
+      type: "Negative"
+      steps:
+        - "Enter valid phone"
+        - "Enter wrong OTP: 000000"
+        - "Tap Verify OTP"
+      expected_result: "Error message: 'Invalid or expired OTP'"
+      status: "Manual"
+
+    # Google Signup Tests
+    TC-AUTH-GS-001:
+      title: "Google Signup: Successful Flow"
+      type: "Positive"
+      steps:
+        - "Navigate to signup method selection"
+        - "Select 'Sign up with Google'"
+        - "Complete Google authentication"
+        - "Enter valid phone: 9876543210"
+        - "Enter valid 6-digit OTP: 123456"
+        - "Enter complete address details"
+        - "Enter valid password: SecurePass123!"
+        - "Confirm password"
+      expected_result: "Account created successfully, user logged in"
+      status: "Manual"
+
+    TC-AUTH-GS-002:
+      title: "Google Signup: Cancelled Auth"
+      type: "Negative"
+      steps:
+        - "Select 'Sign up with Google'"
+        - "Cancel Google authentication"
+      expected_result: "User returns to signup method selection"
+      status: "Manual"
+
+    # Address Entry Tests
+    TC-AUTH-AE-001:
+      title: "Address Entry: All Fields Valid"
+      type: "Positive"
+      steps:
+        - "Reach address entry screen"
+        - "Enter all required fields with valid data"
+        - "Tap Continue"
+      expected_result: "Navigate to password creation screen"
+      status: "Manual"
+
+    TC-AUTH-AE-002:
+      title: "Address Entry: Missing First Name"
+      type: "Negative"
+      steps:
+        - "Leave First Name empty"
+        - "Fill other fields"
+        - "Tap Continue"
+      expected_result: "Error message: 'First name is required'"
+      status: "Manual"
+
+    TC-AUTH-AE-003:
+      title: "Address Entry: Invalid ZIP Code"
+      type: "Negative"
+      steps:
+        - "Enter ZIP: 12345 (5 digits)"
+        - "Tap Continue"
+      expected_result: "Error message: 'Enter valid 6-digit ZIP code'"
+      status: "Manual"
+
+    # Password Creation Tests
+    TC-AUTH-PC-001:
+      title: "Password: Meets All Requirements"
+      type: "Positive"
+      steps:
+        - "Enter password: SecurePass123!"
+        - "Confirm password: SecurePass123!"
+        - "Tap Create Account"
+      expected_result: "Account created successfully"
+      status: "Manual"
+
+    TC-AUTH-PC-002:
+      title: "Password: Too Short"
+      type: "Negative"
+      steps:
+        - "Enter password: Pass1!"
+        - "Check password validator"
+      expected_result: "Password validator shows 'Minimum 8 characters' failed"
+      status: "Manual"
+
+    TC-AUTH-PC-003:
+      title: "Password: No Special Character"
+      type: "Negative"
+      steps:
+        - "Enter password: SecurePass123"
+        - "Check password validator"
+      expected_result: "Password validator shows special character requirement failed"
+      status: "Manual"
+
+    TC-AUTH-PC-004:
+      title: "Password: Mismatch"
+      type: "Negative"
+      steps:
+        - "Enter password: SecurePass123!"
+        - "Enter confirm: SecurePass456!"
+        - "Tap Create Account"
+      expected_result: "Error message: 'Passwords do not match'"
+      status: "Manual"
+
+    # API Tests
+    TC-AUTH-API-001:
+      title: "API: Send Email Verification"
+      type: "Positive"
+      steps:
+        - "POST /api/auth/send-email-verification"
+        - "Body: {email: 'test@example.com'}"
+      expected_result: "200 OK, message: 'Verification code sent'"
+      status: "Automated in physical_device_template_test.dart"
+
+    TC-AUTH-API-002:
+      title: "API: Verify Email Code"
+      type: "Positive"
+      steps:
+        - "POST /api/auth/verify-email-code"
+        - "Body: {email: 'test@example.com', verificationCode: '123456'}"
+      expected_result: "200 OK, message: 'Email verified'"
+      status: "Manual"
+
+    TC-AUTH-API-003:
+      title: "API: Unified Signup"
+      type: "Positive"
+      steps:
+        - "POST /api/auth/unified-signup"
+        - "Body: Complete signup data"
+      expected_result: "200 OK, message: 'User registered successfully'"
+      status: "Manual"
+
+    TC-AUTH-API-004:
+      title: "API: Unified Signup - Duplicate Email"
+      type: "Negative"
+      steps:
+        - "POST /api/auth/unified-signup"
+        - "Body: Existing email"
+      expected_result: "400 Bad Request, message: 'Email is already registered'"
+      status: "Manual"
+
+  # ============================================================
+  # USER STORIES
+  # ============================================================
+  user_stories:
+    
+    US-AUTH-001:
+      title: "Email-First Signup"
+      as_a: "New user preferring email"
+      i_want_to: "Sign up using my email address first"
+      so_that: "I can create an account with my preferred contact method"
+      acceptance_criteria:
+        - "Can enter email and receive verification code"
+        - "Can verify email with 6-digit code"
+        - "Can enter phone and receive OTP"
+        - "Can verify phone with 6-digit OTP"
+        - "Can enter complete address"
+        - "Can create secure password"
+        - "Account created with all verified information"
+
+    US-AUTH-002:
+      title: "Phone-First Signup"
+      as_a: "New user preferring phone"
+      i_want_to: "Sign up using my phone number first"
+      so_that: "I can start with my preferred contact method"
+      acceptance_criteria:
+        - "Can enter phone and receive OTP"
+        - "Can verify phone with 6-digit OTP"
+        - "Can enter email and receive verification code"
+        - "Can verify email with 6-digit code"
+        - "Can enter complete address"
+        - "Can create secure password"
+        - "Account created with all verified information"
+
+    US-AUTH-003:
+      title: "Google Signup"
+      as_a: "New user with Google account"
+      i_want_to: "Sign up quickly using my Google account"
+      so_that: "I don't have to manually enter my email"
+      acceptance_criteria:
+        - "Can tap 'Sign up with Google'"
+        - "Google email is auto-filled and verified"
+        - "Name is pre-filled from Google"
+        - "Still need to verify phone with OTP"
+        - "Can enter complete address"
+        - "Can create secure password"
+        - "Account created with Google email and verified phone"
+
+    US-AUTH-004:
+      title: "Resend Verification Code"
+      as_a: "User who didn't receive code"
+      i_want_to: "Request a new verification code"
+      so_that: "I can complete signup even if first code was lost"
+      acceptance_criteria:
+        - "Can see 'Resend Code' button after 30 seconds"
+        - "New code is sent when tapped"
+        - "Old code becomes invalid"
+        - "Can use new code to verify"
+
+    US-AUTH-005:
+      title: "Password Strength Indicator"
+      as_a: "User creating password"
+      i_want_to: "See real-time password strength feedback"
+      so_that: "I know if my password meets requirements"
+      acceptance_criteria:
+        - "Visual indicator shows each requirement"
+        - "Requirements turn green when met"
+        - "Cannot submit until all requirements met"
+        - "Clear error messages for violations"
+
+  # ============================================================
+  # DATA VALIDATION RULES
+  # ============================================================
+  validation_rules:
+    
+    email:
+      format: "RFC 5322 compliant"
+      regex: "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+      max_length: 100
+      required: true
+      unique: true
+      verification: "6-digit code required"
+
+    phone:
+      format: "10-digit Indian number"
+      regex: "^[6-9]\\d{9}$"
+      max_length: 10
+      required: true
+      unique: true
+      verification: "6-digit OTP required"
+
+    password:
+      min_length: 8
+      max_length: 40
+      require_uppercase: true
+      require_lowercase: true
+      require_numbers: 2
+      require_special: true
+      no_spaces: true
+      no_control_chars: true
+
+    first_name:
+      max_length: 50
+      required: true
+      allowed_chars: "Letters, spaces, hyphens"
+
+    last_name:
+      max_length: 50
+      required: true
+      allowed_chars: "Letters, spaces, hyphens"
+
+    address_line1:
+      label: "Flat/House No."
+      max_length: 120
+      required: true
+
+    address_line2:
+      label: "Society/Locality"
+      max_length: 120
+      required: true
+
+    address_line3:
+      label: "Sector/Area"
+      max_length: 120
+      required: true
+
+    city:
+      max_length: 120
+      required: true
+
+    state:
+      max_length: 120
+      required: true
+
+    zip:
+      format: "6-digit Indian PIN"
+      regex: "^\\d{6}$"
+      required: true
+
+    country:
+      format: "ISO 3166-1 alpha-2"
+      length: 2
+      default: "IN"
+      required: true
+
+  # ============================================================
+  # ERROR MESSAGES
+  # ============================================================
+  error_messages:
+    
+    email_invalid: "Please enter a valid email address"
+    email_exists: "This email is already registered. Please login instead."
+    email_code_sent: "Verification code sent to {email}"
+    email_code_invalid: "Invalid or expired verification code"
+    email_verified: "Email verified successfully"
+
+    phone_invalid: "Please enter a valid 10-digit phone number"
+    phone_exists: "This phone number is already registered. Please login instead."
+    phone_otp_sent: "OTP sent to {phone}"
+    phone_otp_invalid: "Invalid or expired OTP"
+    phone_verified: "Phone verified successfully"
+
+    password_short: "Password must be at least 8 characters"
+    password_no_upper: "Password must contain at least one uppercase letter"
+    password_no_lower: "Password must contain at least one lowercase letter"
+    password_no_number: "Password must contain at least 2 numbers"
+    password_no_special: "Password must contain at least one special character"
+    password_has_space: "Password must not contain spaces"
+    password_mismatch: "Passwords do not match"
+
+    address_required: "Address is required"
+    city_required: "City is required"
+    state_required: "State is required"
+    zip_invalid: "Please enter a valid 6-digit ZIP code"
+    country_invalid: "Please enter a valid 2-letter country code"
+
+    signup_success: "Account created successfully! Welcome to BookMyJuice."
+    signup_failed: "Failed to create account. Please try again."
+    network_error: "Network error. Please check your connection."
