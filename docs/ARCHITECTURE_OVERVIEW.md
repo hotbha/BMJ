@@ -1,8 +1,8 @@
-# BookMyJuice - Architecture Overview
+# BookMyJuice — Enterprise Architecture Overview
 
-**Document Version:** 2.0  
-**Last Updated:** 2026-03-29  
-**Status:** Updated for Unified Signup Flow
+**Document Version:** 3.0  
+**Last Updated:** 2026-05-08  
+**Status:** Enterprise-Grade Production Architecture
 
 ---
 
@@ -13,7 +13,9 @@
 3. [Data Architecture](#data-architecture)
 4. [Security Architecture](#security-architecture)
 5. [Integration Architecture](#integration-architecture)
-6. [Architecture Decision Records](#architecture-decision-records)
+6. [Chargebee Integration Boundaries](#chargebee-integration-boundaries)
+7. [Native Billing Flow](#native-billing-flow)
+8. [Deployment Architecture](#deployment-architecture)
 
 ---
 
@@ -22,33 +24,54 @@
 ### High-Level Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        BookMyJuice System                        │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                           BookMyJuice Enterprise System                       │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-┌──────────────┐         ┌──────────────┐         ┌──────────────┐
-│   Flutter    │         │   bmjServer  │         │  Chargebee   │
-│   Mobile App │◄───────►│  Spring Boot │◄───────►│    Billing   │
-│   (iOS/Android)  REST   │     API      │  API     │   Platform   │
-└──────────────┘         └──────────────┘         └──────────────┘
-       │                        │                        │
-       │                        ▼                        │
-       │                 ┌──────────────┐               │
-       │                 │    MySQL     │               │
-       │                 │   Database   │               │
-       │                 └──────────────┘               │
-       │                                                │
-       └─────────────────── Internet ───────────────────┘
+┌──────────────────────────────────┐       ┌──────────────────────────────────┐
+│         Flutter Mobile App       │       │      Chargebee Hosted Pages      │
+│         (iOS / Android)          │       │                                  │
+│                                  │       │  ┌────────────────────────────┐  │
+│  ┌──── NATIVE BMJ VIEWS ──────┐ │       │  │   Hosted Checkout ONLY     │  │
+│  │ Plan Discovery (native)    │ │       │  │   (Final Payment Step)     │  │
+│  │ Plan Detail (native)       │ │       │  └────────────────────────────┘  │
+│  │ Plan Comparison (native)   │ │       └──────────────────────────────────┘
+│  │ Cart / Review (native)     │ │                        ▲
+│  │ Address Management (native)│ │                        │ WebView
+│  │ Delivery Slots (native)    │ │                        │ (handoff only)
+│  │ Subscription Mgmt (native) │ │                        │
+│  │ Billing Summary (native)   │ │       ┌────────────────┴─────────────────┐
+│  └────────────────────────────┘ │       │        bmjServer (Spring Boot)   │
+│                                  │◄─────►│                                  │
+│  ┌────────────────────────────┐  │ REST  │  Auth | Billing | Delivery      │
+│  │ Hosted Checkout WebView   │  │       │  Webhooks | Cache | Audit        │
+│  │ (final payment only)      │──┘       └────────┬──────────┬─────────────┘
+│  └────────────────────────────┘                   │          │
+└──────────────────────────────────┘                │          │
+                                                    ▼          ▼
+                                            ┌──────────┐ ┌──────────┐
+                                            │  MySQL   │ │  Redis   │
+                                            │  (8.0)   │ │  Cache   │
+                                            └──────────┘ └──────────┘
 ```
 
-### Components
+### Core Principles
 
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| **Mobile App** | Flutter (Dart) | User interface, BLoC state management |
-| **Backend API** | Spring Boot 3.x (Java 17) | REST API, authentication, Chargebee integration |
-| **Database** | MySQL 8.0 | User data, cached Chargebee data |
-| **Billing** | Chargebee | Subscription management, invoicing, payments |
+1. **Chargebee is the SINGLE SOURCE OF TRUTH** for all billing/subscription/product data.
+2. **BMJ never re-implements** subscription logic, invoicing, payment ledger, or order ledger.
+3. **Local persistence** of Chargebee-owned data is read/cache/sync/audit only — never ownership.
+4. **Final payment completion** may remain on Chargebee hosted checkout. All other user-facing billing flows are native BMJ screens.
+5. **BMJ owns** authentication, authorization, session management, delivery domain, and chargebee API orchestration.
+
+### Component Responsibilities
+
+| Component | Technology | Owns | Does NOT Own |
+|-----------|------------|------|--------------|
+| **bmjServer** | Spring Boot 3.x / Java 17 | Auth, sessions, delivery, webhook ingestion, cache, audit | Subscriptions, invoices, payments, orders, products |
+| **Flutter App** | Flutter 3.x / Dart | Native UX, BLoC state management, cart, address, slot picking | Payment processing, billing logic |
+| **MySQL** | MySQL 8.0 | User auth data, local read cache of Chargebee entities | Billing authoritative records |
+| **Redis** | Redis 7.x | App cache (products, plans, service areas, slots) | Persistence (ephemeral cache only) |
+| **Chargebee** | Chargebee SaaS | Subscriptions, invoices, payments, orders, plans, items, prices, billing customer data | User auth, delivery data, non-billing user data |
 
 ---
 
@@ -60,35 +83,23 @@
 lush/
 ├── lib/
 │   ├── bloc/                    # BLoC state management
-│   │   ├── AuthBloc/           # Authentication (ADR-002)
+│   │   ├── AuthBloc/           # Authentication + session
+│   │   ├── BillingBloc/        # Native billing flow
 │   │   ├── CartBloc/           # Shopping cart
+│   │   ├── DeliveryBloc/       # Serviceability, slots, addresses
 │   │   ├── ProductsBloc/       # Product catalog
-│   │   ├── SubscriptionBloc/   # Subscriptions
+│   │   ├── SubscriptionBloc/   # Subscription management
+│   │   ├── ThemeCubit/         # Theme (light/dark/system)
 │   │   └── UserBloc/           # User profile
 │   ├── models/                  # Data models
-│   ├── views/                   # UI screens
-│   │   └── screens/            # All screens (11 new signup screens)
-│   ├── UserRepository/         # API client
-│   ├── services/               # Business logic
-│   └── main.dart               # App entry point
-├── integration_test/           # E2E tests
-└── test/                       # Unit tests
-```
-
-### BLoC Pattern (ADR-002)
-
-```
-┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│   Events    │─────►│    BLoC     │─────►│    States   │
-│  (User Actions)    │  (Business  │      │  (UI State) │
-│                     │   Logic)    │      │             │
-└─────────────┘      └─────────────┘      └─────────────┘
-                            │
-                            ▼
-                     ┌─────────────┐
-                     │ Repository  │
-                     │  (API Call) │
-                     └─────────────┘
+│   ├── theme/                   # AppColors, AppTextStyles, AppTheme, AppSpacing
+│   ├── views/
+│   │   ├── screens/            # All screens
+│   │   └── widgets/            # Reusable widgets
+│   ├── services/               # HTTP API clients
+│   ├── repositories/           # Data access layer
+│   └── main.dart               # App entry point (ThemeData-driven)
+└── test/
 ```
 
 ### Backend Structure
@@ -96,203 +107,129 @@ lush/
 ```
 bmjServer/
 ├── src/main/java/com/bookmyjuice/
-│   ├── controllers/              # REST endpoints
-│   │   ├── AuthController.java  # Authentication (new: unified signup)
-│   │   ├── CheckoutController.java
-│   │   ├── SubscriptionController.java
-│   │   └── webhooks/            # Chargebee webhook handlers
-│   ├── models/                   # JPA entities
-│   ├── repository/               # Data access layer
-│   ├── services/                 # Business logic
-│   │   ├── ChargebeeSyncService.java
-│   │   └── UserDetailsImpl.java
-│   ├── security/                 # Spring Security config
-│   │   └── jwt/                 # JWT utilities
-│   ├── payload/                  # Request/Response DTOs
-│   │   ├── request/             # Request DTOs (new: UnifiedSignupRequest)
-│   │   └── response/            # Response DTOs
-│   └── util/                     # Utilities
-│       ├── OTPUtil.java
-│       └── EmailVerificationService.java (new)
-└── src/main/resources/
-    └── application.properties   # Configuration
+│   ├── bmjServer.java                    # Main entry
+│   ├── config/                           # Redis, Chargebee, Role config
+│   ├── controllers/
+│   │   ├── AuthController.java           # Login, signup, refresh, token
+│   │   ├── BillingController.java        # Native billing endpoints
+│   │   ├── CartController.java           # Cart CRUD
+│   │   ├── CheckoutController.java       # Hosted checkout handoff
+│   │   ├── CheckoutV2Controller.java     # V2 one-time checkout
+│   │   ├── ComplianceController.java     # Right-to-erasure, consent
+│   │   ├── DeliveryController.java       # Serviceability, slots, addresses
+│   │   ├── SessionController.java        # Logout, logout-all
+│   │   ├── SubscriptionController.java   # Subscription CRUD (native)
+│   │   ├── webhooks/                     # Chargebee webhook handlers
+│   │   └── ...                           # Product, Invoice, Order, etc.
+│   ├── models/entities/                  # JPA entities
+│   ├── repository/                       # Data access
+│   ├── services/                         # Business logic
+│   │   ├── DeliveryService.java
+│   │   ├── WebhookSignatureService.java
+│   │   ├── SessionManagementService.java
+│   │   └── ...
+│   ├── security/                         # JWT, rate limiting, webhook filter
+│   └── util/                             # OTP, email, etc.
 ```
 
 ---
 
-## Data Architecture
+## Chargebee Integration Boundaries
 
-### Database Schema (ADR-001)
+### What Chargebee Owns (SSOT)
 
-```sql
--- Users (Authentication)
-CREATE TABLE users (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  username VARCHAR(100) UNIQUE NOT NULL,  -- Email for email-based auth
-  email VARCHAR(100) UNIQUE NOT NULL,
-  phone VARCHAR(20) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL,  -- BCrypt hash
-  first_name VARCHAR(50),
-  last_name VARCHAR(50),
-  address VARCHAR(120),
-  extended_addr VARCHAR(120),
-  extended_addr2 VARCHAR(120),
-  city VARCHAR(120),
-  state VARCHAR(120),
-  zip VARCHAR(10),
-  country VARCHAR(2) DEFAULT 'IN',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+| Domain | Chargebee API | BMJ Local Cache |
+|--------|--------------|-----------------|
+| Products/Items | ✅ `Item` CRUD | ✅ Read-only cache via webhooks + startup sync |
+| Item Prices | ✅ `ItemPrice` CRUD | ✅ Read-only cache via webhooks + startup sync |
+| Plans | ✅ `Plan` CRUD | ✅ Read-only cache via webhooks + startup sync |
+| Subscriptions | ✅ `Subscription` lifecycle | ✅ Reference cache via webhooks |
+| Invoices | ✅ `Invoice` lifecycle | ✅ Reference cache for display |
+| Payments | ✅ `Payment`/`Transaction` | ✅ Reference cache |
+| Orders | ✅ `Order` lifecycle | ✅ Reference cache |
+| Billing Customers | ✅ `Customer` CRUD | ✅ Reference mapping only |
 
--- Roles & Authorization
-CREATE TABLE roles (...);
-CREATE TABLE user_roles (...);
+### What BMJ Owns (SSOT)
 
--- Chargebee Data (Synced via webhooks)
-CREATE TABLE items (...);         -- Products
-CREATE TABLE item_prices (...);   -- Pricing
-CREATE TABLE plans (...);         -- Subscription plans
-CREATE TABLE subscriptions (...); -- User subscriptions
-CREATE TABLE invoices (...);      -- Invoices
-CREATE TABLE orders (...);        -- Orders
-CREATE TABLE payments (...);      -- Payments
-CREATE TABLE customers (...);     -- Customer billing details
-```
-
-### Data Flow (ADR-003)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Data Flow Architecture                    │
-└─────────────────────────────────────────────────────────────┘
-
-Write Operations (Commands):
-  Flutter App → bmjServer → Chargebee API → Webhook → bmjServer → MySQL
-
-Read Operations (Queries):
-  Flutter App → bmjServer → MySQL (local cache) → Response
-
-Example: Purchase Subscription
-  1. User selects plan → GET /api/plans (from MySQL cache)
-  2. User subscribes → POST /api/subscribe → Chargebee API
-  3. Payment complete → Chargebee webhook → subscription.created
-  4. bmjServer updates MySQL → Subscription visible in app
-
-Example: View Order History
-  1. User opens orders → GET /api/orders
-  2. bmjServer queries MySQL → SELECT * FROM orders
-  3. Return cached data (no Chargebee API call needed)
-```
+| Domain | Source | Notes |
+|--------|--------|-------|
+| User Auth (credentials) | BMJ users table | Password hashes, roles |
+| JWT Tokens | BMJ in-memory + refresh token table | Access + refresh token lifecycle |
+| Session Management | BMJ refresh_tokens table | Revocation, logout-all |
+| Delivery Domain | BMJ delivery tables | Service areas, slots, addresses |
+| Audit Logs | BMJ audit_log table | Security event tracking |
+| Consent Records | BMJ consent_records table | GDPR/privacy compliance |
+| Anonymization State | BMJ users table | Right-to-erasure markers |
 
 ---
 
-## Security Architecture
+## Native Billing Flow
 
-### Authentication Flow (ADR-004)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│              Unified Signup Security Architecture            │
-└─────────────────────────────────────────────────────────────┘
-
-Signup Flow:
-  User Input → Validation → Email Verification → Phone Verification
-      ↓
-  Address Collection → Password Creation → BCrypt Hash
-      ↓
-  MySQL User Creation → Chargebee Customer Creation → JWT Token
-      ↓
-  Auto Login → Dashboard
-
-Login Flow:
-  User Credentials → Validation → BCrypt Verify → JWT Token
-      ↓
-  15-minute expiration → Auto-login with persisted token
-```
-
-### Security Measures
-
-| Layer | Measure | Implementation |
-|-------|---------|----------------|
-| **Transport** | HTTPS | TLS 1.3 (production) |
-| **Authentication** | JWT | 15-minute expiration, HS256 |
-| **Password** | BCrypt | Work factor 10, auto-salt |
-| **Verification** | 6-digit codes | 10-minute expiry, one-time use |
-| **Rate Limiting** | Request throttling | 5/hour per email/phone |
-| **Authorization** | Role-based | USER, ADMIN, MODERATOR |
-| **Input Validation** | Bean Validation | @NotBlank, @Email, @Size |
-| **SQL Injection** | Parameterized queries | Spring Data JPA |
-
----
-
-## Integration Architecture
-
-### Chargebee Integration (ADR-003)
+### Flow Diagram: Plan Discovery → Hosted Checkout
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                  Chargebee Integration                       │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│              NATIVE BMJ FLOW (Plan Discovery → Review)               │
+└──────────────────────────────────────────────────────────────────────┘
 
-System Boundaries:
-  Chargebee (Source of Truth for):
-    ✅ Products/Items
-    ✅ Plans & Pricing
-    ✅ Subscriptions
-    ✅ Invoices
-    ✅ Orders
-    ✅ Payments
-    ✅ Customer billing details
-
-  bmjServer (Source of Truth for):
-    ✅ User Authentication
-    ✅ Login credentials
-    ✅ JWT tokens
-    ✅ User roles
-    ✅ Session management
-
-Data Sync Strategy:
-  Real-time: Webhooks (Chargebee → bmjServer)
-  Batch: ChargebeeSyncService (startup sync)
-  Cache: Local MySQL for fast reads
+  User opens app
+      │
+      ▼
+┌──────────────────────┐
+│  Native Plan Catalog │  ← Reads from local cache (MySQL/Redis)
+│  (Plan cards,        │     Backed by webhook-synced plans
+│   filter, compare)   │
+└──────┬───────────────┘
+       │ Select plan
+       ▼
+┌──────────────────────┐
+│  Native Plan Detail  │  ← Full plan details, features, pricing
+│  (Description,       │
+│   features, CTA)     │
+└──────┬───────────────┘
+       │ Subscribe / Add to cart
+       ▼
+┌──────────────────────┐
+│  Native Cart/Review  │  ← Cart contents, quantity, size
+│  (Items, quantities, │
+│   address, delivery) │
+└──────┬───────────────┘
+       │ Proceed to checkout
+       ▼
+┌──────────────────────┐
+│  Native Pre-Checkout │  ← Address selection, slot selection,
+│  Review + Validation │     billing summary, price breakdown
+└──────┬───────────────┘
+       │ Confirm
+       ▼
+╔══════════════════════╗
+║  HOSTED CHECKOUT     ║  ← ONLY Chargebee-hosted step
+║  (Chargebee WebView) ║     Secure payment completion
+║  Payment, Auth,      ║     NO plan browsing or discovery
+║  Confirmation        ║     NO pricing table
+╚══════════════════════╝
+       │
+       ▼
+┌──────────────────────┐
+│  Native Confirmation │  ← Order placed, subscription active
+│  (Order/success)     │     Data synced via webhook
+└──────────────────────┘
 ```
 
-### API Endpoints
+### Why Hosted Checkout is Retained
 
-| Category | Endpoints | Purpose |
-|----------|-----------|---------|
-| **Authentication** | POST /api/auth/signup, /signin, /unified-signup | User auth |
-| **Email Verification** | POST /api/auth/send-email-verification, /verify-email-code | Email verification (new) |
-| **Phone Verification** | POST /api/auth/send-otp, /verify-otp | Phone verification |
-| **Products** | GET /api/products, /plans | Fetch catalog (from cache) |
-| **Subscriptions** | GET /api/subscriptions, POST /api/subscribe | Manage subscriptions |
-| **Orders** | GET /api/orders | Order history (from cache) |
-| **Invoices** | GET /api/invoices | Invoice list (from cache) |
-| **Webhooks** | POST /api/webhooks/* | Chargebee webhook handlers |
+- PCI DSS compliance for payment card data
+- Chargebee handles secure 3D Secure, card storage, payment gateways
+- Avoids re-implementing payment processing logic
+- SCA/regulatory compliance delegated
 
----
+### Why Pricing Tables/Pages are Removed
 
-## Architecture Decision Records
-
-### ADR Index
-
-| ADR | Title | Status | Date |
-|-----|-------|--------|------|
-| [ADR-001](ADR-001-database-selection.md) | Database Selection - MySQL 8.0 | ACCEPTED | 2026-03-27 |
-| [ADR-002](ADR-002-state-management-pattern.md) | State Management - BLoC Pattern | ACCEPTED | 2026-03-27 |
-| [ADR-003](ADR-003-chargebee-integration-strategy.md) | Chargebee Integration & Data Sync | ACCEPTED | 2026-03-27 |
-| [ADR-004](ADR-004-unified-signup-flow.md) | Unified Signup Flow Architecture | ACCEPTED | 2026-03-29 |
-
-### Key Decisions Summary
-
-| Decision | Option Selected | Rationale |
-|----------|-----------------|-----------|
-| Database | MySQL 8.0 | Team expertise, Spring Boot integration, cost |
-| State Management | BLoC | Separation of concerns, testability, Flutter best practices |
-| Billing | Chargebee | Focus on core business, managed compliance |
-| Data Sync | Webhooks + Local Cache | Performance, reliability, offline support |
-| Signup Flow | Multi-step with 3 entry points | User choice, data quality, security |
+- Pricing tables and hosted pages create fragmented UX (leaving BMJ → Chargebee → BMJ)
+- Native plan discovery provides consistent brand experience
+- Faster page loads (no network round-trip to Chargebee for rendering)
+- Full control over layout, comparison, filtering
+- Better offline experience (cached plan data)
 
 ---
 
@@ -301,71 +238,36 @@ Data Sync Strategy:
 ### Development
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Flutter    │     │  Spring Boot │     │    MySQL     │
-│   (localhost)│────►│  (port 8080) │────►│  (Docker)    │
-└──────────────┘     └──────────────┘     └──────────────┘
-                              │
-                              ▼
-                     ┌──────────────┐
-                     │  Chargebee   │
-                     │  Test Site   │
-                     └──────────────┘
+docker-compose up -d
+  ├── MySQL 8.0 (port 3306)
+  ├── Redis 7 (port 6379)  
+  └── bmjServer Spring Boot (port 8080)
 ```
 
-### Production (Planned)
+### Production (Target)
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Flutter    │     │   Spring Boot│     │  AWS RDS     │
-│   (App Store)│────►│   (EC2/ECS)  │────►│    MySQL     │
-└──────────────┘     └──────────────┘     └──────────────┘
-                              │
-                              ▼
-                     ┌──────────────┐
-                     │  Chargebee   │
-                     │  Production  │
-                     └──────────────┘
+Flutter (App Store/Play Store) → API Gateway → bmjServer (ECS/EC2)
+                                                    ├── MySQL RDS
+                                                    ├── Redis ElastiCache (optional)
+                                                    └── Chargebee API
 ```
-
----
-
-## Monitoring & Observability
-
-### Backend Monitoring
-
-- **Spring Boot Actuator:** `/actuator/health`, `/actuator/metrics`
-- **Logging:** SLF4J + Logback (JSON format)
-- **Error Tracking:** Sentry (future)
-- **APM:** New Relic / Datadog (future)
-
-### Frontend Monitoring
-
-- **Crash Reporting:** Firebase Crashlytics
-- **Analytics:** Firebase Analytics (future)
-- **Performance:** Flutter DevTools
-
-### Business Metrics
-
-- Signup completion rate
-- Email verification success rate
-- Phone verification success rate
-- Google signup adoption rate
-- Drop-off per signup step
 
 ---
 
 ## References
 
-- **Requirements:** `../requirements.yaml`
-- **Test Cases:** `../UNIFIED_SIGNUP_TEST_CASES.md`
-- **Use Cases:** `../UNIFIED_SIGNUP_USE_CASES.md`
-- **Implementation Summary:** `../UNIFIED_SIGNUP_IMPLEMENTATION_SUMMARY.md`
-- **API Docs:** `../API.md`
-- **Backend Status:** `../BACKEND_FRONTEND_STATUS.md`
+- [Chargebee Integration Strategy](architecture/ADR-003-chargebee-integration-strategy.md)
+- [Native Billing Flow](NATIVE_BILLING_FLOW.md)
+- [Webhook Reliability](WEBHOOK_RELIABILITY.md)
+- [Caching Strategy](CACHING_STRATEGY.md)
+- [Compliance & Privacy](COMPLIANCE_PRIVACY.md)
+- [API Documentation](API.md)
+- [Design System](DESIGN_SYSTEM.md)
+- [Design System → Flutter Integration](DESIGN_SYSTEM_FLUTTER_INTEGRATION.md)
 
 ---
 
 **Document Maintained By:** Engineering Team  
-**Last Review:** 2026-03-29  
-**Next Review:** 2026-04-29 (post-beta launch)
+**Last Review:** 2026-05-08  
+**Next Review:** 2026-06-08

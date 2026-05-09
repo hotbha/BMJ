@@ -12,6 +12,20 @@
 		"chargebee-knowledge-base": {
 			"type": "http",
 			"url": "https://bookmyjuice-test.mcp.chargebee.com/knowledge_base_agent"
+		},
+		"chargebee-onboarding": {
+			"type": "http",
+			"url": "https://bookmyjuice-test.mcp.chargebee.com/onboarding_agent",
+			"headers": {
+				"Authorization": "Bearer test_ai_-ZFEjZ3qiK2mW3k7C9M2Q60OK2QmLslRdSnNWt61z4E"
+			}
+		},
+		"chargebee-data-lookup": {
+			"type": "http",
+			"url": "https://bookmyjuice-test.mcp.chargebee.com/data_lookup_agent",
+			"headers": {
+				"Authorization": "Bearer test_ai_WvyPvGTh7AKfZ6vM6UHOrWZduN1xKiU1Ir_MxccF3-Q"
+			}
 		}
 	},
 	"inputs": []
