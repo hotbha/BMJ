@@ -1,7 +1,7 @@
 # BookMyJuice - Business Requirements Document (BRD)
 
-**Document Version:** 2.0 (Consolidated)
-**Date:** April 11, 2026
+**Document Version:** 2.1 (Updated)
+**Date:** May 13, 2026
 **Project:** BookMyJuice - Cold-Pressed Juice Subscription Platform
 **Stakeholders:** Product Owner, Development Team, QA Team, Beta Users
 
@@ -69,12 +69,15 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 - Subscription management (pause, resume, cancel with 9 PM cutoff)
 - User profile and address management
 - Order history viewing with pagination
-- Push notifications for key events
+- Push notifications for key events (local-only for MVP; Flutter side FCM + backend FCM token endpoint implemented, no FCM server push)
 - Guest cart with merge on login
+- Delivery address capture during signup (single delivery address per user)
+- Service area management (pincode-based serviceability)
+- Delivery slot allocation (day-wise schedule via subscription metadata)
 
 ### 2.2 Out of Scope (Post-MVP)
-- Multiple delivery addresses
-- Scheduled delivery slots selection
+- Multiple delivery addresses per user
+- Scheduled delivery slots selection (pre-booking specific time windows)
 - Loyalty points and referral programs
 - Advanced analytics dashboard
 - Biometric authentication
@@ -163,9 +166,19 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
-| BR-060 | Push notifications sent for payment failures | P0 | flutter_local_notifications triggered on payment_failed webhook processing (local-only for MVP, no FCM server) |
-| BR-061 | Push notifications sent for subscription actions | P1 | flutter_local_notifications on subscription_paused/resumed/cancelled (local-only for MVP) |
-| BR-062 | Push notifications sent for order events | P1 | flutter_local_notifications on order_updated/delivered (local-only for MVP) |
+| BR-060 | Push notifications sent for payment failures | P0 | FCM partially implemented: Flutter side FirebaseNotificationService with token management exists; backend FCM token endpoint planned but not built. For MVP, only local notifications via flutter_local_notifications are active. No FCM server push - local-only notifications. |
+| BR-061 | Push notifications sent for subscription actions | P1 | FCM partially implemented: Flutter side handles foreground messages and displays local notifications. Backend FCM push not implemented for MVP. Notifications triggered locally on webhook processing response. |
+| BR-062 | Push notifications sent for order events | P1 | FCM partially implemented: Flutter FCM token obtained and can be uploaded to server (uploadTokenToServer placeholder exists). No FCM server push - local-only notifications for MVP. |
+
+
+### 3.8 Delivery Domain
+
+| ID | Requirement | Priority | Acceptance Criteria |
+|----|-------------|----------|---------------------|
+| BR-070 | Users can enter delivery address during signup | P0 | Address fields (line1, line2, city, state, zip, country) captured during registration |
+| BR-071 | Service areas managed by pincode with serviceability check | P1 | Admin can define serviceable pincodes with cutoff time and lead hours via ServiceAreaEntity |
+| BR-072 | Subscription includes day-wise delivery schedule | P0 | User selects which days (Mon-Sat) receive delivery; schedule stored in subscription metadata |
+| BR-073 | Delivery fee is applied based on subtotal threshold | P0 | Cart shows delivery_fee calculated server-side; free delivery above configurable threshold |
 
 ---
 
@@ -250,6 +263,9 @@ This JSON is stored in the `meta_data` of the Chargebee subscription. Applicable
 | NFR-005 | Passwords hashed with BCrypt (cost factor 10) | 100% compliance | Code review, security scan |
 | NFR-006 | JWT tokens stored securely | SharedPreferences with encryption | Code review |
 | NFR-007 | Webhook signature validation | Reject invalid with 401 | X-Chargebee-Webhook-Signature header check |
+| NFR-011 | Rate Limiting - OTP endpoints limited using RateLimitService | 10 attempts/5min per IP | Bucket4j token bucket enforcement in RateLimitingFilter |
+| NFR-013 | Profile-based Config - Spring @Profile("dev") gates test controllers | Dev-only access | Profile annotation on TestController and MetadataTestController |
+| NFR-015 | Sensitive Data Externalization - All secrets in .env, not in application.properties | 100%% via spring-dotenv | .env file at project root loaded by spring-dotenv dependency |
 
 ### 5.3 Reliability
 
@@ -263,8 +279,15 @@ This JSON is stored in the `meta_data` of the Chargebee subscription. Applicable
 
 | ID | Requirement | Target | Measurement |
 |----|-------------|--------|-------------|
-| NFR-011 | First-time user completes signup in < 2 minutes | < 120 seconds | User testing |
-| NFR-012 | All text meets WCAG 2.1 AA contrast ratio (4.5:1) | 100% compliance | Accessibility scanner |
+| NFR-016 | First-time user completes signup in < 2 minutes | < 120 seconds | User testing |
+| NFR-017 | All text meets WCAG 2.1 AA contrast ratio (4.5:1) | 100% compliance | Accessibility scanner |
+
+### 5.5 Data Management
+
+| ID | Requirement | Target | Measurement |
+|----|-------------|--------|-------------|
+| NFR-012 | FCM Token Persistence - FCM tokens stored and updated_at tracked in users table | Token stored per user | Database column for fcm_token and updated_at |
+| NFR-014 | Push Notification Support - Firebase Cloud Messaging integrated | Flutter + backend FCM token endpoint | Flutter FirebaseNotificationService; backend endpoint for token storage |
 
 ---
 
@@ -281,7 +304,8 @@ This JSON is stored in the `meta_data` of the Chargebee subscription. Applicable
 | BR-030 to BR-033 | FR-CHK-001 to FR-CHK-004 | UC-CHK-* | TC-CHK-* | ✅ Implemented |
 | BR-040 to BR-047 | FR-SUB-001 to FR-SUB-009 | UC-SUB-* | TC-SUB-* | ✅ Implemented |
 | BR-050 to BR-054 | FR-ORD-001 to FR-ORD-003 | UC-ORD-* | TC-ORD-* | ✅ Implemented |
-| BR-060 to BR-062 | FR-PUSH-001 to FR-PUSH-003 | UC-PUSH-* | TC-PUSH-* | ⏳ Pending |
+| BR-060 to BR-062 | FR-PUSH-001 to FR-PUSH-003 | UC-PUSH-* | TC-PUSH-* | ⏳ Partially Implemented (Flutter FCM + local notif, no server push) |
+| BR-070 to BR-073 | FR-DEL-001 to FR-DEL-004 | UC-DEL-* | TC-DEL-* | ✅ Implemented (ServiceAreaEntity, address capture, delivery fee calc) |
 
 ---
 
@@ -411,6 +435,6 @@ During subscription card integration and testing, the following requirements wer
 
 **Document Control:**
 - **Created:** March 27, 2026
-- **Last Updated:** April 11, 2026 (Consolidated)
-- **Version:** 2.0
+- **Last Updated:** May 13, 2026 (Delivery, NFR, FCM)
+- **Version:** 2.1
 - **Status:** ✅ Approved for Beta Release
