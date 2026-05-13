@@ -126,7 +126,7 @@ Model Context Protocol (MCP) allows AI assistants to interact with external tool
   "mcpServers": {
     "postgres": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://bmj:rEMEMBER$8@localhost:3306/bmj_db"]
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://bmj:PASS@123@localhost:3306/bmj_db"]
     }
   }
 }
@@ -627,7 +627,7 @@ Add to `.vscode/settings.json`:
       "port": 3306,
       "database": "bmj_db",
       "username": "bmj",
-      "password": "rEMEMBER$8",
+      "password": "PASS@123",
       "askForPassword": false
     },
     {
@@ -661,7 +661,7 @@ Configure `bmjServer/src/main/resources/flyway.conf`:
 ```properties
 flyway.url=jdbc:mysql://localhost:3306/bmj_db
 flyway.user=bmj
-flyway.password=rEMEMBER$8
+flyway.password=PASS@123
 flyway.locations=filesystem:src/main/resources/db/migration
 flyway.baselineOnMigrate=true
 ```

@@ -2,13 +2,18 @@
 # Docker Compose for BookMyJuice Local Development
 # ============================================================
 # Usage:
-#   docker-compose up -d              # Start all services
-#   docker-compose down               # Stop all services
-#   docker-compose logs -f            # View logs
-#   docker-compose ps                 # Check status
+#   docker-compose --env-file .env up -d     # Start all services
+#   docker-compose down                      # Stop all services
+#   docker-compose logs -f                   # View logs
+# ============================================================
+# Secrets are loaded from ROOT .env file at X:\BMJ\.env (copy .env.example to .env first)
+# IMPORTANT: Only ONE .env file exists — at the project root (X:\BMJ\.env).
+# Do NOT create a duplicate .env inside bmjServer/ or any subdirectory.
+# Running docker-compose from the project root (X:\BMJ) will automatically pick up X:\BMJ\.env
+# via the relative path ./.env shown below.
 # ============================================================
 
-version: '3.8'
+# version: '3.8'
 
 services:
   # ============================================================
@@ -19,21 +24,25 @@ services:
     container_name: bmj-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root_password_change_in_production
-      MYSQL_DATABASE: bmj_db
-      MYSQL_USER: bmj
-      MYSQL_PASSWORD: rEMEMBER$8
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root_password_change_in_production}
+      MYSQL_DATABASE: ${DB_NAME:-bmj_db}
+      MYSQL_USER: ${DB_USERNAME:-bmj}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-PASS@123}
       TZ: UTC
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./bmjServer/src/main/resources/db/migration:/docker-entrypoint-initdb.d:ro
-      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/99-init.sql:ro
+      # Mount the migration folder to a sub-folder to keep it clean
+      - ./bmjServer/src/main/resources/db/migration:/docker-entrypoint-initdb.d/migration:ro
+      # Mount init scripts. NOTE: if scripts/init-db.sql is a directory,
+      # point to an actual .sql file inside it instead.
+      # - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/99-init.sql:ro
+
     networks:
       - bmj-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "bmj", "-prEMEMBER$8"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DB_USERNAME:-bmj}", "-p${DB_PASSWORD:-PASS@123}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -74,14 +83,16 @@ services:
       dockerfile: Dockerfile.dev
     container_name: bmj-backend
     restart: unless-stopped
+    env_file:
+      - ./.env
     environment:
       SPRING_PROFILES_ACTIVE: dev,docker
-      DB_HOSTNAME: mysql
+      DB_HOSTNAME: ${DB_HOSTNAME:-mysql}
       DB_PORT: 3306
-      DB_NAME: bmj_db
-      DB_USERNAME: bmj
-      DB_PASSWORD: rEMEMBER$8
-      CHARGEBEE_SITE: bookmyjuice-test
+      DB_NAME: ${DB_NAME:-bmj_db}
+      DB_USERNAME: ${DB_USERNAME:-bmj}
+      DB_PASSWORD: ${DB_PASSWORD:-PASS@123}
+      CHARGEBEE_SITE: ${CHARGEBEE_SITE:-bookmyjuice-test}
       CHARGEBEE_API_KEY: ${CHARGEBEE_API_KEY:-test_key_placeholder}
       JWT_SECRET: ${JWT_SECRET:-BookMyJuice_SecureJWT_Key_2024_Minimum32Chars}
       JWT_EXPIRATION_MS: 86400000
@@ -108,8 +119,11 @@ services:
         condition: service_healthy
     networks:
       - bmj-network
+    # Clean command is not needed in dev mode (mvn handles incremental builds).
+    # Use mvn directly — ./mvnw is not in the image and has Windows permission issues.
+    # Dockerfile.dev now uses CMD, so this command fully overrides it.
     command: >
-      sh -c "./mvnw clean spring-boot:run -Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xdebug'"
+      mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xdebug"
 
   # ============================================================
   # phpMyAdmin (Database Management UI)
@@ -122,7 +136,7 @@ services:
       PMA_HOST: mysql
       PMA_PORT: 3306
       PMA_USER: bmj
-      PMA_PASSWORD: rEMEMBER$8
+      PMA_PASSWORD: PASS@123
       UPLOAD_LIMIT: 100M
     ports:
       - "8081:80"
@@ -203,7 +217,7 @@ volumes:
 #   docker-compose down -v
 #
 # Access database:
-#   MySQL: localhost:3306 (user: bmj, pass: rEMEMBER$8)
+#   MySQL: localhost:3306 (user: bmj, pass: PASS@123)
 #   phpMyAdmin: http://localhost:8081
 #
 # Access Redis:

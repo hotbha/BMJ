@@ -1,273 +1,119 @@
-# BookMyJuice — Enterprise Architecture Overview
+# BookMyJuice Architecture Overview
 
-**Document Version:** 3.0  
-**Last Updated:** 2026-05-08  
-**Status:** Enterprise-Grade Production Architecture
+> **Version:** 3.0 (Enterprise)  
+> **Last Updated:** 2026-05-09  
+> **Status:** ✅ Active — authoritative source
 
----
+## Architecture Principles
 
-## Table of Contents
+1. **Chargebee is the single source of truth** for subscriptions, invoices, payments, orders, plans, and billing customer records.
+2. **bmjServer orchestrates Chargebee APIs server-side only** — no secret keys exposed to Flutter.
+3. **Hosted checkout retained only for final payment completion** — all other hosted pages (pricing, plan selection) removed and replaced with native Flutter screens.
+4. **BMJ owns the delivery domain** (serviceability, addresses, delivery slots).
+5. **Local persistence of Chargebee-owned data is read/cache/sync/audit only** — never an alternative source of truth.
+6. **Redis caching for high-read data** with graceful degradation.
+7. **Webhook processing is idempotent and reliable** with DLQ support.
+8. **.env file is the single source for all secrets and credentials** — never committed to git.
 
-1. [System Architecture](#system-architecture)
-2. [Application Architecture](#application-architecture)
-3. [Data Architecture](#data-architecture)
-4. [Security Architecture](#security-architecture)
-5. [Integration Architecture](#integration-architecture)
-6. [Chargebee Integration Boundaries](#chargebee-integration-boundaries)
-7. [Native Billing Flow](#native-billing-flow)
-8. [Deployment Architecture](#deployment-architecture)
+## Secrets Management
 
----
+All secrets, credentials, API keys, and passwords are managed through a single `.env` file at the project root.
+
+### .env Variables
+
+| Variable | Description | Source |
+|----------|-------------|--------|
+| `DB_USERNAME` | MySQL database user | `.env` |
+| `DB_PASSWORD` | MySQL database password | `.env` |
+| `DB_HOSTNAME` | MySQL host | `.env` |
+| `DB_PORT` | MySQL port | `.env` |
+| `DB_NAME` | MySQL database name | `.env` |
+| `ADMIN_USER` | Spring admin username | `.env` |
+| `ADMIN_PASSWORD` | Spring admin password | `.env` |
+| `CHARGEBEE_SITE` | Chargebee site name | `.env` |
+| `CHARGEBEE_API_KEY` | Chargebee API key | `.env` |
+| `JWT_SECRET` | JWT signing secret | `.env` |
+| `WEBHOOK_USERNAME` | Webhook basic auth username | `.env` |
+| `WEBHOOK_PASSWORD` | Webhook basic auth password | `.env` |
+| `MAIL_HOST` | SMTP host | `.env` |
+| `MAIL_PORT` | SMTP port | `.env` |
+| `MAIL_USERNAME` | SMTP username | `.env` |
+| `MAIL_PASSWORD` | SMTP password | `.env` |
+| `MAIL_FROM` | Mail from address | `.env` |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID | `.env` |
+
+### CI/CD Secrets
+
+In GitHub Actions, each secret is configured as a repository secret (`secrets.X`). The CI pipelines reference them directly without a `.env` file.
+
+### Flutter Build-Time Variables
+
+Flutter uses `--dart-define` for build-time configuration:
+- `API_BASE_URL` — Backend API base URL
 
 ## System Architecture
 
-### High-Level Overview
-
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                           BookMyJuice Enterprise System                       │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────┐       ┌──────────────────────────────────┐
-│         Flutter Mobile App       │       │      Chargebee Hosted Pages      │
-│         (iOS / Android)          │       │                                  │
-│                                  │       │  ┌────────────────────────────┐  │
-│  ┌──── NATIVE BMJ VIEWS ──────┐ │       │  │   Hosted Checkout ONLY     │  │
-│  │ Plan Discovery (native)    │ │       │  │   (Final Payment Step)     │  │
-│  │ Plan Detail (native)       │ │       │  └────────────────────────────┘  │
-│  │ Plan Comparison (native)   │ │       └──────────────────────────────────┘
-│  │ Cart / Review (native)     │ │                        ▲
-│  │ Address Management (native)│ │                        │ WebView
-│  │ Delivery Slots (native)    │ │                        │ (handoff only)
-│  │ Subscription Mgmt (native) │ │                        │
-│  │ Billing Summary (native)   │ │       ┌────────────────┴─────────────────┐
-│  └────────────────────────────┘ │       │        bmjServer (Spring Boot)   │
-│                                  │◄─────►│                                  │
-│  ┌────────────────────────────┐  │ REST  │  Auth | Billing | Delivery      │
-│  │ Hosted Checkout WebView   │  │       │  Webhooks | Cache | Audit        │
-│  │ (final payment only)      │──┘       └────────┬──────────┬─────────────┘
-│  └────────────────────────────┘                   │          │
-└──────────────────────────────────┘                │          │
-                                                    ▼          ▼
-                                            ┌──────────┐ ┌──────────┐
-                                            │  MySQL   │ │  Redis   │
-                                            │  (8.0)   │ │  Cache   │
-                                            └──────────┘ └──────────┘
+┌─────────────┐     ┌──────────────────┐     ┌─────────────┐
+│   Flutter   │────▶│   bmjServer     │────▶│  Chargebee  │
+│   (Native)  │     │  (Spring Boot)  │     │   (SOT)     │
+└─────────────┘     └──────────────────┘     └─────────────┘
+       │                    │                       │
+       │                    ├──▶ Redis (Cache)      │
+       │                    ├──▶ MySQL (Local)      │
+       │                    ├──▶ Webhook Ingestion  │
+       │                    └──▶ Mail (SMTP)        │
+       │                                            │
+       └──── Hosted Checkout (final payment only) ──┘
 ```
 
-### Core Principles
+## Data Flow
 
-1. **Chargebee is the SINGLE SOURCE OF TRUTH** for all billing/subscription/product data.
-2. **BMJ never re-implements** subscription logic, invoicing, payment ledger, or order ledger.
-3. **Local persistence** of Chargebee-owned data is read/cache/sync/audit only — never ownership.
-4. **Final payment completion** may remain on Chargebee hosted checkout. All other user-facing billing flows are native BMJ screens.
-5. **BMJ owns** authentication, authorization, session management, delivery domain, and chargebee API orchestration.
-
-### Component Responsibilities
-
-| Component | Technology | Owns | Does NOT Own |
-|-----------|------------|------|--------------|
-| **bmjServer** | Spring Boot 3.x / Java 17 | Auth, sessions, delivery, webhook ingestion, cache, audit | Subscriptions, invoices, payments, orders, products |
-| **Flutter App** | Flutter 3.x / Dart | Native UX, BLoC state management, cart, address, slot picking | Payment processing, billing logic |
-| **MySQL** | MySQL 8.0 | User auth data, local read cache of Chargebee entities | Billing authoritative records |
-| **Redis** | Redis 7.x | App cache (products, plans, service areas, slots) | Persistence (ephemeral cache only) |
-| **Chargebee** | Chargebee SaaS | Subscriptions, invoices, payments, orders, plans, items, prices, billing customer data | User auth, delivery data, non-billing user data |
-
----
-
-## Application Architecture
-
-### Flutter App Structure
+### Native Plan Discovery → Hosted Checkout
 
 ```
-lush/
-├── lib/
-│   ├── bloc/                    # BLoC state management
-│   │   ├── AuthBloc/           # Authentication + session
-│   │   ├── BillingBloc/        # Native billing flow
-│   │   ├── CartBloc/           # Shopping cart
-│   │   ├── DeliveryBloc/       # Serviceability, slots, addresses
-│   │   ├── ProductsBloc/       # Product catalog
-│   │   ├── SubscriptionBloc/   # Subscription management
-│   │   ├── ThemeCubit/         # Theme (light/dark/system)
-│   │   └── UserBloc/           # User profile
-│   ├── models/                  # Data models
-│   ├── theme/                   # AppColors, AppTextStyles, AppTheme, AppSpacing
-│   ├── views/
-│   │   ├── screens/            # All screens
-│   │   └── widgets/            # Reusable widgets
-│   ├── services/               # HTTP API clients
-│   ├── repositories/           # Data access layer
-│   └── main.dart               # App entry point (ThemeData-driven)
-└── test/
+Flutter PlanCatalogScreen
+  │ GET /api/plans (bmjServer reads from Chargebee-synced cache/DB)
+  │
+  ▼
+Flutter PlanDetailScreen / ComparisonScreen
+  │ User selects plan
+  │
+  ▼
+Flutter AddressSelectionScreen
+  │ Delivery slot picker
+  │
+  ▼
+Flutter BillingReviewScreen
+  │ POST /api/billing/checkout/review (bmjServer validates)
+  │
+  ▼
+Flutter BillingReviewScreen (after review)
+  │ POST /api/billing/checkout/start (bmjServer creates checkout session)
+  │ Returns Chargebee hosted checkout URL
+  │
+  ▼
+Flutter opens WebView → Chargebee Hosted Checkout ← SECURE PAYMENT ONLY
+  │ Payment completed
+  │
+  ▼
+Chargebee sends webhook → bmjServer → webhook_events table
+  │ Update local subscription/order read model
+  │
+  ▼
+Flutter polls GET /api/billing/purchases/{id}/status → Success!
 ```
 
-### Backend Structure
+## Module Summary
 
-```
-bmjServer/
-├── src/main/java/com/bookmyjuice/
-│   ├── bmjServer.java                    # Main entry
-│   ├── config/                           # Redis, Chargebee, Role config
-│   ├── controllers/
-│   │   ├── AuthController.java           # Login, signup, refresh, token
-│   │   ├── BillingController.java        # Native billing endpoints
-│   │   ├── CartController.java           # Cart CRUD
-│   │   ├── CheckoutController.java       # Hosted checkout handoff
-│   │   ├── CheckoutV2Controller.java     # V2 one-time checkout
-│   │   ├── ComplianceController.java     # Right-to-erasure, consent
-│   │   ├── DeliveryController.java       # Serviceability, slots, addresses
-│   │   ├── SessionController.java        # Logout, logout-all
-│   │   ├── SubscriptionController.java   # Subscription CRUD (native)
-│   │   ├── webhooks/                     # Chargebee webhook handlers
-│   │   └── ...                           # Product, Invoice, Order, etc.
-│   ├── models/entities/                  # JPA entities
-│   ├── repository/                       # Data access
-│   ├── services/                         # Business logic
-│   │   ├── DeliveryService.java
-│   │   ├── WebhookSignatureService.java
-│   │   ├── SessionManagementService.java
-│   │   └── ...
-│   ├── security/                         # JWT, rate limiting, webhook filter
-│   └── util/                             # OTP, email, etc.
-```
-
----
-
-## Chargebee Integration Boundaries
-
-### What Chargebee Owns (SSOT)
-
-| Domain | Chargebee API | BMJ Local Cache |
-|--------|--------------|-----------------|
-| Products/Items | ✅ `Item` CRUD | ✅ Read-only cache via webhooks + startup sync |
-| Item Prices | ✅ `ItemPrice` CRUD | ✅ Read-only cache via webhooks + startup sync |
-| Plans | ✅ `Plan` CRUD | ✅ Read-only cache via webhooks + startup sync |
-| Subscriptions | ✅ `Subscription` lifecycle | ✅ Reference cache via webhooks |
-| Invoices | ✅ `Invoice` lifecycle | ✅ Reference cache for display |
-| Payments | ✅ `Payment`/`Transaction` | ✅ Reference cache |
-| Orders | ✅ `Order` lifecycle | ✅ Reference cache |
-| Billing Customers | ✅ `Customer` CRUD | ✅ Reference mapping only |
-
-### What BMJ Owns (SSOT)
-
-| Domain | Source | Notes |
-|--------|--------|-------|
-| User Auth (credentials) | BMJ users table | Password hashes, roles |
-| JWT Tokens | BMJ in-memory + refresh token table | Access + refresh token lifecycle |
-| Session Management | BMJ refresh_tokens table | Revocation, logout-all |
-| Delivery Domain | BMJ delivery tables | Service areas, slots, addresses |
-| Audit Logs | BMJ audit_log table | Security event tracking |
-| Consent Records | BMJ consent_records table | GDPR/privacy compliance |
-| Anonymization State | BMJ users table | Right-to-erasure markers |
-
----
-
-## Native Billing Flow
-
-### Flow Diagram: Plan Discovery → Hosted Checkout
-
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│              NATIVE BMJ FLOW (Plan Discovery → Review)               │
-└──────────────────────────────────────────────────────────────────────┘
-
-  User opens app
-      │
-      ▼
-┌──────────────────────┐
-│  Native Plan Catalog │  ← Reads from local cache (MySQL/Redis)
-│  (Plan cards,        │     Backed by webhook-synced plans
-│   filter, compare)   │
-└──────┬───────────────┘
-       │ Select plan
-       ▼
-┌──────────────────────┐
-│  Native Plan Detail  │  ← Full plan details, features, pricing
-│  (Description,       │
-│   features, CTA)     │
-└──────┬───────────────┘
-       │ Subscribe / Add to cart
-       ▼
-┌──────────────────────┐
-│  Native Cart/Review  │  ← Cart contents, quantity, size
-│  (Items, quantities, │
-│   address, delivery) │
-└──────┬───────────────┘
-       │ Proceed to checkout
-       ▼
-┌──────────────────────┐
-│  Native Pre-Checkout │  ← Address selection, slot selection,
-│  Review + Validation │     billing summary, price breakdown
-└──────┬───────────────┘
-       │ Confirm
-       ▼
-╔══════════════════════╗
-║  HOSTED CHECKOUT     ║  ← ONLY Chargebee-hosted step
-║  (Chargebee WebView) ║     Secure payment completion
-║  Payment, Auth,      ║     NO plan browsing or discovery
-║  Confirmation        ║     NO pricing table
-╚══════════════════════╝
-       │
-       ▼
-┌──────────────────────┐
-│  Native Confirmation │  ← Order placed, subscription active
-│  (Order/success)     │     Data synced via webhook
-└──────────────────────┘
-```
-
-### Why Hosted Checkout is Retained
-
-- PCI DSS compliance for payment card data
-- Chargebee handles secure 3D Secure, card storage, payment gateways
-- Avoids re-implementing payment processing logic
-- SCA/regulatory compliance delegated
-
-### Why Pricing Tables/Pages are Removed
-
-- Pricing tables and hosted pages create fragmented UX (leaving BMJ → Chargebee → BMJ)
-- Native plan discovery provides consistent brand experience
-- Faster page loads (no network round-trip to Chargebee for rendering)
-- Full control over layout, comparison, filtering
-- Better offline experience (cached plan data)
-
----
-
-## Deployment Architecture
-
-### Development
-
-```
-docker-compose up -d
-  ├── MySQL 8.0 (port 3306)
-  ├── Redis 7 (port 6379)  
-  └── bmjServer Spring Boot (port 8080)
-```
-
-### Production (Target)
-
-```
-Flutter (App Store/Play Store) → API Gateway → bmjServer (ECS/EC2)
-                                                    ├── MySQL RDS
-                                                    ├── Redis ElastiCache (optional)
-                                                    └── Chargebee API
-```
-
----
-
-## References
-
-- [Chargebee Integration Strategy](architecture/ADR-003-chargebee-integration-strategy.md)
-- [Native Billing Flow](NATIVE_BILLING_FLOW.md)
-- [Webhook Reliability](WEBHOOK_RELIABILITY.md)
-- [Caching Strategy](CACHING_STRATEGY.md)
-- [Compliance & Privacy](COMPLIANCE_PRIVACY.md)
-- [API Documentation](API.md)
-- [Design System](DESIGN_SYSTEM.md)
-- [Design System → Flutter Integration](DESIGN_SYSTEM_FLUTTER_INTEGRATION.md)
-
----
-
-**Document Maintained By:** Engineering Team  
-**Last Review:** 2026-05-08  
-**Next Review:** 2026-06-08
+| Module | Ownership | Description |
+|--------|-----------|-------------|
+| Auth | BMJ Server | JWT-based auth, refresh tokens, Google OAuth |
+| Products/Plans | Chargebee (SOT) → BMJ (Cache) | Synced read model |
+| Subscriptions | Chargebee (SOT) → BMJ (Cache) | BMJ manages local references |
+| Orders | Chargebee (SOT) → BMJ (Cache) | BMJ manages delivery locally |
+| Invoices | Chargebee (SOT) → BMJ (Cache) | Read-only view |
+| Payments | Chargebee (SOT) | Handled in hosted checkout |
+| Delivery | BMJ (SOT) | Addresses, slots, serviceability |
+| Webhooks | BMJ Server | Idempotent ingestion, DLQ |
+| Cache | Redis (BMJ-managed) | TTL-based, graceful degradation |

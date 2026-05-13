@@ -1,0 +1,62 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'lush/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'lush/**'
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          cd lush
+          flutter pub get
+
+      - name: Analyze Dart code
+        run: |
+          cd lush
+          flutter analyze --fatal-infos
+
+      - name: Run unit tests
+        run: |
+          cd lush
+          flutter test --coverage
+
+      - name: Check coverage
+        run: |
+          cd lush
+          lcov --summary coverage/lcov.info | grep 'lines' | awk '{print $2}' | sed 's/%//' | xargs -I {} bash -c 'if [ {} -lt 90 ]; then echo "Coverage {}% < 90%"; exit 1; fi'
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-coverage
+          path: lush/coverage/
+
+      - name: Build APK (debug)
+        run: |
+          cd lush
+          flutter build apk --debug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-apk
+          path: lush/build/app/outputs/flutter-apk/*.apk

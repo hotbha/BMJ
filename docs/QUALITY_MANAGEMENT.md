@@ -204,11 +204,17 @@ Coverage Report (docs/test-registry/COVERAGE_REPORT.md)
 |-----------|------|-------|--------|
 | `test/theme/app_theme_test.dart` | Unit | 26 | ✅ All passed |
 | `test/theme/theme_cubit_test.dart` | Unit | 12 | ✅ All passed |
-| `test/widgets/signup_screen_test.dart` | Widget | 9 | ✅ All passed |
-| **Total** | | **68** | ✅ All passed |
+| `test/unit/bloc/auth_bloc_test.dart` | Unit | 30 | ✅ All passed |
+| `test/unit/bloc/cart_bloc_test.dart` | Unit | 14 | ✅ All passed |
+| `test/widget/screens/login_page_test.dart` | Widget | 21 | ✅ All passed |
+| `test/widget/screens/signup_screen_test.dart` | Widget | 14 | ✅ All passed |
+| `test/widget/screens/email_signup_test.dart` | Widget | 8 | ✅ All passed |
+| `test/widget/screens/phone_signup_test.dart` | Widget | 8 | ✅ All passed |
+| **Backend (Java)** | Unit + Integration | **77** | ✅ All passed |
+| **Total** | | **210** | ✅ All passed |
 
 ---
 
 **Document Maintained By:** QA Team  
-**Last Review:** 2026-05-09  
-**Next Review:** 2026-06-09
+**Last Review:** 2026-05-11  
+**Next Review:** 2026-06-11

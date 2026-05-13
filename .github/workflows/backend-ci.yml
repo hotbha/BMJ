@@ -1,0 +1,95 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'bmjServer/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'bmjServer/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: bmj_test
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and run tests
+        run: |
+          cd bmjServer
+          mvn clean verify -Pci
+        env:
+          DB_HOSTNAME: localhost
+          DB_PORT: 3306
+          DB_NAME: bmj_test
+          DB_USERNAME: test
+          DB_PASSWORD: test
+          CHARGEBEE_SITE: ${{ secrets.CHARGEBEE_SITE || 'bookmyjuice-test' }}
+          CHARGEBEE_API_KEY: ${{ secrets.CHARGEBEE_API_KEY }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'test-jwt-secret-minimum-32-characters-long' }}
+          WEBHOOK_USERNAME: ${{ secrets.WEBHOOK_USERNAME || 'test-webhook' }}
+          WEBHOOK_PASSWORD: ${{ secrets.WEBHOOK_PASSWORD || 'test-webhook-password' }}
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+
+      - name: Generate coverage report
+        run: |
+          cd bmjServer
+          mvn jacoco:report
+
+      - name: Check coverage threshold
+        run: |
+          cd bmjServer
+          mvn jacoco:check
+
+      - name: Dependency vulnerability check
+        run: |
+          cd bmjServer
+          mvn org.owasp:dependency-check-maven:check
+        continue-on-error: true
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          path: |
+            bmjServer/target/surefire-reports/
+            bmjServer/target/site/jacoco/
+
+      - name: Build JAR
+        run: |
+          cd bmjServer
+          mvn package -DskipTests
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: bmjServer/target/*.jar

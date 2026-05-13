@@ -29,12 +29,12 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 | Category | Use Cases | Description |
 |----------|-----------|-------------|
-| Authentication | UC-AUTH-001 to UC-AUTH-005 | User registration and login flows |
+| Authentication | UC-AUTH-001 to UC-AUTH-007c | User registration and login flows (incl. Firebase Phone Auth) |
 | Cart & Browsing | UC-01 to UC-02 | Product browsing and cart management |
 | Checkout | UC-03 to UC-04 | One-time and subscription checkout |
 | Subscription | UC-05 to UC-07 | Subscription pause, resume, cancel |
 | Order Management | UC-08 to UC-09 | Order history and invoice viewing |
-| Notifications | UC-10 | Push notification handling |
+| Notifications | UC-10, UC-11 | Push notification handling (incl. FCM) |
 
 ---
 
@@ -355,7 +355,81 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 ---
 
-### UC-AUTH-007: Resend Verification Code
+### UC-AUTH-007a: Firebase Phone Auth — Alternative Phone Verification (Signup)
+
+**Goal:** Verify phone number using Firebase Phone Auth as an alternative to backend OTP during signup
+
+**Actor:** New User
+
+**Preconditions:**
+- User has selected phone signup flow
+- User has valid 10-digit Indian phone number
+- Firebase Authentication is configured with Phone sign-in method enabled
+
+**Main Success Scenario:**
+
+1. User enters phone number on Phone Entry screen
+2. User taps "Verify via Firebase" button (OutlinedButton.icon, blue)
+3. System formats phone to E.164 format (+919876543210)
+4. System calls `FirebasePhoneAuth.instance.initiatePhoneVerification()`
+5. Firebase sends SMS with 6-digit verification code
+6. System navigates to OTP Verification screen with `isFirebaseAuth: true` and `verificationId`
+7. User enters 6-digit SMS code
+8. System calls `FirebasePhoneAuth.instance.verifyPhoneOtp(code)`
+9. Firebase verifies code successfully
+10. System dispatches `VerifyFirebaseOtp` event to BLoC
+11. BLoC emits `FirebasePhoneVerified` state
+12. System displays "Phone Verified via Firebase" toast
+13. If email-first flow: system navigates to Address Entry screen
+14. If phone-first flow: system navigates to Email Entry screen
+
+**Extensions:**
+
+- **4a. Firebase Auth network error:** System shows error toast, user retries or uses backend OTP
+- **6a. SMS delivery timeout (60s):** System shows timeout toast, user taps "Resend" to retry
+- **8a. Invalid/expired verification code:** System shows error toast, user re-enters code
+- **10a. Firebase verification fails:** BLoC emits `FirebasePhoneVerificationFailed`, error toast shown
+
+**Special Requirements:**
+- Phone must be in E.164 format (+91XXXXXXXXXX) for Firebase
+- Firebase Phone Auth operates independently from backend OTP
+- Backend authentication still occurs via `POST /api/auth/login-otp` for login flow
+- No Chargebee or backend changes needed for Firebase Phone verification itself
+
+---
+
+### UC-AUTH-007b: Firebase Phone Auth — Alternative Phone Verification (Login)
+
+**Goal:** Verify phone number using Firebase Phone Auth during login flow, then authenticate via backend
+
+**Actor:** Registered User
+
+**Preconditions:**
+- User is on Phone Login screen
+- User has a registered account with the given phone number
+- Firebase Authentication is configured with Phone sign-in method enabled
+
+**Main Success Scenario:**
+
+1. User enters phone number on Phone Login screen
+2. User taps "Verify via Firebase" button
+3. System formats phone to E.164 and initiates Firebase verification
+4. Firebase sends SMS with verification code via `initiatePhoneVerification()`
+5. System navigates to OTP Verification screen with `isFirebaseAuth: true`, `isLoginFlow: true`
+6. User enters SMS code
+7. On successful Firebase verification, BLoC emits `FirebasePhoneVerified`
+8. System shows "Phone Verified" toast, navigates back to login screen
+9. User enters email/password to authenticate via backend
+
+**Alternate Flow (User not found):**
+- Firebase phone verification succeeds
+- System calls `POST /api/auth/login-otp` to check if phone exists
+- Backend returns `user_not_found`
+- System redirects to signup flow with pre-filled phone
+
+---
+
+### UC-AUTH-007c: Resend Verification Code
 
 **Goal:** Request new verification code when original is lost/expired
 
@@ -622,6 +696,43 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 **Postcondition:** User sees failed order details and can retry payment (post-MVP) or contact support
 
+### UC-11: FCM Foreground Notification Display
+
+**Goal:** Display FCM push notifications as local notifications when app is in foreground
+
+**Actor:** Authenticated User (app in foreground)
+
+**Precondition:**
+- User is logged in and app is open
+- User has granted notification permission
+- FCM token has been registered and optionally uploaded to backend
+
+**Main Success Scenario:**
+
+1. Server sends FCM push notification to user's device
+2. `FirebaseMessaging.onMessage` fires in the app with the notification payload
+3. `FirebaseNotificationService` receives the remote message
+4. Service extracts `notification.title`, `notification.body`, and `data` payload
+5. Service checks if `notification` is non-null
+6. Service displays notification using `LocalNotificationService`
+7. Flutter `flutter_local_notifications` plugin shows the notification in the system tray
+8. User taps the notification → app reads `data` payload for deep-link navigation
+9. If `data` contains `type` and relevant IDs, app navigates to the appropriate screen
+
+**Extensions:**
+
+- **4a. Notification payload has no title/body:** Service falls back to a default message: "New update from BookMyJuice"
+- **4b. No data payload:** Notification is displayed as a generic notification without deep-link capability
+- **7a. User taps notification while app is in foreground:** App handles the tap and can navigate based on data payload
+- **8a. Notification permission not granted:** Service requests permission again on next app launch
+
+**Special Requirements:**
+- FCM is a secondary layer on top of the existing `flutter_local_notifications` setup
+- `FirebaseMessaging.onBackgroundMessage` handler is registered at app startup for background notifications
+- FCM token is refreshed via `onTokenRefresh` stream and stored locally
+- Backend integration for `uploadTokenToServer()` is a placeholder for future FCM token sync
+- Notification permission is requested with `alert: true, badge: true, sound: true` for iOS
+
 ---
 
 ## 9. Screen Flow Map
@@ -693,5 +804,6 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 **Document Control:**
 - **Created:** April 11, 2026 (Consolidated from UNIFIED_SIGNUP_USE_CASES.md and BOOKMYJUICE_SPECIFICATION.md)
-- **Version:** 1.0
+- **Updated:** May 12, 2026 (Added UC-AUTH-007a Firebase Phone Signup, UC-AUTH-007b Firebase Phone Login, UC-11 FCM Foreground Notifications)
+- **Version:** 1.1
 - **Status:** ✅ Approved for Development

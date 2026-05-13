@@ -300,7 +300,7 @@
 		{
 			"label": "Database: Check Connection",
 			"type": "shell",
-			"command": "mysql -h localhost -u bmj -prEMEMBER$8 bmj_db -e 'SELECT 1 AS connection_ok;'",
+			"command": "mysql -h localhost -u bmj -pPASS@123 bmj_db -e 'SELECT 1 AS connection_ok;'",
 			"presentation": {
 				"echo": true,
 				"reveal": "always",

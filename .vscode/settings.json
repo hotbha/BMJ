@@ -41,7 +41,7 @@
             "port": 3306,
             "database": "bmj_db",
             "username": "bmj",
-            "password": "rEMEMBER$8",
+            "password": "PASS@123",
             "askForPassword": false
         }
     ],
