@@ -1,0 +1,1 @@
+var fs=require("fs");var all=JSON.parse(fs.readFileSync("x:/BMJ/tcdata_full.json","utf8")||"[]");function P(iid,ttl,p1,s1,b,u,st,ex,pr,da){all.push({id:iid,t:ttl,p:p1,s:s1,b:b,u:u,st:st,ex:ex,pr:pr,da:da});}

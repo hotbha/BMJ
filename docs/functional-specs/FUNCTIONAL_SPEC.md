@@ -148,11 +148,11 @@ Three entry points converging to same data collection:
 
 | Endpoint | Method | Auth Required | Description |
 |----------|--------|---------------|-------------|
-| `/api/v1/auth/signup` | POST | No | Create user with email/password |
-| `/api/v1/auth/login` | POST | No | Authenticate user, return JWT |
+| `/api/v1/auth/signup` | POST | No | Create user with email/password (username = phone) |
+| `/api/v1/auth/login` | POST | No | Authenticate user, return JWT (username field = phone) |
 | `/api/v1/auth/logout` | POST | Yes | Invalidate JWT server-side |
 | `/api/v1/auth/me` | GET | Yes | Get current user profile |
-| `/api/v1/auth/unified-signup` | POST | No | Unified signup (any entry point) |
+| `/api/v1/auth/unified-signup` | POST | No | Unified signup (any entry point, username = phone) |
 | `/api/v1/auth/send-email-verification` | POST | No | Send 6-digit email code |
 | `/api/v1/auth/verify-email-code` | POST | No | Verify email code |
 | `/api/v1/auth/send-otp` | POST | No | Send 6-digit phone OTP |
@@ -160,7 +160,17 @@ Three entry points converging to same data collection:
 | `/api/v1/auth/reset-password-mobile` | POST | No | Reset password via mobile OTP (phone → OTP → new password) |
 | `/api/v1/auth/reset-password-email` | POST | No | Reset password via email OTP (email → verification code → new password) |
 
-### 3.3 Password Requirements
+### 3.3 Username = Phone Rule
+
+The `username` field always contains the user's 10-digit phone number (without country code):
+- **All signup paths** (Email-First, Phone-First, Google Unified) set `username = request.getPhone().trim()`
+- **Login** uses phone as the `username` parameter: `POST /api/auth/signin {"username": "9876543210", "password": "..."}`
+- **Database**: `@Size(min = 10, max = 10) @Pattern(regexp = "^[0-9]{10}$")` enforced on `User.username`
+- **Frontend**: Flutter `signUpWithGoogle()` and `signUp()` both call `login(phone, password, false)` after registration
+- **User lookup**: `findByUsername()` finds by phone; `findByPhone()` is fallback for legacy users
+- **getUserDetailsFromServer()**: Sets `user.setPhone = response['username']` since username is now the phone
+
+### 3.4 Password Requirements
 - Minimum 8 characters
 - At least 1 uppercase letter (A-Z)
 - At least 1 lowercase letter (a-z)
@@ -168,7 +178,7 @@ Three entry points converging to same data collection:
 - At least 1 special character (!@#$%^&* etc.)
 - No spaces or control characters
 
-### 3.4 Password Reset
+### 3.5 Password Reset
 
 Two methods available:
 
@@ -197,7 +207,7 @@ Two methods available:
 - Password must meet same complexity requirements as signup
 - Old sessions invalidated after password change
 
-### 3.5 Verification Code Rules
+### 3.6 Verification Code Rules
 - 6-digit code, 10-minute expiry
 - Resend available after 30 seconds
 - Maximum 5 resend attempts per email/phone

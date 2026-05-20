@@ -53,7 +53,9 @@ jobs:
       - name: Build APK (debug)
         run: |
           cd lush
-          flutter build apk --debug
+          flutter build apk --debug \
+            --dart-define=SENTRY_DSN_FLUTTER=${{ secrets.SENTRY_DSN_FLUTTER || '' }} \
+            --dart-define=SENTRY_ENVIRONMENT=ci
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4

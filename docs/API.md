@@ -17,11 +17,11 @@
 ## Overview
 
 **Base URL:**
-- Development: `http://localhost:8080/api`
-- Staging: `https://staging-api.bookmyjuice.co.in/api`
-- Production: `https://api.bookmyjuice.co.in/api`
+- Development: `http://localhost:8080`
+- Staging: `https://staging-api.bookmyjuice.co.in`
+- Production: `https://api.bookmyjuice.co.in`
 
-**API Version:** `v1`
+**API Version:** No version prefix — most endpoints are at root `/api/` (e.g., `/api/auth/signin`, not `/api/v1/auth/signin`). Cart and Product endpoints use `/api/v1/cart` and `/api/v1/products`.
 
 **Content Type:** `application/json`
 
@@ -49,7 +49,7 @@ Authorization: Bearer <access_token>
 
 ```
 1. User Login
-   POST /api/v1/auth/signin
+   POST /api/auth/signin
    ↓
 2. Receive Tokens
    { accessToken, refreshToken }
@@ -58,7 +58,7 @@ Authorization: Bearer <access_token>
    Authorization: Bearer <accessToken>
    ↓
 4. When Access Token expires (15 min)
-   POST /api/v1/auth/refresh
+   POST /api/auth/refresh   (Note: Refresh token endpoint not yet implemented)
    { refreshToken }
    ↓
 5. Receive new Access Token
@@ -70,9 +70,9 @@ Authorization: Bearer <access_token>
 
 ### Authentication
 
-#### POST /api/v1/auth/signin
+#### POST /api/auth/signin
 
-Sign in with email and password.
+Sign in with email or phone and password.
 
 **Request:**
 ```json
@@ -81,44 +81,25 @@ Sign in with email and password.
   "password": "SecurePass123!"
 }
 ```
+Note: `username` field accepts either email address or 10-digit phone number.
 
 **Response (200 OK):**
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-  "user": {
-    "id": "usr_123",
-    "email": "user@example.com",
-    "name": "John Doe",
-    "phone": "+919876543210",
-    "roles": ["USER"]
-  }
+  "tokenType": "Bearer",
+  "id": 500,
+  "username": "9999999901",
+  "email": "user@example.com",
+  "roles": ["ROLE_USER"]
 }
 ```
 
 **Error Responses:**
 ```json
-// 401 Unauthorized
+// 400 Bad Request - Invalid credentials
 {
-  "timestamp": "2026-03-27T10:30:00Z",
-  "status": 401,
-  "message": "Invalid credentials",
-  "path": "/api/v1/auth/signin"
-}
-
-// 400 Bad Request
-{
-  "timestamp": "2026-03-27T10:30:00Z",
-  "status": 400,
-  "message": "Validation failed",
-  "errors": [
-    {
-      "field": "email",
-      "message": "Invalid email format"
-    }
-  ],
-  "path": "/api/v1/auth/signin"
+  "message": "Error: Invalid username or password!"
 }
 ```
 

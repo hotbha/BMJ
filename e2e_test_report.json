@@ -1,0 +1,693 @@
+{
+  "summary": {
+    "total": 34,
+    "passed": 19,
+    "failed": 15,
+    "pass_rate": "55.9%"
+  },
+  "results": [
+    {
+      "name": "Health Check",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "timestamp": "2026-05-19T18:06:00.590352521",
+        "status": "UP"
+      },
+      "path": "/api/health",
+      "method": "GET"
+    },
+    {
+      "name": "Sign In (existing user guess)",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/signin",
+      "method": "POST"
+    },
+    {
+      "name": "Sign Up",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/signup",
+      "method": "POST"
+    },
+    {
+      "name": "Send OTP",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/send-otp",
+      "method": "POST"
+    },
+    {
+      "name": "Verify OTP",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/verify-otp",
+      "method": "POST"
+    },
+    {
+      "name": "Google Sign-In",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/google",
+      "method": "POST"
+    },
+    {
+      "name": "Unified Signup",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/unified-signup",
+      "method": "POST"
+    },
+    {
+      "name": "Login with OTP",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/login-otp",
+      "method": "POST"
+    },
+    {
+      "name": "Auto Login",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/autologin",
+      "method": "POST"
+    },
+    {
+      "name": "Reset Password Mobile",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/reset-password-mobile",
+      "method": "POST"
+    },
+    {
+      "name": "Reset Password Email",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/reset-password-email",
+      "method": "POST"
+    },
+    {
+      "name": "Send Email Verification",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "message": "Success: Verification code sent to user@example.com"
+      },
+      "path": "/api/auth/send-email-verification",
+      "method": "POST"
+    },
+    {
+      "name": "Verify Email Code",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/verify-email-code",
+      "method": "POST"
+    },
+    {
+      "name": "Link Google Account (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/link-google-account",
+      "method": "POST"
+    },
+    {
+      "name": "Delete Account (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/account",
+      "method": "GET"
+    },
+    {
+      "name": "Get Account (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/account",
+      "method": "GET"
+    },
+    {
+      "name": "Get Products (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/products",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/v1/products",
+      "method": "GET"
+    },
+    {
+      "name": "Get Pricing Plans (no auth)",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/api/subscriptions/pricing/plans",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/subscriptions/pricing/plans",
+      "method": "GET"
+    },
+    {
+      "name": "Get My Subscriptions (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/subscriptions/my",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/subscriptions/my",
+      "method": "GET"
+    },
+    {
+      "name": "Create Subscription (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/subscriptions/create",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/subscriptions/create",
+      "method": "POST"
+    },
+    {
+      "name": "Get Subscription Detail (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/subscriptions/test-123",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/subscriptions/test-123",
+      "method": "GET"
+    },
+    {
+      "name": "Pause Subscription (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/subscriptions/test-123/pause",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/subscriptions/test-123/pause",
+      "method": "PUT"
+    },
+    {
+      "name": "Get Cart (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/cart",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/v1/cart",
+      "method": "GET"
+    },
+    {
+      "name": "Add Item to Cart (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/cart/items",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/v1/cart/items",
+      "method": "POST"
+    },
+    {
+      "name": "Clear Cart (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/cart/clear",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/v1/cart/clear",
+      "method": "DELETE"
+    },
+    {
+      "name": "One-time Checkout (no auth)",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/api/test/oneTimeCheckoutPageUrl",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/test/oneTimeCheckoutPageUrl",
+      "method": "GET"
+    },
+    {
+      "name": "Cart Checkout (no auth)",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/api/test/cartCheckout",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/test/cartCheckout",
+      "method": "POST"
+    },
+    {
+      "name": "Get My Orders (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/orders/my",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/orders/my",
+      "method": "GET"
+    },
+    {
+      "name": "Get Order Detail (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/orders/test-order-123",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/orders/test-order-123",
+      "method": "GET"
+    },
+    {
+      "name": "Get My Invoices (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/invoices/my",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/invoices/my",
+      "method": "GET"
+    },
+    {
+      "name": "Get Addresses (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/delivery/addresses",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/delivery/addresses",
+      "method": "GET"
+    },
+    {
+      "name": "Add Address (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/delivery/addresses",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/delivery/addresses",
+      "method": "POST"
+    },
+    {
+      "name": "Webhook Event (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/webhooks/chargebee",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/webhooks/chargebee",
+      "method": "POST"
+    },
+    {
+      "name": "Sign In via /api/v1/auth (doc path)",
+      "passed": false,
+      "status": 401,
+      "expected": 404,
+      "response": {
+        "path": "/api/v1/auth/signin",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/v1/auth/signin",
+      "method": "POST"
+    }
+  ],
+  "failures": [
+    {
+      "name": "Sign In (existing user guess)",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/signin",
+      "method": "POST"
+    },
+    {
+      "name": "Sign Up",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/signup",
+      "method": "POST"
+    },
+    {
+      "name": "Send OTP",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/send-otp",
+      "method": "POST"
+    },
+    {
+      "name": "Verify OTP",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/verify-otp",
+      "method": "POST"
+    },
+    {
+      "name": "Google Sign-In",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/google",
+      "method": "POST"
+    },
+    {
+      "name": "Unified Signup",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/unified-signup",
+      "method": "POST"
+    },
+    {
+      "name": "Login with OTP",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/login-otp",
+      "method": "POST"
+    },
+    {
+      "name": "Auto Login",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/autologin",
+      "method": "POST"
+    },
+    {
+      "name": "Reset Password Mobile",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/reset-password-mobile",
+      "method": "POST"
+    },
+    {
+      "name": "Reset Password Email",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/reset-password-email",
+      "method": "POST"
+    },
+    {
+      "name": "Verify Email Code",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/error",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/auth/verify-email-code",
+      "method": "POST"
+    },
+    {
+      "name": "Get Pricing Plans (no auth)",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/api/subscriptions/pricing/plans",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/subscriptions/pricing/plans",
+      "method": "GET"
+    },
+    {
+      "name": "One-time Checkout (no auth)",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/api/test/oneTimeCheckoutPageUrl",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/test/oneTimeCheckoutPageUrl",
+      "method": "GET"
+    },
+    {
+      "name": "Cart Checkout (no auth)",
+      "passed": false,
+      "status": 401,
+      "expected": 200,
+      "response": {
+        "path": "/api/test/cartCheckout",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/test/cartCheckout",
+      "method": "POST"
+    },
+    {
+      "name": "Sign In via /api/v1/auth (doc path)",
+      "passed": false,
+      "status": 401,
+      "expected": 404,
+      "response": {
+        "path": "/api/v1/auth/signin",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "status": 401
+      },
+      "path": "/api/v1/auth/signin",
+      "method": "POST"
+    }
+  ]
+}

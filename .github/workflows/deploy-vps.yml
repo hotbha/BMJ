@@ -1,0 +1,150 @@
+# ============================================================
+# BookMyJuice — Deploy to VPS
+# ============================================================
+# Triggered manually via GitHub Environments.
+# Downloads the JAR artifact from the latest backend CI run,
+# copies it to the VPS via SCP, backs up the previous JAR,
+# restarts the systemd service, and runs a health check.
+# ============================================================
+name: Deploy to VPS
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build JAR
+        run: |
+          cd bmjServer
+          mvn package -DskipTests -q
+        env:
+          SENTRY_DSN_BACKEND: ${{ secrets.SENTRY_DSN_BACKEND || '' }}
+          SENTRY_ENVIRONMENT: ${{ github.event.inputs.environment }}
+
+      - name: Extract version from POM
+        id: version
+        run: |
+          VERSION=$(grep -m1 '<version>' bmjServer/pom.xml | sed 's/.*<version>//;s/<\/version>.*//')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Deploy via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || '22' }}
+          source: "bmjServer/target/*.jar"
+          target: "~/bmj/"
+          strip_components: 2
+          rm: false
+
+      - name: Restart service via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || '22' }}
+          script: |
+            set -e
+
+            # Paths
+            JAR_DIR="$HOME/bmj"
+            SYSTEMD_SERVICE="bmj-backend"
+            BACKUP_DIR="$HOME/bmj/backups"
+
+            # Create backup directory
+            mkdir -p "$BACKUP_DIR"
+
+            # Find the newly uploaded JAR (most recent)
+            NEW_JAR=$(ls -t "$JAR_DIR"/*.jar 2>/dev/null | head -1)
+            if [ -z "$NEW_JAR" ]; then
+              echo "ERROR: No JAR file found in $JAR_DIR"
+              exit 1
+            fi
+
+            echo "New JAR: $NEW_JAR"
+
+            # Backup current running JAR if it exists
+            CURRENT_JAR=$(readlink -f "$JAR_DIR/current.jar" 2>/dev/null || true)
+            if [ -n "$CURRENT_JAR" ] && [ -f "$CURRENT_JAR" ]; then
+              BACKUP_NAME="bmj-backup-$(date +%Y%m%d%H%M%S).jar"
+              cp "$CURRENT_JAR" "$BACKUP_DIR/$BACKUP_NAME"
+              echo "Backed up current JAR to $BACKUP_DIR/$BACKUP_NAME"
+            fi
+
+            # Link new JAR as current
+            ln -sf "$NEW_JAR" "$JAR_DIR/current.jar"
+
+            # Copy environment file
+            # Expects $HOME/bmj/.env to exist with all secrets
+            # Create it once manually or via provision script
+
+            # Restart service
+            echo "Restarting $SYSTEMD_SERVICE service..."
+            sudo systemctl restart "$SYSTEMD_SERVICE"
+
+            # Wait for startup
+            sleep 10
+
+            # Health check
+            echo "Running health check..."
+            HEALTH_URL="http://localhost:8080/api/health"
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || echo "000")
+            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "302" ]; then
+              echo "Health check PASSED (HTTP $HTTP_CODE)"
+            else
+              echo "Health check FAILED (HTTP $HTTP_CODE)"
+              echo "Rolling back to previous version..."
+
+              # Rollback
+              PREV_BACKUP=$(ls -t "$BACKUP_DIR"/*.jar 2>/dev/null | head -1)
+              if [ -n "$PREV_BACKUP" ] && [ -f "$PREV_BACKUP" ]; then
+                ln -sf "$PREV_BACKUP" "$JAR_DIR/current.jar"
+                sudo systemctl restart "$SYSTEMD_SERVICE"
+                echo "Rolled back to: $PREV_BACKUP"
+              fi
+              exit 1
+            fi
+
+            # Cleanup old backups (keep last 5)
+            ls -t "$BACKUP_DIR"/*.jar 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
+            echo "Deployment to ${{ github.event.inputs.environment }} completed successfully."
+
+      - name: Notify Sentry release
+        uses: getsentry/action-release@v1
+        with:
+          environment: ${{ github.event.inputs.environment }}
+          version: bookmyjuice-backend@${{ steps.version.outputs.version }}
+          source_errors: true
+          ignore_missing: true
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: bmj-backend

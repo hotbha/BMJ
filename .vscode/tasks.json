@@ -104,6 +104,35 @@
 			}
 		},
 		{
+			"label": "Flutter: Run on Phone (Debug)",
+			"type": "shell",
+			"command": "cd ${workspaceFolder}/lush && $ip=$((Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '172.*' -and $_.IPAddress -notlike '169.254.*' } | Select-Object -First 1 -ExpandProperty IPAddress)); Write-Host \"Detected IP: $ip\"; flutter run --dart-define=API_BASE_URL=http://${ip}:8080",
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"isBackground": false,
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Flutter: Show Detected IP",
+			"type": "shell",
+			"command": "powershell -Command \"$ip=Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '172.*' -and $_.IPAddress -notlike '169.254.*' } | Select-Object -First 1 -ExpandProperty IPAddress; Write-Host 'Your machine IP: ' -NoNewline; Write-Host $ip -ForegroundColor Green; Write-Host 'Use this in: --dart-define=API_BASE_URL=http://'$ip':8080' -ForegroundColor Cyan\"",
+			"group": "none",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+
+		{
 			"label": "Flutter: Run Tests",
 			"type": "shell",
 			"command": "cd ${workspaceFolder}/lush && flutter test --dart-define=API_BASE_URL=http://localhost:8080",
@@ -306,6 +335,33 @@
 				"reveal": "always",
 				"panel": "new"
 			}
+		},
+		{
+			"label": "Start MySQL (if needed)",
+			"type": "shell",
+			"command": "echo \"✅ MySQL is expected to be running in Docker. Run 'docker-compose up -d' if not already started.\"",
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Docker: Start Services",
+			"type": "shell",
+			"command": "powershell -ExecutionPolicy Bypass -Command \"$running = docker ps --format '{{.Names}}' | Where-Object { $_ -eq 'bmj-backend' }; if (-not $running) { Write-Host 'Starting Docker services...'; docker-compose up -d | Out-Null }; $count = 0; do { $r = try { (Invoke-WebRequest -Uri http://localhost:8080/api/health -TimeoutSec 2 -UseBasicParsing).StatusCode } catch { $null }; if ($r -eq 200) { Write-Host 'Backend is ready!' -ForegroundColor Green; exit 0 }; Write-Host ('Waiting for backend... (' + [string]($count * 3) + 's)'); Start-Sleep -Seconds 3; $count++ } while ($count -lt 20); Write-Host 'ERROR: Backend did not start within 60 seconds. Run docker-compose up -d manually.' -ForegroundColor Red; exit 1\"",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
 		}
+
 	]
 }
+

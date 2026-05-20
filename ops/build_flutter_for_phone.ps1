@@ -81,7 +81,7 @@ if ($RunOnly) {
 Write-Host "[CHECK] Looking for connected Android devices..." -ForegroundColor Yellow
 try {
     $devices = & adb devices 2>$null
-    if ($devices -match "^\w+\s+device$" -or $UseEmulator) {
+    if ($devices -match "^\S+\s+device$" -or $UseEmulator) {
         Write-Host "[INFO] Device(s) found. Running Flutter app..." -ForegroundColor Green
         Push-Location $lushDir
         try {

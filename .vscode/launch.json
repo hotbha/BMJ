@@ -9,7 +9,7 @@
       "projectName": "com.bookmyjuice.bmjServer",
       "cwd": "${workspaceFolder}/bmjServer",
       "env": {
-        "SPRING_PROFILES_ACTIVE": "dev",
+        "SPRING_PROFILES_ACTIVE": "dev"
       },
       "args": "",
       "preLaunchTask": "maven: verify (bmjServer)",
@@ -23,6 +23,17 @@
       "cwd": "${workspaceFolder}/lush",
       "args": [
         "--dart-define=API_BASE_URL=http://localhost:8080"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Flutter App (Phone Debug)",
+      "type": "dart",
+      "request": "launch",
+      "program": "${workspaceFolder}/lush/lib/main.dart",
+      "cwd": "${workspaceFolder}/lush",
+      "args": [
+        "--dart-define=API_BASE_URL=http://${input:machineIP}:8080"
       ],
       "console": "integratedTerminal"
     },
@@ -49,7 +60,18 @@
       "cwd": "${workspaceFolder}/bmjServer",
       "preLaunchTask": "maven: test (bmjServer)",
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Docker: Attach Debugger (Backend)",
+      "type": "java",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 5005,
+      "projectName": "com.bookmyjuice.bmjServer",
+      "timeout": 60000,
+      "console": "integratedTerminal"
     }
+
   ],
   "compounds": [
     {
@@ -60,6 +82,24 @@
       ],
       "stopOnEntry": false,
       "preLaunchTask": "Start MySQL (if needed)"
+    },
+    {
+      "name": "Full Stack (Docker + Phone Debug)",
+      "configurations": [
+        "Docker: Attach Debugger (Backend)",
+        "Flutter App (Phone Debug)"
+      ],
+      "stopOnEntry": false,
+      "preLaunchTask": "Docker: Start Services"
+    }
+  ],
+
+  "inputs": [
+    {
+      "id": "machineIP",
+      "type": "promptString",
+      "description": "Enter your machine's LAN IP address (run .\\ops\\find_active_ip.ps1 to get it)",
+      "default": "192.168.1.100"
     }
   ]
 }

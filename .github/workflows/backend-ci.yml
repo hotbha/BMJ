@@ -57,6 +57,8 @@ jobs:
           WEBHOOK_PASSWORD: ${{ secrets.WEBHOOK_PASSWORD || 'test-webhook-password' }}
           REDIS_HOST: localhost
           REDIS_PORT: 6379
+          SENTRY_DSN_BACKEND: ${{ secrets.SENTRY_DSN_BACKEND || '' }}
+          SENTRY_ENVIRONMENT: ci
 
       - name: Generate coverage report
         run: |

@@ -30,7 +30,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-PASS@123}
       TZ: UTC
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       # Mount the migration folder to a sub-folder to keep it clean
@@ -87,6 +87,10 @@ services:
       - ./.env
     environment:
       SPRING_PROFILES_ACTIVE: dev,docker
+      # No MAVEN_OPTS needed here; remove to avoid JDWP port conflict with
+      # spring-boot.run.jvmArguments below. MAVEN_OPTS attaches debugger to the
+      # Maven JVM, while jvmArguments passes it to the forked Spring Boot JVM,
+      # both on port 5005 => bind error.
       DB_HOSTNAME: ${DB_HOSTNAME:-mysql}
       DB_PORT: 3306
       DB_NAME: ${DB_NAME:-bmj_db}
@@ -103,11 +107,13 @@ services:
       MAIL_USERNAME: ${MAIL_USERNAME:-}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
       MAIL_FROM: ${MAIL_FROM:-support@bookmyjuice.co.in}
+      SENTRY_DSN_BACKEND: ${SENTRY_DSN_BACKEND:-}
+      SENTRY_ENVIRONMENT: ${SENTRY_ENVIRONMENT:-development}
       LOGGING_LEVEL: DEBUG
       SERVER_PORT: 8080
     ports:
       - "8080:8080"
-      - "5005:5005"  # Debug port
+      - "5005:5005"  # Debug port (JDWP)
     volumes:
       - ./bmjServer:/app
       - ./bmjServer/logs:/app/logs
@@ -119,11 +125,13 @@ services:
         condition: service_healthy
     networks:
       - bmj-network
-    # Clean command is not needed in dev mode (mvn handles incremental builds).
-    # Use mvn directly — ./mvnw is not in the image and has Windows permission issues.
-    # Dockerfile.dev now uses CMD, so this command fully overrides it.
-    command: >
-      mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xdebug"
+    # Override Dockerfile CMD to include JDWP debug agent.
+    # Using exec/list form to avoid shell quoting issues with JVM args.
+    command:
+      - mvn
+      - spring-boot:run
+      - -Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xdebug
+      - -Dspring-boot.run.addResources=true
 
   # ============================================================
   # phpMyAdmin (Database Management UI)
@@ -227,4 +235,24 @@ volumes:
 # Access Mailhog (for email testing):
 #   Web UI: http://localhost:8025
 #   SMTP: localhost:1025
+#
+# ============================================================
+# Debugging from Phone (Checkpoints):
+# ============================================================
+# Backend debug port 5005 is already exposed. To debug your Spring Boot code
+# from a physical phone:
+#
+# 1. Start Docker services:    docker-compose up -d
+# 2. Get your machine IP:      .\ops\find_active_ip.ps1
+# 3. In VS Code, use the "Docker: Attach Debugger (Backend)" launch config
+#    (connects to localhost:5005 where Docker exposes JDWP)
+# 4. For Flutter on phone, use the "Flutter App (Phone Debug)" launch config
+#    (prompts you to enter your machine's LAN IP)
+# 5. Alternatively, use compound config:
+#    "Full Stack (Docker + Phone Debug)" — attaches debugger AND runs Flutter
+#
+# The key insight: Docker exposes port 5005 bound to 0.0.0.0 inside the
+# container. VS Code's "Remote Attach" on localhost:5005 can connect to
+# the Docker container's JDWP agent. Set breakpoints in any Java file
+# and they will be hit when your phone makes API calls.
 # ============================================================

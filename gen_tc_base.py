@@ -1,0 +1,18 @@
+import json,os
+os.chdir("x:/BMJ")
+P=chr(124)
+f=open("docs/test-cases/TC_E2E_AUTH.md","w",encoding="utf-8")
+def sec(n):f.write("## "+n+"\n\n---\n\n")
+def TC(i,t,p,s,b,u,st,ex,pr,da):
+ f.write("### "+i+": "+t+"\n\n"+P+" Field "+P+" Value "+P+"\n"+P+"-----"+P+"-----"+P+"\n"+P+" Module "+P+" AUTH "+P+"\n"+P+" Type "+P+" E2E (Black Box) "+P+"\n"+P+" Priority "+P+" "+p+" "+P+"\n"+P+" Severity "+P+" "+s+" "+P+"\n"+P+" Linked BR "+P+" "+b+" "+P+"\n"+P+" Linked UC "+P+" "+u+" "+P+"\n"+P+" Auto "+P+" X Manual "+P+"\n\n**Preconditions:**\n")
+ for x in pr:f.write("- [ ] "+x+"\n")
+ f.write("\n**Test Steps:**\n")
+ for i2,s2 in enumerate(st,1):f.write(str(i2)+". "+s2+"\n")
+ f.write("\n**Expected Results:**\n")
+ for i2,r2 in enumerate(ex,1):f.write(str(i2)+". "+r2+"\n")
+ f.write("\n**Test Data:**\n")
+ for d2 in da:f.write("- "+d2+"\n")
+ f.write("\n---\n\n")
+f.write("# AUTH Module - End-to-End (E2E) Black-Box Test Cases\n\n")
+f.write(P+" Document Version: 1.0 "+P+" Date: 2026-05-14 "+P+" Scope: AUTHENTICATION module "+P+" Total: 60 "+P+"\n\n---\n\n")
+f.write("## Table of Contents\n\n1. [Email-First Signup](#1)\n2. [Phone-First Signup](#2)\n3. [Google Signup](#3)\n4. [User Login](#4)\n5. [Auto-Login](#5)\n6. [Google Sign-In](#6)\n7. [Phone Sign-In](#7)\n8. [Firebase Phone Auth Signup](#8)\n9. [Firebase Phone Auth Login](#9)\n10. [Password Reset](#10)\n11. [Rate Limiting and Security](#11)\n12. [Edge Cases](#12)\n\n---\n\n")

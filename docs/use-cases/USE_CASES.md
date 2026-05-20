@@ -250,6 +250,8 @@ This document provides detailed use case specifications for the BookMyJuice plat
 7. System navigates to dashboard
 8. On subsequent launches, auto-login checks token validity ONLY (no Google/phone)
 
+**Note:** Username for login is the user's 10-digit phone number. The phone number serves as both the login identifier and the `username` field in the database.
+
 **Extensions:**
 
 - **4a. Invalid credentials:** System shows "Invalid email or password"

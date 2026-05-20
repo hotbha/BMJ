@@ -1,7 +1,7 @@
 # BookMyJuice E2E Testing Makefile
 # Supports: Emulators, Physical Devices, CI/CD
 
-.PHONY: help test-e2e test-device test-physical test-emulator test-checkout test-signup test-cart test-orders test-full test-report e2e-clean e2e-all
+.PHONY: help test-e2e test-device test-physical test-emulator test-checkout test-signup test-cart test-orders test-full test-report e2e-clean e2e-all phone-debug phone-ip
 
 # Default target
 help:
@@ -21,10 +21,15 @@ help:
 	@echo "  make e2e-clean             # Clean E2E reports"
 	@echo "  make e2e-all               # Clean + run with reporting"
 	@echo ""
+	@echo "Phone Debugging:"
+	@echo "  make phone-ip              # Show your machine's LAN IP"
+	@echo "  make phone-debug           # Print flutter run command with your IP"
+	@echo ""
 	@echo "Examples:"
 	@echo "  make test-device DEVICE=25053PC47I"
 	@echo "  make test-device DEVICE=emulator-5554"
 	@echo ""
+
 
 # Run all E2E tests on default device
 test-e2e:
@@ -124,3 +129,15 @@ check:
 	@echo "🔍 Checking Patrol installation..."
 	patrol --version
 	@echo "✅ Patrol installed"
+
+# Show your machine's LAN IP for phone debugging
+phone-ip:
+	@echo "📡 Detecting your machine IP..."
+	powershell -Command "$$ip=Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Where-Object { $$_.IPAddress -notlike '127.*' -and $$_.IPAddress -notlike '172.*' -and $$_.IPAddress -notlike '169.254.*' } | Select-Object -First 1 -ExpandProperty IPAddress; Write-Host 'Your machine IP: ' -NoNewline; Write-Host $$ip -ForegroundColor Green; Write-Host 'Use this in: --dart-define=API_BASE_URL=http://'$$ip':8080' -ForegroundColor Cyan"
+
+# Print flutter run command for phone testing
+phone-debug:
+	@echo "📱 Phone Debug Setup:"
+	@echo ""
+	powershell -Command "$$ip=Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Where-Object { $$_.IPAddress -notlike '127.*' -and $$_.IPAddress -notlike '172.*' -and $$_.IPAddress -notlike '169.254.*' } | Select-Object -First 1 -ExpandProperty IPAddress; Write-Host '1. Ensure backend is running (docker-compose up -d)' -ForegroundColor Yellow; Write-Host '2. Ensure phone is on same WiFi network' -ForegroundColor Yellow; Write-Host '3. Run:  cd lush && flutter run --dart-define=API_BASE_URL=http://'$$ip':8080' -ForegroundColor Green; Write-Host '4. In VS Code: Use \"Docker: Attach Debugger (Backend)\" to set breakpoints' -ForegroundColor Cyan; Write-Host ''; Write-Host 'Or use the \"Full Stack (Docker + Phone Debug)\" compound config in VS Code!' -ForegroundColor Magenta"
+

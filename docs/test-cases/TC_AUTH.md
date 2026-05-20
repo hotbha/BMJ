@@ -16,7 +16,7 @@
 | **Severity** | S1-Major |
 | **Preconditions** | Mock UserRepo, PasswordEncoder, RoleRepo |
 | **Steps** | POST /api/auth/signup with valid email, password, name |
-| **Expected** | 500 (Chargebee not mocked) — signup flow starts correctly |
+| **Expected** | 500 (Chargebee not mocked) — signup flow starts correctly (username is phone) |
 | **Auto** | ✅ Automated |
 | **Coverage** | AuthController.java:signup |
 
@@ -45,7 +45,7 @@
 | **Priority** | P1-High |
 | **Severity** | S1-Major |
 | **Preconditions** | Mock AuthManager, JwtUtils |
-| **Steps** | POST /api/auth/signin with valid credentials |
+| **Steps** | POST /api/auth/signin with valid credentials (username=10-digit phone, password=correct) |
 | **Expected** | 200 + JWT token |
 | **Auto** | ✅ Automated |
 | **Coverage** | AuthController.java:signin |
@@ -151,7 +151,7 @@
 | **Severity** | S1-Major |
 | **Preconditions** | Mock Authentication |
 | **Steps** | generate then getUserNameFromJwtToken |
-| **Expected** | "testuser" |
+| **Expected** | "9876543210" (the phone number used as username) |
 | **Auto** | ✅ Automated |
 | **Coverage** | JwtUtils.java |
 

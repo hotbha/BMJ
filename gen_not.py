@@ -1,0 +1,8 @@
+P=chr(124)
+N=chr(10)
+A=chr(8594)
+D=chr(8212)
+X=chr(10060)
+RED=chr(128308)
+CHECK=chr(9989)
+print("test pipe: "+chr(124))

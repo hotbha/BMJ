@@ -16,8 +16,12 @@
     "e2e:full": "patrol test integration_test/e2e_suite.dart --dart-define=E2E=true",
     "e2e:report": "patrol test --dart-define=E2E=true --reporter=json --reporter-path=./.e2e-reports/results.json",
     "e2e:clean": "rimraf ./.e2e-reports/*",
-    "e2e:all": "npm run e2e:clean && npm run e2e:report"
+    "e2e:all": "npm run e2e:clean && npm run e2e:report",
+    "phone:debug": "powershell -ExecutionPolicy Bypass -File ops/build_flutter_for_phone.ps1 -RunOnly",
+    "phone:build": "powershell -ExecutionPolicy Bypass -File ops/build_flutter_for_phone.ps1",
+    "phone:ip": "powershell -ExecutionPolicy Bypass -File ops/find_active_ip.ps1"
   },
+
   "keywords": [
     "bookmyjuice",
     "e2e",
