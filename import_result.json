@@ -1,0 +1,3 @@
+event: message
+data: {"jsonrpc": "2.0", "id": 3, "result": {"content": [{"type": "text", "text": "{\n  \"item_families\": {\n    \"importErrors\": {},\n    \"importErrorList\": [],\n    \"totalRecords\": 3,\n    \"failedRecords\": 0\n  },\n  \"items\": {\n    \"importErrors\": {},\n    \"importErrorList\": [],\n    \"totalRecords\": 45,\n    \"failedRecords\": 0\n  },\n  \"item_prices\": {\n    \"importErrors\": {},\n    \"importErrorList\": [],\n    \"totalRecords\": 90,\n    \"failedRecords\": 0\n  }\n}"}], "isError": false}}
+

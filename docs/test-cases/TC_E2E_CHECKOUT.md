@@ -100,7 +100,7 @@ Before executing these tests, ensure:
 1. Order ID returned
 2. Order status: 'pending' or 'confirmed'
 3. Order items match cart items (name, quantity, price)
-4. Subtotal, tax, delivery_fee, grand_total match cart pricing
+4. Subtotal, tax, grand_total match cart pricing (delivery fee sourced from Chargebee, not a separate line item)
 5. Shipping address matches user's saved address
 6. payment_status: 'paid' or 'not_paid' initially
 **Test Data:**

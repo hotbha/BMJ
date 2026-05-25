@@ -1,4 +1,4 @@
-﻿# ORDERS Module - E2E Black-Box Test Cases
+# ORDERS Module - E2E Black-Box Test Cases
 
 > **Document Version:** 1.0
 > **Last Updated:** 2026-05-18
@@ -137,7 +137,7 @@ Before executing these tests, ensure:
 4. Verify sections:
    a. Order header (Order ID, Status, Date)
    b. Items (names, quantities, unit prices, totals)
-   c. Pricing (subtotal, delivery fee, tax, discount, grand total)
+    c. Pricing (subtotal, tax, discount, grand total — delivery fee sourced from Chargebee)
    d. Shipping address (full address)
    e. Payment status
    f. Status timeline (if implemented)
@@ -150,7 +150,7 @@ Before executing these tests, ensure:
 4. Sections display:
    a. Header: Order ID, Status badge, Date (DD/MM/YYYY)
    b. Items: name, qty, unit price, line total
-   c. Pricing: Subtotal, Delivery Rs.0, Tax, Discount Rs.0, Grand total
+   c. Pricing: Subtotal, Tax, Discount, Grand total (delivery fee sourced from Chargebee)
    d. Shipping: Flat, Area, City, State, Pincode, Country
    e. Payment status: Paid/Failed/Refunded
    f. Timeline: Pending -> Confirmed -> Preparing -> Shipped -> Delivered
@@ -161,7 +161,7 @@ Before executing these tests, ensure:
 **Test Data:**
 - User: TA-04
 - API: GET /api/v1/orders/:id
-- Expected fields: id, status, payment_status, items[], subtotal, delivery_fee, tax, discount, grand_total, shipping_address, created_at
+- Expected fields: id, status, payment_status, items[], subtotal, tax, discount, grand_total, shipping_address, created_at (delivery fee is not a separate field — sourced from Chargebee)
 
 ---
 

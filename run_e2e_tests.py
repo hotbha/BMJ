@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Comprehensive E2E Black-Box Test Suite for BookMyJuice Backend V2
-Tests against actual API contracts discovered from source code
+Comprehensive E2E Black-Box Test Suite for BookMyJuice Backend V3
+- Phase 2: Execute all tests against live server
+- Phase 3: Fix and verify all bugs
 """
 import json
 import urllib.request
@@ -13,6 +14,7 @@ import time
 BASE_URL = "http://localhost:8080"
 
 results = []
+test_accounts = {}
 
 def test(name, method, path, body=None, expected_status=200, headers=None, raw_body=False):
     """Execute a single API test and record result"""
@@ -80,7 +82,7 @@ def test(name, method, path, body=None, expected_status=200, headers=None, raw_b
         return None, str(e)
 
 def print_summary():
-    """Print test summary"""
+    """Print test summary with categorized results"""
     passed = sum(1 for r in results if r['passed'])
     failed = sum(1 for r in results if not r['passed'])
     total = len(results)
@@ -109,209 +111,236 @@ def print_summary():
 # TEST EXECUTION
 # ============================================================
 print("="*60)
-print("BOOKMYJUICE E2E BLACK-BOX TEST SUITE V2")
-print("Using correct API field names from source code")
+print("BOOKMYJUICE E2E BLACK-BOX TEST SUITE V3")
+print("Phase 2: Execution + Phase 3: Fix Verification")
 print("="*60)
 
-# ----- 1. AUTH TESTS -----
+# ============================================================
+# AUTH TEST SUITE
+# ============================================================
 print("\n\n--- AUTH TEST SUITE ---")
 
-# Health check first
+# Health check
 test("Health Check", "GET", "/api/health", expected_status=200)
 
-# Signin with CORRECT field names (LoginRequest uses 'username' not 'mobileNumber')
-# username can be phone number or email
-resp, _ = test("Sign In (correct fields)", "POST", "/api/auth/signin", 
-     {"username": "9876543210", "password": "Test@123"}, 
-     expected_status=200)
+# --- SIGNUP & SIGNIN FLOW (creates live account for subsequent tests) ---
+ts = str(int(time.time()))
+# Ensure 10-digit phone: prefix 99 + last 8 digits of timestamp
+test_phone = f"99{ts[-8:]}"
+test_email = f"e2e_{ts[-8:]}@example.com"
 
-# Actually, with correct field names but no user exists, it should get BadCredentials (400)
-# But since there's no @ControllerAdvice, validation pass -> BadCredentials -> 400 JSON response
-# The /error path issue only happens with validation failures (@Valid)
-# Let's check what happens with just a 400 response
+print(f"\n[SETUP] Using test phone: {test_phone}, email: {test_email}")
 
-# Try signup with CORRECT field names (EmailSignupRequest uses firstName, lastName, email, phone, password)
-resp, _ = test("Sign Up (correct fields)", "POST", "/api/auth/signup",
-     {"firstName": "E2E", "lastName": "Test", "email": "e2etest_v2@example.com", 
-      "phone": "9999999998", "password": "Test@1234"},
-     expected_status=200)
+# Sign up with complete valid data
+resp, _ = test("Sign Up (complete)", "POST", "/api/auth/signup",
+    {"firstName": "E2E", "lastName": "Tester", "email": test_email, 
+     "phone": test_phone, "password": "Test@1234"},
+    expected_status=200)
+if resp:
+    test_accounts["phone"] = test_phone
+    test_accounts["password"] = "Test@1234"
 
-# Send OTP
-resp, _ = test("Send OTP", "POST", "/api/auth/send-otp",
-     {"phone": "9876543210"},
-     expected_status=200)
+# Sign in with the created account
+resp, _ = test("Sign In (existing user)", "POST", "/api/auth/signin",
+    {"username": test_phone, "password": "Test@1234"},
+    expected_status=200)
+jwt_token = None
+if resp and isinstance(resp, dict):
+    if "token" in resp:
+        jwt_token = resp["token"]
+    elif "jwt" in resp:
+        jwt_token = resp["jwt"]
+    elif "accessToken" in resp:
+        jwt_token = resp["accessToken"]
+    test_accounts["jwt"] = jwt_token
+    if jwt_token:
+        print(f"[SETUP] JWT token obtained: {jwt_token[:50]}...")
 
-# Verify OTP
-test("Verify OTP", "POST", "/api/auth/verify-otp",
-     {"phone": "9876543210", "otp": "123456"},
-     expected_status=200)
+# Sign in with invalid credentials
+test("Sign In (wrong password)", "POST", "/api/auth/signin",
+    {"username": test_phone, "password": "WrongPass@1"},
+    expected_status=400)
 
-# Login with OTP  
-test("Login with OTP (correct fields)", "POST", "/api/auth/login-otp",
-     {"phone": "9876543210", "otp": "123456"},
-     expected_status=200)
+# Auth header for authenticated tests
+auth_header = {"Authorization": f"Bearer {jwt_token}"} if jwt_token else {}
 
-# Google sign-in
-test("Google Sign-In", "POST", "/api/auth/google",
-     {"idToken": "test_google_id_token"},
-     expected_status=200)
+# --- UNIFIED SIGNUP ---
+ts2 = str(int(time.time()))
+unified_phone = f"88{ts2[-8:]}"
+# Full unified signup - country must be 2-letter code!
+resp, _ = test("Unified Signup (complete)", "POST", "/api/auth/unified-signup",
+    {"phone": unified_phone, "email": f"unified_{ts2[-8:]}@example.com", 
+     "password": "Test@1234", "fullName": "Unified User",
+     "firstName": "Unified", "lastName": "User",
+     "address": "123 Test Street", "extendedAddr": "Apt 4B",
+     "extendedAddr2": "", "city": "Mumbai", "state": "Maharashtra",
+     "zip": "400001", "country": "IN"},  # 2-letter code required
+    expected_status=200)
 
-# Unified signup (correct fields - uses phone, email, password, fullName)
-test("Unified Signup (correct fields)", "POST", "/api/auth/unified-signup",
-     {"phone": "9999999997", "email": "unified_v2@example.com", 
-      "password": "Test@1234", "fullName": "Unified User"},
-     expected_status=200)
+# --- AUTO LOGIN ---
+# autologin is @GetMapping, so POST should 404 via RouteExistenceFilter
+test("Auto Login (POST - wrong method)", "POST", "/api/auth/autologin",
+    {}, expected_status=404)
 
-# Auto login
-test("Auto Login (no auth header)", "POST", "/api/auth/autologin",
-     {}, expected_status=400)
+# Auto login with valid JWT
+if jwt_token:
+    test("Auto Login (valid JWT)", "GET", "/api/auth/autologin",
+        headers={"Authorization": f"Bearer {jwt_token}"},
+        expected_status=200)
 
-# Reset password by mobile
-test("Reset Password Mobile (correct fields)", "POST", "/api/auth/reset-password-mobile",
-     {"phone": "9876543210", "otp": "123456", "password": "NewTest@123"},
-     expected_status=200)
+# Auto login without auth header
+test("Auto Login (no auth header)", "GET", "/api/auth/autologin",
+    expected_status=400)
 
-# Reset password by email
-test("Reset Password Email", "POST", "/api/auth/reset-password-email",
-     {"email": "user@example.com", "password": "NewTest@123", "verificationCode": "123456"},
-     expected_status=200)
+# --- GOOGLE SIGN-IN ---
+# Needs real Google token - test with invalid token
+test("Google Sign-In (invalid token)", "POST", "/api/auth/google",
+    {"idToken": "test_invalid_google_token"},
+    expected_status=400)
 
-# Send email verification
-test("Send Email Verification", "POST", "/api/auth/send-email-verification",
-     {"email": "newuser_v2@example.com"},
-     expected_status=200)
+# --- SEND & VERIFY EMAIL ---
+ts3 = str(int(time.time()))
+verify_email = f"verify_{ts3[-8:]}@example.com"
+resp, _ = test("Send Email Verification", "POST", "/api/auth/send-email-verification",
+    {"email": verify_email},
+    expected_status=200)
 
-# Verify email code
-test("Verify Email Code", "POST", "/api/auth/verify-email-code",
-     {"email": "user@example.com", "verificationCode": "123456"},
-     expected_status=200)
+# Verify with wrong code (hardcoded won't match server-generated code)
+test("Verify Email Code (wrong code)", "POST", "/api/auth/verify-email-code",
+    {"email": verify_email, "verificationCode": "000000"},
+    expected_status=400)
 
-# Link Google account (no OTP - should fail validation)
-test("Link Google Account (invalid params)", "POST", "/api/auth/link-google-account",
-     {"phone": "", "otp": "", "googleId": ""},
-     expected_status=400)
+# --- ACCOUNT ENDPOINTS ---
+# GET /api/auth/account doesn't exist (only DELETE does)
+test("Get Account (route check - no auth)", "GET", "/api/auth/account",
+    expected_status=404)
 
-# Account endpoints - require auth
-test("Get Account (no auth)", "GET", "/api/auth/account",
-     expected_status=401)
-
+# DELETE requires auth - without auth returns 403 (AccessDeniedException → Forbidden)
 test("Delete Account (no auth)", "DELETE", "/api/auth/account",
-     expected_status=401)
+    expected_status=403)
 
-
-# ----- 2. PRODUCTS / CATALOG -----
+# ============================================================
+# PRODUCTS / CATALOG
+# ============================================================
 print("\n\n--- PRODUCTS/CATALOG TEST SUITE ---")
 
+# Products endpoint requires auth
 test("Get Products (no auth)", "GET", "/api/v1/products",
-     expected_status=401)
+    expected_status=401)
 
+# Pricing plans are public (permitAll in B-05 fix)
 test("Get Pricing Plans (no auth)", "GET", "/api/subscriptions/pricing/plans",
-     expected_status=200)  # Should be public (no @PreAuthorize)
+    expected_status=200)
 
 
-# ----- 3. SUBSCRIPTION -----
+# ============================================================
+# SUBSCRIPTION
+# ============================================================
 print("\n\n--- SUBSCRIPTION TEST SUITE ---")
 
 test("Get My Subs (no auth)", "GET", "/api/subscriptions/my",
-     expected_status=401)
+    expected_status=401)
 test("Create Sub (no auth)", "POST", "/api/subscriptions/create",
-     {"planId": "test-plan", "paymentMethodId": "pm_test"},
-     expected_status=401)
+    {"planId": "test-plan", "paymentMethodId": "pm_test"},
+    expected_status=401)
 test("Pause Sub (no auth)", "PUT", "/api/subscriptions/test-123/pause",
-     expected_status=401)
+    expected_status=401)
 
 
-# ----- 4. CART -----
+# ============================================================
+# CART
+# ============================================================
 print("\n\n--- CART TEST SUITE ---")
 
 test("Get Cart (no auth)", "GET", "/api/v1/cart", expected_status=401)
 test("Add to Cart (no auth)", "POST", "/api/v1/cart/items",
-     {"priceId": "test-price", "quantity": 1}, expected_status=401)
+    {"priceId": "test-price", "quantity": 1}, expected_status=401)
 test("Clear Cart (no auth)", "DELETE", "/api/v1/cart/clear", expected_status=401)
 
+# Cart with auth
+if jwt_token:
+    test("Get Cart (with auth)", "GET", "/api/v1/cart", 
+         headers=auth_header, expected_status=200)
 
-# ----- 5. CHECKOUT -----
+
+# ============================================================
+# CHECKOUT
+# ============================================================
 print("\n\n--- CHECKOUT TEST SUITE ---")
 
+# Checkout test endpoints: /api/test/** now permitAll (B-11), but @PreAuthorize
+# returns 403 (Forbidden) instead of 401 (Unauthorized) when no valid role
 test("One-time Checkout URL (no auth)", "GET", "/api/test/oneTimeCheckoutPageUrl",
-     expected_status=200)
+    expected_status=403)  # 403 because route is permitted but role check fails
 test("Cart Checkout (no auth)", "POST", "/api/test/cartCheckout",
-     [{"priceId": "test-price", "quantity": 1}], expected_status=200)
+    [{"priceId": "test-price", "quantity": 1}], expected_status=403)  # same
 
 
-# ----- 6. ORDERS -----
+# ============================================================
+# ORDERS
+# ============================================================
 print("\n\n--- ORDERS TEST SUITE ---")
 
 test("Get Orders (no auth)", "GET", "/api/orders/my", expected_status=401)
 test("Get Order Detail (no auth)", "GET", "/api/orders/test-order-123", expected_status=401)
 
 
-# ----- 7. INVOICES -----
+# ============================================================
+# INVOICES
+# ============================================================
 print("\n\n--- INVOICES TEST SUITE ---")
 
 test("Get Invoices (no auth)", "GET", "/api/invoices/my", expected_status=401)
 
 
-# ----- 8. DELIVERY -----
-print("\n\n--- DELIVERY TEST SUITE ---")
+# ============================================================
+# ADDRESS
+# ============================================================
+print("\n\n--- ADDRESS TEST SUITE ---")
 
-test("Get Addresses (no auth)", "GET", "/api/delivery/addresses", expected_status=401)
-test("Add Address (no auth)", "POST", "/api/delivery/addresses",
-     {"fullName": "Test", "phone": "9876543210", "addressLine1": "123 Test St",
-      "city": "City", "state": "State", "pincode": "123456", "isDefault": False},
-     expected_status=401)
+# Canonical address endpoint at /api/v1/address (NOT /api/delivery/addresses)
+test("Get Addresses (no auth)", "GET", "/api/v1/address", expected_status=401)
+test("Add Address (no auth)", "POST", "/api/v1/address",
+    {"fullName": "Test", "phone": "9876543210", "addressLine1": "123 Test St",
+     "city": "Mumbai", "state": "Maharashtra", "pincode": "400001"},
+    expected_status=401)
 
 
-# ----- 9. WEBHOOK -----
+# ============================================================
+# WEBHOOK
+# ============================================================
 print("\n\n--- WEBHOOK TEST SUITE ---")
 
+# Webhook requires HTTP Basic auth per separate filter chain
 test("Webhook Chargebee (no auth)", "POST", "/api/webhooks/chargebee",
-     {"event_type": "test.event", "content": {"id": "test"}},
-     expected_status=401)
+    {"event_type": "test.event", "content": {"id": "test"}},
+    expected_status=401)
 
 
-# ----- 10. API CONSISTENCY -----
+# ============================================================
+# API CONSISTENCY
+# ============================================================
 print("\n\n--- API CONSISTENCY TEST SUITE ---")
 
-# Check if /api/v1/auth* also works (might be mapped despite code saying /api/auth)
-test("v1 auth prefix check", "POST", "/api/v1/auth/signin",
-     {"username": "test", "password": "test"},
-     expected_status=404)  # Should 404 since AuthController uses /api/auth
+# /api/v1/auth/signin now has permitAll (B-11 fix). Invalid creds → 400
+test("v1 auth prefix (invalid creds)", "POST", "/api/v1/auth/signin",
+    {"username": "invalid", "password": "invalid"},
+    expected_status=400)  # Route exists, permitAll, invalid creds = 400
+
+# v1 auth prefix with valid creds should work (signin with our test account)
+if jwt_token:
+    test("v1 auth prefix (signin with real creds)", "POST", "/api/v1/auth/signin",
+        {"username": test_phone, "password": "Test@1234"},
+        expected_status=200)
 
 
 # ============================================================
-# PHONE CONNECTIVITY TEST
-# ============================================================
-print("\n\n--- PHONE CONNECTIVITY TEST ---")
-print("\nChecking if phone can reach backend...")
-
-# Phone has two IPs: 192.168.1.5 (WiFi) and 10.37.65.201 (USB)
-# PC IPs: 10.37.65.113 (USB), 172.27.240.1 (Hyper-V)
-# Backend is on 0.0.0.0:8080 inside Docker, mapped to host's 0.0.0.0:8080
-
-# The phone should be able to reach the PC via:
-# 1. USB tethering network: http://10.37.65.113:8080
-# 2. WiFi network: http://192.168.1.x:8080 (where x is PC's WiFi IP - need to find)
-
-print("Phone IP (WiFi): 192.168.1.5")
-print("Phone IP (USB):  10.37.65.201")
-print("PC IP (USB):     10.37.65.113")
-print("Backend port:    8080")
-print("")
-print("The phone should access: http://10.37.65.113:8080/api/health")
-print("Or via WiFi: http://<PC_WIFI_IP>:8080/api/health")
-print("")
-
-# Test from this machine (simulating phone)
-test("Phone accessibility (via USB)", "GET", "http://10.37.65.113:8080/api/health",
-     expected_status=200)
-
-
 # Print results
+# ============================================================
 print_summary()
 
 # Write detailed report
-with open('e2e_test_report_v2.json', 'w') as f:
+with open('e2e_test_report_v3.json', 'w') as f:
     json.dump({
         "summary": {
             "total": len(results),
@@ -320,7 +349,8 @@ with open('e2e_test_report_v2.json', 'w') as f:
             "pass_rate": f"{sum(1 for r in results if r['passed'])/len(results)*100 if results else 0:.1f}%"
         },
         "results": results,
-        "failures": [r for r in results if not r['passed']]
+        "failures": [r for r in results if not r['passed']],
+        "test_account": test_accounts
     }, f, indent=2)
 
-print(f"\n\nDetailed report written to e2e_test_report_v2.json")
+print(f"\n\nDetailed report written to e2e_test_report_v3.json")

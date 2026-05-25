@@ -1,4 +1,4 @@
-﻿# DELIVERY Module - E2E Black-Box Test Cases
+# DELIVERY Module - E2E Black-Box Test Cases
 
 > **Document Version:** 1.0
 > **Last Updated:** 2026-05-18
@@ -17,7 +17,7 @@ Before executing these tests, ensure:
 - Pincode serviceability API configured: Serviceable=400001,400002,110001; Non-serviceable=999999,111111; Invalid=12,12345
 - Delivery addresses mapped to subscriptions in MySQL
 - Day-wise delivery schedule data configured for test subscriptions
-- Free delivery (delivery_fee=0) configured for MVP
+- Delivery fee sourced from Chargebee pricing data
 
 ---
 
@@ -386,7 +386,7 @@ Before executing these tests, ensure:
 
 ---
 
-## TC-E2E-DEL-009: Delivery fee displayed as Rs.0 for all orders (MVP)
+## TC-E2E-DEL-009: Delivery fee not returned in cart/order response — sourced from Chargebee
 
 | Field | Value |
 |-------|-------|
@@ -395,13 +395,12 @@ Before executing these tests, ensure:
 | Type | E2E |
 | Priority | P2-Medium |
 | Severity | S2-Minor |
-| Preconditions | User has order with delivery_fee (TA-04). User logged in. |
+| Preconditions | User has an order (TA-04). User logged in. |
 | Automation Status | To Be Automated |
 | Linked BR/UC | BR-073, UC-08 |
 
 **Preconditions:**
 - TA-04 has at least one order
-- Order data has delivery_fee=0 in MySQL
 - User logged in
 
 **Test Steps:**
@@ -409,25 +408,26 @@ Before executing these tests, ensure:
 2. Navigate to Order History
 3. Tap any order to open Order Detail
 4. Locate pricing/fee breakdown section
-5. Verify delivery fee field
+5. Verify NO delivery fee field is displayed
 6. Check across multiple orders
-7. Verify no unexpected delivery fee during signup/subscription flow
+7. Verify cart API response does not include delivery_fee key
+8. Verify order API response does not include delivery_fee key
 
 **Expected Results:**
 1. Login succeeds
 2. Order History loads
 3. Order Detail opens
-4. Pricing: Subtotal: Rs.X, Delivery Fee: Rs.0.00, Tax: Rs.X, Grand Total: Rs.X
-5. Delivery Fee displayed exactly as Rs.0.00 (not blank)
-6. delivery_fee line item visible and clearly labeled
-7. Across all orders: delivery_fee = Rs.0.00
-8. During signup: no delivery fee added to charge
-9. Grand total = subtotal + tax (delivery_fee adds nothing)
+4. Pricing: Subtotal: Rs.X, Tax: Rs.X, Grand Total: Rs.X
+5. No delivery_fee line item present in order display
+6. Across all orders: no delivery_fee field in response
+7. Cart GET /api/v1/cart response does NOT include delivery_fee in summary
+8. Grand total = subtotal + tax (delivery fee from Chargebee)
+9. Delivery fee is not calculated or returned by the app/backend — it is sourced from Chargebee pricing data
 
 **Test Data:**
 - User: TA-04
-- Expected delivery_fee: 0.00 across all orders
-- MVP constraint: BR-073
+- Expected: delivery_fee NOT present in cart or order API responses
+- Delivery fee sourced from Chargebee pricing data per BR-073
 
 ---
 
@@ -491,7 +491,7 @@ Before executing these tests, ensure:
 | TC-E2E-DEL-006 | Same juice everyday checkbox - one selection maps to all 6 days | P1-High | BR-072 |
 | TC-E2E-DEL-007 | Different juice per day - independent selection | P2-Medium | BR-072 |
 | TC-E2E-DEL-008 | View/update saved delivery address | P1-High | BR-070 |
-| TC-E2E-DEL-009 | Delivery fee displayed as Rs.0 for all orders (MVP) | P2-Medium | BR-073 |
+| TC-E2E-DEL-009 | Delivery fee not returned in cart/order response — sourced from Chargebee | P2-Medium | BR-073 |
 | TC-E2E-DEL-010 | Invalid pincode format - validation | P2-Medium | BR-071 |
 
 ## BR Coverage Traceability
@@ -501,7 +501,7 @@ Before executing these tests, ensure:
 | BR-070 | Address captured during signup | DEL-001, DEL-002, DEL-008 |
 | BR-071 | Pincode serviceability check | DEL-003, DEL-004, DEL-010 |
 | BR-072 | Day-wise delivery schedule Mon-Sat, Sunday holiday | DEL-005, DEL-006, DEL-007 |
-| BR-073 | Free delivery for MVP (delivery_fee=0) | DEL-009 |
+| BR-073 | Delivery fee sourced from Chargebee pricing data | DEL-009 |
 
 ## Document Control
 

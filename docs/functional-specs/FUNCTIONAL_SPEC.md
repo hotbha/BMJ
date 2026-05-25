@@ -116,25 +116,30 @@ Flutter App → bmjServer → MySQL (local cache) → Response
 - JWT Bearer token in `Authorization` header
 - Token expiry: 30 days (no refresh token workflow)
 - Token stored in SharedPreferences
-- **Auto-login:** Checks ONLY token validity via `GET /api/v1/auth/me`. Does NOT invoke Google Sign-In or phone OTP. If token expired/missing → show login screen.
-- **Google Sign-In:** Triggered ONLY when user taps Google button on login screen. Never auto-invoked.
-- **Phone Sign-In:** Triggered ONLY when user taps Phone button on login screen. Never auto-invoked.
+- **Auto-login:** Checks ONLY token validity via `GET /api/v1/auth/me`. Does NOT invoke Google Sign-In or phone OTP. If token expired/missing → show Dashboard in public mode with toast notification: "Session expired. Please sign in again."
+- **Google Sign-In:** Triggered ONLY when user taps Google or Sign In button on Dashboard/Login screen. Never auto-invoked.
+- **Phone Sign-In:** Triggered ONLY when user taps Phone button on Dashboard/Login screen. Never auto-invoked.
+- **Default Landing:** ALL users (new and existing) land on Dashboard. New users see public mode with catalog preview. Existing users see Dashboard after successful auto-login attempt. If auto-login fails, Dashboard in public mode is shown with a toast notification.
 
 ### Login Flow Decision Tree
 ```
 User opens app
-  → Auto-login: Check JWT token in SharedPreferences
-    → Valid token + server confirms → Dashboard
-    → Expired/missing → Show Login Screen
+  → Always show Dashboard (public mode) immediately
+  → In parallel, auto-login checks JWT token in SharedPreferences
+    → Valid token + server confirms → Upgrade to Dashboard (full/authenticated mode)
+    → Expired/missing → Stay on Dashboard (public mode) with toast: "Session expired"
 
-Login Screen
-  → User enters email + password → POST /api/v1/auth/login → JWT → Dashboard
-  → User taps Google button → Show Google account picker
-    → If user with Google ID exists → Login with JWT → Dashboard
-    → If user NOT found → Signup screen with pre-filled email + name from Google
-  → User taps Phone button → Enter phone → Send OTP → Verify OTP
-    → If user with verified phone exists → Login with JWT → Dashboard
-    → If user NOT found → Signup screen with pre-filled verified phone
+Dashboard (Public Mode)
+  → User sees promotions, plans, catalog preview, and "Sign In" button
+  → User taps "Sign In"
+    → Shows Login/Signup Selection Screen
+      → User enters email + password → POST /api/v1/auth/login → JWT → Dashboard (full)
+      → User taps Google button → Show Google account picker
+        → If user with Google ID exists → Login with JWT → Dashboard (full)
+        → If user NOT found → Signup screen with pre-filled email + name from Google
+      → User taps Phone button → Enter phone → Send OTP → Verify OTP
+        → If user with verified phone exists → Login with JWT → Dashboard (full)
+        → If user NOT found → Signup screen with pre-filled verified phone
 ```
 
 ### 3.1 Unified Signup Flow
@@ -252,7 +257,6 @@ Two methods available:
   "pricing": {
     "subtotal": 15000,
     "tax": 2700,
-    "delivery_fee": 0,
     "grand_total": 17700,
     "currency": "INR"
   }
@@ -261,7 +265,7 @@ Two methods available:
 
 **Notes:**
 - `tax` value is sourced directly from Chargebee pricing data (passthrough, no calculation)
-- `delivery_fee` is always 0 for MVP (free delivery)
+- `delivery_fee` is sourced from Chargebee item/plan pricing (passthrough, no calculation)
 - Mobile app MUST NOT calculate these values — display only what bmjServer returns
 
 ### 4.4 Cart Merge Flow
@@ -390,7 +394,6 @@ Same as one-time, but:
   "status": "confirmed",
   "payment_status": "paid",
   "subtotal": 15000,
-  "delivery_fee": 0,
   "tax": 2700,
   "discount": 0,
   "grand_total": 17700,
@@ -447,25 +450,30 @@ Same as one-time, but:
 
 ## 9. Push Notification Module
 
-**MVP Approach:** Local-only notifications using `flutter_local_notifications` package. No FCM server push for MVP.
+FCM server-side push notifications via Firebase Cloud Messaging. All notifications are sent from the backend when events occur, and the Flutter app receives them in all states (foreground, background, closed).
 
-### 9.1 Trigger Points (Local)
-Notifications are triggered locally when the app processes webhook results or user actions:
-- `payment_failed` — After webhook processing confirms payment failure
-- `subscription_paused` — After user pauses subscription and confirms state refetch
-- `subscription_resumed` — After user resumes subscription and confirms state refetch
-- `subscription_cancelled` — After user cancels subscription and confirms state refetch
-- `order_updated` — When order status changes to "shipped"
+### 9.1 Trigger Points (Server Push)
+Notifications are pushed from bmjServer via FCM when the following events occur:
+- `payment_failed` — After Chargebee webhook confirms payment failure, bmjServer sends FCM push
+- `subscription_paused` — After bmjServer processes pause request and updates Chargebee
+- `subscription_resumed` — After bmjServer processes resume request and updates Chargebee
+- `subscription_cancelled` — After bmjServer processes cancel request and updates Chargebee
+- `order_updated` — When order status changes (confirmed, shipped)
 - `order_delivered` — When order status changes to "delivered"
 
 ### 9.2 Implementation Notes
-- All notifications are scheduled locally via `flutter_local_notifications`
-- No FCM server-side push for MVP (simplifies infrastructure)
+- All notifications sent via FCM HTTP v1 API from bmjServer
+- Flutter FirebaseNotificationService handles foreground messages via `FirebaseMessaging.onMessage`
+- Background/closed app messages handled by system via notification payload
 - Notification payload includes deep-link data for in-app navigation
-- Post-MVP: Migrate to FCM server-side push for background/closed-app notifications
+- FCM tokens are stored in the users table and updated on token refresh
+- `flutter_local_notifications` used as a secondary display layer for foreground messages
 
-### 9.3 API Endpoints (Not needed for MVP)
-FCM token registration endpoints are **deferred to post-MVP** since notifications are local-only.
+### 9.3 API Endpoints
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/v1/notifications/fcm-token` | POST | Required | Register/update FCM token for current user |
+| `/api/v1/notifications/fcm-token` | DELETE | Required | Remove FCM token on logout |
 
 ---
 
@@ -574,7 +582,8 @@ CREATE TABLE orders (
     status              ENUM('pending', 'confirmed', 'preparing', 'shipped', 'delivered', 'cancelled', 'refunded') NOT NULL DEFAULT 'pending',
     payment_status      ENUM('not_paid', 'paid', 'failed', 'refunded') NOT NULL DEFAULT 'not_paid',
     subtotal            INT NOT NULL,
-    delivery_fee        INT NOT NULL DEFAULT 0,
+    -- delivery_fee removed. Delivery fee is sourced from Chargebee pricing data.
+    -- See BR-073 for details.
     tax                 INT NOT NULL,
     discount            INT NOT NULL DEFAULT 0,
     grand_total         INT NOT NULL,
@@ -684,5 +693,6 @@ lush/
 
 **Document Control:**
 - **Created:** April 11, 2026 (Consolidated)
-- **Version:** 1.0
-- **Status:** ✅ Approved for Development
+- **Updated:** May 25, 2026 (Dashboard-First Landing: Updated auto-login rules, login flow decision tree, default landing)
+- **Version:** 1.1
+- **Status:** ✅ Updated for Dashboard-First Flow

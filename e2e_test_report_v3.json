@@ -1,0 +1,460 @@
+{
+  "summary": {
+    "total": 32,
+    "passed": 32,
+    "failed": 0,
+    "pass_rate": "100.0%"
+  },
+  "results": [
+    {
+      "name": "Health Check",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "status": "UP",
+        "timestamp": "2026-05-24T16:35:54.918134596"
+      },
+      "path": "/api/health",
+      "method": "GET"
+    },
+    {
+      "name": "Sign Up (complete)",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "message": "User registered successfully!"
+      },
+      "path": "/api/auth/signup",
+      "method": "POST"
+    },
+    {
+      "name": "Sign In (existing user)",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "id": 525,
+        "username": "9979640554",
+        "email": "e2e_79640554@example.com",
+        "roles": [
+          "ROLE_USER"
+        ],
+        "newUser": false,
+        "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5OTc5NjQwNTU0IiwidG9rZW5WZXJzaW9uIjoxLCJpYXQiOjE3Nzk2NDA1NTYsImV4cCI6MTc3OTcyNjk1Nn0.ahivIjRg5wluU6EVjucDGtynYbMV_vcZ-XLiN7WC4l8",
+        "tokenType": "Bearer"
+      },
+      "path": "/api/auth/signin",
+      "method": "POST"
+    },
+    {
+      "name": "Sign In (wrong password)",
+      "passed": true,
+      "status": 400,
+      "expected": 400,
+      "response": {
+        "message": "Error: Invalid username or password!"
+      },
+      "path": "/api/auth/signin",
+      "method": "POST"
+    },
+    {
+      "name": "Unified Signup (complete)",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "message": "User registered successfully!"
+      },
+      "path": "/api/auth/unified-signup",
+      "method": "POST"
+    },
+    {
+      "name": "Auto Login (POST - wrong method)",
+      "passed": true,
+      "status": 404,
+      "expected": 404,
+      "response": {
+        "path": "/api/auth/autologin",
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
+      },
+      "path": "/api/auth/autologin",
+      "method": "POST"
+    },
+    {
+      "name": "Auto Login (valid JWT)",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "message": "ok"
+      },
+      "path": "/api/auth/autologin",
+      "method": "GET"
+    },
+    {
+      "name": "Auto Login (no auth header)",
+      "passed": true,
+      "status": 400,
+      "expected": 400,
+      "response": {
+        "message": "Error: Authorization header is missing!"
+      },
+      "path": "/api/auth/autologin",
+      "method": "GET"
+    },
+    {
+      "name": "Google Sign-In (invalid token)",
+      "passed": true,
+      "status": 400,
+      "expected": 400,
+      "response": {
+        "message": "Error: Invalid Google ID token"
+      },
+      "path": "/api/auth/google",
+      "method": "POST"
+    },
+    {
+      "name": "Send Email Verification",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "message": "Success: Verification code sent to verify_79640558@example.com"
+      },
+      "path": "/api/auth/send-email-verification",
+      "method": "POST"
+    },
+    {
+      "name": "Verify Email Code (wrong code)",
+      "passed": true,
+      "status": 400,
+      "expected": 400,
+      "response": {
+        "message": "Error: Invalid or expired verification code!"
+      },
+      "path": "/api/auth/verify-email-code",
+      "method": "POST"
+    },
+    {
+      "name": "Get Account (route check - no auth)",
+      "passed": true,
+      "status": 404,
+      "expected": 404,
+      "response": {
+        "path": "/api/auth/account",
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
+      },
+      "path": "/api/auth/account",
+      "method": "GET"
+    },
+    {
+      "name": "Delete Account (no auth)",
+      "passed": true,
+      "status": 403,
+      "expected": 403,
+      "response": {
+        "path": "/api/auth/account",
+        "error": "Forbidden",
+        "message": "Access denied",
+        "timestamp": "2026-05-24T16:35:58.635252597Z",
+        "status": 403
+      },
+      "path": "/api/auth/account",
+      "method": "DELETE"
+    },
+    {
+      "name": "Get Products (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/products",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:58.655933927Z",
+        "status": 401
+      },
+      "path": "/api/v1/products",
+      "method": "GET"
+    },
+    {
+      "name": "Get Pricing Plans (no auth)",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "status": "success",
+        "data": []
+      },
+      "path": "/api/subscriptions/pricing/plans",
+      "method": "GET"
+    },
+    {
+      "name": "Get My Subs (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/subscriptions/my",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:58.718692645Z",
+        "status": 401
+      },
+      "path": "/api/subscriptions/my",
+      "method": "GET"
+    },
+    {
+      "name": "Create Sub (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/subscriptions/create",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:58.735465681Z",
+        "status": 401
+      },
+      "path": "/api/subscriptions/create",
+      "method": "POST"
+    },
+    {
+      "name": "Pause Sub (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/subscriptions/test-123/pause",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:58.752029239Z",
+        "status": 401
+      },
+      "path": "/api/subscriptions/test-123/pause",
+      "method": "PUT"
+    },
+    {
+      "name": "Get Cart (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/cart",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:58.765443635Z",
+        "status": 401
+      },
+      "path": "/api/v1/cart",
+      "method": "GET"
+    },
+    {
+      "name": "Add to Cart (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/cart/items",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:58.798442159Z",
+        "status": 401
+      },
+      "path": "/api/v1/cart/items",
+      "method": "POST"
+    },
+    {
+      "name": "Clear Cart (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/cart/clear",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:58.829297926Z",
+        "status": 401
+      },
+      "path": "/api/v1/cart/clear",
+      "method": "DELETE"
+    },
+    {
+      "name": "Get Cart (with auth)",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "cart_id": 3,
+        "subtotal": 0,
+        "tax": 0,
+        "grand_total": 0,
+        "items": []
+      },
+      "path": "/api/v1/cart",
+      "method": "GET"
+    },
+    {
+      "name": "One-time Checkout URL (no auth)",
+      "passed": true,
+      "status": 403,
+      "expected": 403,
+      "response": {
+        "path": "/api/test/oneTimeCheckoutPageUrl",
+        "error": "Forbidden",
+        "message": "Access denied",
+        "timestamp": "2026-05-24T16:35:59.013709439Z",
+        "status": 403
+      },
+      "path": "/api/test/oneTimeCheckoutPageUrl",
+      "method": "GET"
+    },
+    {
+      "name": "Cart Checkout (no auth)",
+      "passed": true,
+      "status": 403,
+      "expected": 403,
+      "response": {
+        "path": "/api/test/cartCheckout",
+        "error": "Forbidden",
+        "message": "Access denied",
+        "timestamp": "2026-05-24T16:35:59.037341498Z",
+        "status": 403
+      },
+      "path": "/api/test/cartCheckout",
+      "method": "POST"
+    },
+    {
+      "name": "Get Orders (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/orders/my",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:59.061195178Z",
+        "status": 401
+      },
+      "path": "/api/orders/my",
+      "method": "GET"
+    },
+    {
+      "name": "Get Order Detail (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/orders/test-order-123",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:59.086221796Z",
+        "status": 401
+      },
+      "path": "/api/orders/test-order-123",
+      "method": "GET"
+    },
+    {
+      "name": "Get Invoices (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/invoices/my",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:59.118843497Z",
+        "status": 401
+      },
+      "path": "/api/invoices/my",
+      "method": "GET"
+    },
+    {
+      "name": "Get Addresses (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/address",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:59.137686396Z",
+        "status": 401
+      },
+      "path": "/api/v1/address",
+      "method": "GET"
+    },
+    {
+      "name": "Add Address (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/v1/address",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:59.158122824Z",
+        "status": 401
+      },
+      "path": "/api/v1/address",
+      "method": "POST"
+    },
+    {
+      "name": "Webhook Chargebee (no auth)",
+      "passed": true,
+      "status": 401,
+      "expected": 401,
+      "response": {
+        "path": "/api/webhooks/chargebee",
+        "error": "Unauthorized",
+        "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-24T16:35:59.178428727Z",
+        "status": 401
+      },
+      "path": "/api/webhooks/chargebee",
+      "method": "POST"
+    },
+    {
+      "name": "v1 auth prefix (invalid creds)",
+      "passed": true,
+      "status": 400,
+      "expected": 400,
+      "response": {
+        "message": "Error: Invalid username or password!"
+      },
+      "path": "/api/v1/auth/signin",
+      "method": "POST"
+    },
+    {
+      "name": "v1 auth prefix (signin with real creds)",
+      "passed": true,
+      "status": 200,
+      "expected": 200,
+      "response": {
+        "id": 525,
+        "username": "9979640554",
+        "email": "e2e_79640554@example.com",
+        "roles": [
+          "ROLE_USER"
+        ],
+        "newUser": false,
+        "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5OTc5NjQwNTU0IiwidG9rZW5WZXJzaW9uIjoxLCJpYXQiOjE3Nzk2NDA1NTksImV4cCI6MTc3OTcyNjk1OX0.-zYkujUtUVI1zW7DKnyivggsWS2bB7Tu8ZAf8ojCKpA",
+        "tokenType": "Bearer"
+      },
+      "path": "/api/v1/auth/signin",
+      "method": "POST"
+    }
+  ],
+  "failures": [],
+  "test_account": {
+    "phone": "9979640554",
+    "password": "Test@1234",
+    "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5OTc5NjQwNTU0IiwidG9rZW5WZXJzaW9uIjoxLCJpYXQiOjE3Nzk2NDA1NTYsImV4cCI6MTc3OTcyNjk1Nn0.ahivIjRg5wluU6EVjucDGtynYbMV_vcZ-XLiN7WC4l8"
+  }
+}

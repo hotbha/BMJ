@@ -27,7 +27,7 @@
 
 **Resolution:** JWT secret configured in `.env`:
 - `JWT_SECRET=<REDACTED_ROTATE_NOW>` (40 chars)
-- `JWT_EXPIRATION_MS=86400000` (24 hours)
+- `JWT_EXPIRATION_MS=2592000000` (30 days) — **Updated from 24h to 30 days (see H20)**
 
 **Note:** Current secret is 40 characters (meets minimum 32-char requirement). For production, consider generating a full 64-character cryptographically random string as originally specified.
 
@@ -316,6 +316,21 @@ Files updated:
 - Test back button behavior on multi-step signup flow (try pressing back mid-flow)
 - Verify theme looks correct on both light and dark modes on at least 5 key screens
 
+---
+
+## H20 â€” [NEW] JWT Expiration Corrected to 30 Days
+
+**Status:** âœ… Resolved  
+**Priority:** Medium  
+**Owner:** DevOps
+
+**Correction:** The `JWT_EXPIRATION_MS` value has been corrected from `86400000` (24 hours) to `2592000000` (30 days) in:
+- `bmjServer/src/main/resources/application.properties` (default: `bezkoder.app.jwtExpirationMs=${JWT_EXPIRATION_MS:2592000000}`)
+- `.env` file
+
+**Impact:** Auto-login now validates tokens correctly for 30-day validity. This aligns with BRD BR-006 which requires "JWT tokens valid for 30 days with no refresh token workflow."
+
+**Note:** H2 and H14 are superseded by this entry â€” their stated `86400000` value is no longer current.
 
 ---
 
@@ -342,6 +357,7 @@ Files updated:
 | H17 | Dynamic IP Handling | âœ… Resolved | Medium |
 | H18 | Firebase Configuration & google-services.json | âœ… Resolved | High |
 | **H19** | **Full-screen Theme Migration & Dashboard as Default** | **âœ… Completed** | **High** |
+| **H20** | **JWT Expiration Corrected to 30 Days** | **âœ… Resolved** | **Medium** |
 
 **Still needing human action:** H10 (run docker-compose), H11 (production Redis), H12 (GitHub secrets setup).
 - H19 requires human verification (recommended: test dashboard for logged-out users, back button behavior, theme light/dark mode).

@@ -21,9 +21,14 @@
 - Staging: `https://staging-api.bookmyjuice.co.in`
 - Production: `https://api.bookmyjuice.co.in`
 
-**API Version:** No version prefix — most endpoints are at root `/api/` (e.g., `/api/auth/signin`, not `/api/v1/auth/signin`). Cart and Product endpoints use `/api/v1/cart` and `/api/v1/products`.
+**API Version:** All endpoints use the `/api/v1/` prefix (e.g., `/api/v1/auth/signin`). Some older endpoints at `/api/` root (e.g., `/api/auth/signin`) are kept for backward compatibility — prefer the versioned path.
 
 **Content Type:** `application/json`
+
+**Price Units:**
+- All prices are stored and transmitted in **paise** (Indian paise / cents) from Chargebee APIs.
+- The app divides by 100 for display purposes (e.g., `9900` paise → `₹99`).
+- The backend never calculates prices locally; Chargebee is the sole pricing authority.
 
 ---
 
@@ -42,27 +47,27 @@ Authorization: Bearer <access_token>
 
 | Token Type | Expiry | Refresh |
 |------------|--------|---------|
-| Access Token | 15 minutes | Using Refresh Token |
-| Refresh Token | 7 days | Re-authentication |
+| Access Token | 30 days (2592000000 ms) | No refresh — re-authenticate |
 
 ### Authentication Flow
 
 ```
 1. User Login
-   POST /api/auth/signin
+   POST /api/v1/auth/signin   (canonical)
    ↓
-2. Receive Tokens
-   { accessToken, refreshToken }
+2. Receive Token
+   { accessToken, tokenType, id, username, email, roles }
    ↓
 3. Use Access Token for API calls
    Authorization: Bearer <accessToken>
    ↓
-4. When Access Token expires (15 min)
-   POST /api/auth/refresh   (Note: Refresh token endpoint not yet implemented)
-   { refreshToken }
+4. When Access Token expires (30 days)
+   Re-authenticate via /api/v1/auth/signin
    ↓
 5. Receive new Access Token
 ```
+
+> **Note:** No refresh token flow exists. The JWT is a single 30-day token. When it expires, the user must re-authenticate. The token version is tracked server-side for invalidation support (e.g., on password reset).
 
 ---
 
@@ -70,7 +75,10 @@ Authorization: Bearer <access_token>
 
 ### Authentication
 
-#### POST /api/auth/signin
+> **Canonical Auth Endpoint:** `/api/v1/auth/signin`
+> Legacy: `/api/auth/signin` kept for backward compatibility.
+
+#### POST /api/v1/auth/signin (canonical) | /api/auth/signin (legacy)
 
 Sign in with email or phone and password.
 
@@ -136,26 +144,7 @@ Register a new user account.
 
 ---
 
-#### POST /api/v1/auth/refresh
-
-Refresh access token using refresh token.
-
-**Request:**
-```json
-{
-  "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
-}
-```
-
-**Response (200 OK):**
-```json
-{
-  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
-}
-```
-
----
+> **Note:** No `/api/v1/auth/refresh` endpoint exists. JWT tokens are single 30-day tokens. When expired, re-authenticate via `/api/v1/auth/signin`.
 
 #### POST /api/v1/auth/google
 
@@ -176,9 +165,12 @@ Sign in with Google.
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-  "user": { ... },
-  "isNewUser": true
+  "tokenType": "Bearer",
+  "id": 500,
+  "username": "9999999901",
+  "email": "user@example.com",
+  "roles": ["ROLE_USER"],
+  "isNewUser": false
 }
 ```
 
@@ -223,8 +215,11 @@ Verify OTP and authenticate.
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-  "user": { ... }
+  "tokenType": "Bearer",
+  "id": 500,
+  "username": "9999999901",
+  "email": "user@example.com",
+  "roles": ["ROLE_USER"]
 }
 ```
 
@@ -292,28 +287,119 @@ Update user profile.
 
 ---
 
-#### POST /api/v1/user/addresses
+### Address Management
 
-Add new address.
+> **Canonical Address Endpoint:** `/api/v1/address`
+> Legacy: `/api/v1/user/addresses` kept for backward compatibility.
+
+#### GET /api/v1/address
+
+Get all saved addresses for the authenticated user.
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "count": 1,
+  "data": [
+    {
+      "id": 1,
+      "label": "Home",
+      "fullName": "John Doe",
+      "phone": "9876543210",
+      "addressLine1": "123 Main St",
+      "addressLine2": "Apartment 4B",
+      "landmark": "Near City Park",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "pincode": "560001",
+      "isDefault": true,
+      "latitude": null,
+      "longitude": null,
+      "deliveryInstructions": "Leave at door"
+    }
+  ]
+}
+```
+
+---
+
+#### POST /api/v1/address
+
+Add a new delivery address.
 
 **Request:**
 ```json
 {
-  "type": "work",
-  "isDefault": false,
-  "street": "456 Tech Park",
+  "label": "Work",
+  "fullName": "John Doe",
+  "phone": "9876543210",
+  "addressLine1": "456 Tech Park",
+  "addressLine2": "Floor 3",
+  "landmark": "Near Metro Station",
   "city": "Bangalore",
   "state": "Karnataka",
   "pincode": "560100",
-  "country": "India"
+  "latitude": null,
+  "longitude": null,
+  "deliveryInstructions": "Reception desk",
+  "default": true
 }
 ```
 
 **Response (201 Created):**
 ```json
 {
+  "status": "success",
   "message": "Address added successfully",
-  "addressId": "addr_2"
+  "data": {
+    "id": 2,
+    "label": "Work",
+    ...
+  }
+}
+```
+
+---
+
+#### PUT /api/v1/address/{id}
+
+Update an existing address.
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Address updated successfully",
+  "data": { ... }
+}
+```
+
+---
+
+#### DELETE /api/v1/address/{id}
+
+Delete an address.
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Address deleted successfully"
+}
+```
+
+---
+
+#### PATCH /api/v1/address/{id}/default
+
+Set an address as the default delivery address.
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Default address updated successfully"
 }
 ```
 
@@ -341,7 +427,7 @@ Get available subscription plans.
       "features": [
         "Daily delivery",
         "Flexible scheduling",
-        "Free delivery"
+        "Flexible delivery"
       ]
     },
     {
@@ -356,7 +442,7 @@ Get available subscription plans.
       "features": [
         "Alternate day delivery",
         "Flexible scheduling",
-        "Free delivery"
+        "Flexible delivery"
       ]
     }
   ]
@@ -501,7 +587,6 @@ Get order history with pagination.
       ],
       "subtotal": 120,
       "tax": 21.6,
-      "deliveryFee": 0,
       "discount": 0,
       "total": 141.6,
       "currency": "INR",
@@ -518,6 +603,8 @@ Get order history with pagination.
   }
 }
 ```
+
+> **Note:** `deliveryFee` is not returned by the API. Delivery fee is sourced from Chargebee pricing data.
 
 ---
 
@@ -569,36 +656,6 @@ Get order details.
 
 ---
 
-#### POST /api/v1/orders/one-time/checkout
-
-Get checkout URL for one-time order.
-
-**Request:**
-```json
-{
-  "items": [
-    {
-      "productId": "prod_orange",
-      "quantity": 2,
-      "priceId": "price_250ml"
-    }
-  ],
-  "deliveryAddressId": "addr_1",
-  "deliverySlot": "morning"
-}
-```
-
-**Response (200 OK):**
-```json
-{
-  "url": "https://bookmyjuice-test.chargebee.com/hosted_pages/checkout?...",
-  "orderId": "ord_temp_123",
-  "expiresAt": "2026-03-27T11:30:00Z"
-}
-```
-
----
-
 ### Cart Management
 
 #### GET /api/v1/cart
@@ -630,13 +687,14 @@ Get current user's cart.
     "itemCount": 3,
     "subtotal": 390,
     "tax": 70.2,
-    "deliveryFee": 20,
     "discount": 0,
-    "total": 480.2,
+    "total": 460.2,
     "currency": "INR"
   }
 }
 ```
+
+> **Note:** `deliveryFee` is NOT included in cart response. Delivery fee is sourced from Chargebee pricing data during checkout.
 
 ---
 
@@ -698,25 +756,94 @@ Remove item from cart.
 
 ---
 
-#### POST /api/v1/cart/checkout
+#### POST /api/v1/cart/merge
 
-Initiate cart checkout.
+Merge guest cart items into user's cart on login. Handles conflict resolution for mixed cart types (one-time vs. subscription).
 
 **Request:**
 ```json
 {
-  "deliveryAddressId": "addr_1",
-  "deliverySlot": "morning",
-  "paymentMethod": "card"
+  "items": [
+    {
+      "productId": "prod_orange",
+      "quantity": 2,
+      "priceId": "price_250ml",
+      "itemType": "charge"
+    }
+  ]
 }
 ```
 
 **Response (200 OK):**
 ```json
 {
-  "url": "https://bookmyjuice-test.chargebee.com/hosted_pages/checkout?...",
-  "orderId": "ord_123",
-  "expiresAt": "2026-03-27T11:30:00Z"
+  "message": "Cart merged successfully",
+  "cart": { ... }
+}
+```
+
+**Error Responses:**
+- `409 Conflict` — Mixed cart types detected (one-time and subscription items cannot coexist)
+
+---
+
+### Checkout
+
+> **Canonical Checkout Endpoint:** `POST /api/v2/checkout`
+> Per FUNCTIONAL_SPEC, cart-based checkout creates a Chargebee Hosted Page URL for payment.
+
+#### POST /api/v2/checkout
+
+Initiate one-time checkout from authenticated user's cart. Returns a Chargebee Hosted Page URL for payment processing.
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Checkout session created successfully",
+  "data": {
+    "url": "https://bookmyjuice-test.chargebee.com/hosted_pages/checkout?...",
+    "orderId": "ord_temp_123",
+    "expiresAt": "2026-03-27T11:30:00Z"
+  }
+}
+```
+
+**Error Responses:**
+- `400 Bad Request` — Cart empty, mixed cart types, or user has no Chargebee customer ID
+- `401 Unauthorized` — Authentication required
+
+---
+
+#### POST /api/v2/checkout/with-items
+
+Create a one-time checkout with specific items without using the cart system.
+
+**Request:**
+```json
+{
+  "items": [
+    { "price_id": "charge_xxx", "quantity": 2 },
+    { "price_id": "charge_yyy", "quantity": 1 }
+  ]
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Checkout session created successfully",
+  "data": {
+    "url": "https://bookmyjuice-test.chargebee.com/hosted_pages/checkout?...",
+    "orderId": "ord_temp_123",
+    "expiresAt": "2026-03-27T11:30:00Z"
+  }
 }
 ```
 
@@ -726,7 +853,7 @@ Initiate cart checkout.
 
 #### GET /api/v1/products
 
-Get all available products.
+Get all available products (sourced from Chargebee).
 
 **Query Parameters:**
 - `category` (optional): Filter by category
@@ -785,6 +912,8 @@ Get all available products.
 }
 ```
 
+> **Note:** Product IDs are sourced from Chargebee and are not hardcoded. The products endpoint serves as a cache of Chargebee item data synced to the local database.
+
 ---
 
 #### GET /api/v1/products/{id}
@@ -839,6 +968,91 @@ Check API health status.
 
 ---
 
+### Serviceability
+
+#### GET /api/v1/serviceability
+
+Check if delivery is available for a given pincode.
+
+**Query Parameters:**
+- `pincode` (required): 6-digit pincode
+
+**Response (200 OK):**
+```json
+{
+  "serviceable": true,
+  "message": "Delivery available in your area"
+}
+```
+
+---
+
+### Delivery Slots
+
+#### GET /api/v1/delivery/slots
+
+Get available delivery time slots.
+
+**Query Parameters:**
+- `serviceAreaId` (required): Service area ID
+- `date` (required): Date in YYYY-MM-DD format
+
+**Response (200 OK):**
+```json
+{
+  "slots": [
+    {
+      "id": 1,
+      "startTime": "07:00",
+      "endTime": "09:00",
+      "label": "Morning"
+    },
+    {
+      "id": 2,
+      "startTime": "09:00",
+      "endTime": "12:00",
+      "label": "Mid-Morning"
+    }
+  ]
+}
+```
+
+---
+
+### Webhooks
+
+#### Chargebee Webhooks
+
+The backend processes Chargebee webhooks for real-time updates.
+
+**Webhook Endpoint:**
+```
+POST /api/v1/webhooks/chargebee
+```
+
+### Supported Events
+
+| Event | Description |
+|-------|-------------|
+| `customer.created` | New customer registered |
+| `customer.updated` | Customer details updated |
+| `subscription.created` | New subscription |
+| `subscription.updated` | Subscription modified |
+| `subscription.cancelled` | Subscription cancelled |
+| `invoice.created` | Invoice generated |
+| `invoice.paid` | Payment received |
+| `invoice.failed` | Payment failed |
+| `payment.succeeded` | Payment successful |
+| `payment.failed` | Payment failed |
+
+### Webhook Signature Verification
+
+```
+X-Chargebee-Signature: t=<timestamp>,v1=<hmac_signature>
+```
+
+---
+
 ## Error Handling
 
 ### Standard Error Response Format
@@ -870,7 +1084,7 @@ Check API health status.
 | 401 | Unauthorized | Authentication required |
 | 403 | Forbidden | Insufficient permissions |
 | 404 | Not Found | Resource not found |
-| 409 | Conflict | Resource conflict |
+| 409 | Conflict | Resource conflict (e.g., mixed cart types) |
 | 422 | Unprocessable Entity | Validation error |
 | 429 | Too Many Requests | Rate limit exceeded |
 | 500 | Internal Server Error | Server error |
@@ -882,7 +1096,7 @@ Check API health status.
 | Error Code | Description | Resolution |
 |------------|-------------|------------|
 | `AUTH_001` | Invalid credentials | Check username/password |
-| `AUTH_002` | Token expired | Refresh token |
+| `AUTH_002` | Token expired | Re-authenticate via /api/v1/auth/signin |
 | `AUTH_003` | Invalid token | Re-authenticate |
 | `USER_001` | User not found | Register first |
 | `USER_002` | Email already exists | Use different email |
@@ -929,40 +1143,6 @@ Retry-After: 60
   "retryAfter": 60,
   "path": "/api/v1/endpoint"
 }
-```
-
----
-
-## Webhooks
-
-### Chargebee Webhooks
-
-The backend processes Chargebee webhooks for real-time updates.
-
-**Webhook Endpoint:**
-```
-POST /api/v1/webhooks/chargebee
-```
-
-### Supported Events
-
-| Event | Description |
-|-------|-------------|
-| `customer.created` | New customer registered |
-| `customer.updated` | Customer details updated |
-| `subscription.created` | New subscription |
-| `subscription.updated` | Subscription modified |
-| `subscription.cancelled` | Subscription cancelled |
-| `invoice.created` | Invoice generated |
-| `invoice.paid` | Payment received |
-| `invoice.failed` | Payment failed |
-| `payment.succeeded` | Payment successful |
-| `payment.failed` | Payment failed |
-
-### Webhook Signature Verification
-
-```
-X-Chargebee-Signature: t=<timestamp>,v1=<hmac_signature>
 ```
 
 ---
@@ -1044,7 +1224,7 @@ class ApiException implements Exception {
 ### cURL Examples
 
 ```bash
-# Login
+# Login (canonical endpoint)
 curl -X POST http://localhost:8080/api/v1/auth/signin \
   -H "Content-Type: application/json" \
   -d '{
@@ -1061,19 +1241,28 @@ curl -X GET http://localhost:8080/api/v1/user/profile \
 curl -X GET http://localhost:8080/api/v1/products \
   -H "Accept: application/json"
 
-# Create Order
-curl -X POST http://localhost:8080/api/v1/orders/one-time/checkout \
+# Initiate Checkout (V2 - cart-based)
+curl -X POST http://localhost:8080/api/v2/checkout \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+
+# Add Address (canonical)
+curl -X POST http://localhost:8080/api/v1/address \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "items": [
-      {
-        "productId": "prod_orange",
-        "quantity": 2,
-        "priceId": "price_250ml"
-      }
-    ]
+    "label": "Home",
+    "fullName": "John Doe",
+    "phone": "9876543210",
+    "addressLine1": "123 Main St",
+    "city": "Bangalore",
+    "state": "Karnataka",
+    "pincode": "560001"
   }'
+
+# Check Pincode Serviceability
+curl -X GET "http://localhost:8080/api/v1/serviceability?pincode=400001" \
+  -H "Accept: application/json"
 ```
 
 ---
@@ -1091,5 +1280,5 @@ Interactive API documentation is available at:
 
 ---
 
-*Last Updated: March 27, 2026*
+*Last Updated: May 20, 2026*
 *API Version: 1.0.0*

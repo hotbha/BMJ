@@ -23,7 +23,6 @@ This document defines the boundary between native BMJ screens and Chargebee-host
 | One-Time Product Detail | Browse individual juice products | Local cache |
 | Cart / Review | View selected items, modify quantities | Local state + API |
 | Address Selection | Choose delivery address | BMJ delivery API |
-| Delivery Slot Picker | Select delivery time slot | BMJ delivery API |
 | Pre-Checkout Review | Final validation before payment | BMJ billing API |
 | Subscription Management | View/manage active subscriptions | Local cache + Chargebee API (server-side) |
 | Billing Summary | Invoice/payment history | Local cache |
@@ -68,14 +67,14 @@ This document defines the boundary between native BMJ screens and Chargebee-host
      │ 3. User browses, selects plan         │                   │
      │    (all native screens)               │                   │
      │                   │                   │                   │
-     │ 4. POST /api/billing/checkout/review  │                   │
+     │ 4. POST /api/v2/checkout/review      │                   │
      │──────────────────►│                   │                   │
      │                   │ 5. Validate cart  │                   │
      │                   │    Check pricing  │                   │
      │                   │    Verify delivery│                   │
      │◄──────────────────│                   │                   │
      │                   │                   │                   │
-     │ 6. POST /api/billing/checkout/start   │                   │
+     │ 6. POST /api/v2/checkout             │                   │
      │──────────────────►│                   │                   │
      │                   │ 7. HostedPage     │                   │
      │                   │    .checkoutNew() │                   │
@@ -160,23 +159,35 @@ After a user completes payment on hosted checkout:
 
 ---
 
-## API Endpoints Summary
+## API Endpoints Summary (Actual)
 
 | Method | Endpoint | Purpose | Native/Hosted |
 |--------|----------|---------|---------------|
-| GET | `/api/products` | Product catalog | Native |
-| GET | `/api/plans` | Subscription plans | Native |
-| GET | `/api/plans/{id}` | Plan details | Native |
-| POST | `/api/billing/checkout/review` | Pre-checkout validation | Native |
-| POST | `/api/billing/checkout/start` | Start checkout, get hosted URL | Backend → Hosted |
-| GET | `/api/billing/subscriptions/me` | User's subscriptions | Native |
-| POST | `/api/billing/subscriptions/change-plan` | Change plan | Native |
-| POST | `/api/billing/subscriptions/cancel` | Cancel subscription | Native |
-| GET | `/api/billing/orders/me` | Order history | Native |
+| GET | `/api/products` | Product catalog (one-time purchase items) | Native |
+| GET | `/api/subscriptions/pricing/plans` | All subscription plans from local DB (synced from Chargebee ItemPrices) | Native |
+| POST | `/api/subscriptions/create` | Create subscription → returns Chargebee hosted checkout URL | Backend → Hosted |
+| GET | `/api/subscriptions/my` | Current user's subscriptions | Native |
+| GET | `/api/subscriptions/{subscriptionId}` | Single subscription details | Native |
+| PUT | `/api/subscriptions/{subscriptionId}/pause` | Pause subscription (enforces 9PM IST cutoff) | Native |
+| PUT | `/api/subscriptions/{subscriptionId}/resume` | Resume paused subscription (enforces 9PM IST cutoff) | Native |
+| DELETE | `/api/subscriptions/{subscriptionId}` | Cancel subscription (enforces 9PM IST cutoff) | Native |
 | GET | `/api/billing/invoices/me` | Invoice history | Native |
+| POST | `/api/v1/subscribe` | Legacy subscription checkout from cart | Native |
+| POST | `/api/v1/subscribe/direct` | Legacy direct subscription checkout with plan_id | Native |
+
+### Deprecated Endpoints (Return 410 GONE)
+
+| Method | Endpoint | Reason |
+|--------|----------|--------|
+| GET | `/api/test/generate_pricing_page_session_url` | Chargebee Pricing Pages removed — use native plan selection |
+| POST | `/api/test/generate_plan_change_session_url` | Chargebee Pricing Pages removed — use native subscription management |
+| GET | `/api/test/generate_new_premium_subscription_pricing_page` | Same as above |
+| GET | `/api/test/generate_new_signature_subscription_pricing_page` | Same as above |
+| GET | `/api/test/generate_new_delight_subscription_pricing_page` | Same as above |
+| GET | `/api/test/generate_existing_delight_subscription_session` | Same as above |
 
 ---
 
 **Document Maintained By:** Engineering Team  
-**Last Review:** 2026-05-08  
-**Next Review:** 2026-06-08
+**Last Review:** 2026-05-25  
+**Next Review:** 2026-06-25

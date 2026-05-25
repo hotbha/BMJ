@@ -17,7 +17,9 @@
 | SECURITY | 7 | 0 | 1 | 0 | 8 | 8 | 0 |
 | CICD | 3 | 0 | 0 | 0 | 3 | 3 | 0 |
 | PROFILE | 3 | 0 | 0 | 0 | 3 | 3 | 0 |
-| **TOTAL** | **123** | **5** | **13** | **3** | **144** | **68** | **76** |
+| PHONE_UX | 0 | 0 | 0 | 12 | 12 | 0 | 0 |
+| CROSS_MODULE | 0 | 0 | 0 | 12 | 12 | 0 | 0 |
+| **TOTAL** | **123** | **5** | **13** | **27** | **168** | **68** | **76** |
 
 > **Note:** The 133 Flutter tests (82 unit + 51 widget) are tracked under AUTH (81), CART (14), and THEME (38). An additional 5 Flutter widget tests are counted separately under AUTH widget category. Backend total = 77 tests (67 unit + 10 integration).
 

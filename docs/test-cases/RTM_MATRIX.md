@@ -1,9 +1,9 @@
 # BookMyJuice — Requirements Traceability Matrix (RTM)
 
-> **Document Version:** 1.0
-> **Last Updated:** 2026-05-19
+> **Document Version:** 1.1
+> **Last Updated:** 2026-05-23
 > **Total Requirements:** 35 (BR-001 to BR-073 + NFRs)
-> **Total Test Cases:** 173 E2E + 52 Existing (Unit/Integration) = **225 Total**
+> **Total Test Cases:** 221 E2E + 52 Existing (Unit/Integration) = **273 Total**
 > **Total Use Cases:** 13 (UC-AUTH-001 to UC-AUTH-007c + UC-01 to UC-11)
 
 ---
@@ -12,7 +12,7 @@
 
 | Module | BRs Covered | Use Cases | E2E Test Cases | Existing Tests | Total | Coverage |
 |--------|-------------|-----------|----------------|----------------|-------|----------|
-| **Authentication** | BR-001 to BR-003, BR-006, BR-009 to BR-011 | UC-AUTH-001 to UC-AUTH-007c | 60 | 56+68=124 | 184 | Full |
+| **Authentication** | BR-001 to BR-003, BR-006, BR-009 to BR-011 | UC-AUTH-001 to UC-AUTH-007c | 60 + 18 SG | 56+68=124 | 202 | Full |
 | **Product Catalog** | BR-008, BR-010 to BR-012 | UC-01 | 12 | — | 12 | Full |
 | **Cart** | BR-004, BR-005, BR-020 to BR-024 | UC-01, UC-02 | 16 | 14 | 30 | Full |
 | **Checkout/Billing** | BR-030 to BR-033 | UC-03, UC-04 | 16 | 5 | 21 | Full |
@@ -22,7 +22,9 @@
 | **Notifications** | BR-060 to BR-062 | UC-10, UC-11 | 10 | 7 | 17 | Local only |
 | **Profile** | BR-007 | Profile mgmt | 6 | 3 | 9 | Full |
 | **Non-Functional** | NFR-001 to NFR-017 | NFR | 19 | 7+5=12 | 31 | Full |
-| **TOTAL** | **35** | **13** | **173** | **52** | **225** | **Full** |
+| **Phone UX** | BR-001, BR-006, BR-008, BR-011 | UC-AUTH-001 to UC-AUTH-007, UC-01 | 12 | — | 12 | New |
+| **Cross-Module** | BR-001 to BR-073 | UC-AUTH-001 to UC-11 | 12 | — | 12 | New |
+| **TOTAL** | **35** | **13** | **221** | **52** | **273** | **Full** |
 
 ---
 
@@ -64,7 +66,7 @@
 | BR-020 | Single-mode cart (one-time OR subscription) | UC-01 | CART-001, CART-002, CART-006 to CART-008, CART-016 | Tested |
 | BR-021 | No local price calculation | UC-01 | CART-005, CART-016 | Tested |
 | BR-022 | Price breakdown display | UC-01 | CART-005 | Tested |
-| BR-023 | Delivery fee = 0 for MVP | UC-01 | CART-005 | Tested |
+| BR-023 | Delivery fee from Chargebee | UC-01 | CART-005 | Tested |
 | BR-024 | Tax from Chargebee | UC-01 | CART-005 | Tested |
 
 **16 E2E Cart Test Cases:** Add items (5), Single-mode enforcement (3), Item management (4), Cart merge (3), Edge cases (1).
@@ -122,7 +124,7 @@
 | BR-070 | Delivery address during signup | DEL-001, DEL-002, DEL-003 | Tested |
 | BR-071 | Pincode-based serviceability | DEL-004, DEL-005, DEL-010 | Tested |
 | BR-072 | Day-wise delivery schedule | DEL-006 to DEL-009 | Tested |
-| BR-073 | Delivery fee/subtotal threshold | DEL-009 | Tested |
+| BR-073 | Delivery fee sourced from Chargebee pricing data | DEL-009 | Tested |
 
 **10 E2E Delivery Test Cases:** Address validation (3), Pincode check (3), Day-wise schedule (3), Fee check (1).
 
@@ -132,9 +134,9 @@
 
 | BR ID | Description | Use Case | E2E TCs | Status |
 |-------|-------------|----------|---------|--------|
-| BR-060 | Payment failure notifications | UC-10 | NOT-001 | Local only |
-| BR-061 | Subscription action notifications | UC-10 | NOT-002, NOT-003, NOT-004 | Local only |
-| BR-062 | Order event notifications | UC-11 | NOT-005 | Local only |
+| BR-060 | Payment failure notifications via FCM push | UC-10 | NOT-001 | FCM Push |
+| BR-061 | Subscription action notifications via FCM push | UC-10 | NOT-002, NOT-003, NOT-004 | FCM Push |
+| BR-062 | Order event notifications via FCM push | UC-11 | NOT-005 | FCM Push |
 
 **10 E2E Notification Test Cases:** Payment failure (1), Subscription actions (3), Order events (1), Permission handling (1), Deep links (1), FCM token (1), Stacking (1), Foreground (1).
 
@@ -188,7 +190,7 @@
 | Checkout & Payment | 4 | 4 | 100% |
 | Subscriptions | 8 | 8 | 100% |
 | Orders & Status | 5 | 5 | 100% |
-| Notifications | 3 | 3 | Local only |
+| Notifications | 3 | 3 | FCM Push |
 | Delivery Domain | 4 | 4 | 100% |
 | Profile | 1 | 1 | 100% |
 | Security (BR-006, BR-009 to BR-011) | 4 | 4 | 100% |
@@ -204,6 +206,7 @@ All 20 use cases covered: UC-AUTH-001 to UC-AUTH-007c (10), UC-01 to UC-11 (10).
 | Category | Count |
 |----------|-------|
 | Authentication E2E | 60 |
+| Auth Signup Gaps E2E | 18 |
 | Product Catalog E2E | 12 |
 | Cart E2E | 16 |
 | Checkout E2E | 16 |
@@ -213,10 +216,12 @@ All 20 use cases covered: UC-AUTH-001 to UC-AUTH-007c (10), UC-01 to UC-11 (10).
 | Notification E2E | 10 |
 | Profile E2E | 6 |
 | Non-Functional E2E | 19 |
-| **Total E2E Test Cases** | **173** |
+| Phone UX E2E | 12 |
+| Cross-Module E2E | 12 |
+| **Total E2E Test Cases** | **221** |
 | Existing Backend Tests | 71 |
 | Existing Flutter Tests | 82 |
-| **Grand Total** | **225+** |
+| **Grand Total** | **274** |
 
 ---
 

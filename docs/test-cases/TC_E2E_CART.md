@@ -59,7 +59,7 @@ Before executing these tests, ensure:
 1. Item added with quantity 1
 2. Cart type = 'onetime'
 3. Cart badge shows count = 1
-4. Cart screen shows: item name, quantity, unit price, subtotal, tax, delivery_fee=0, grand_total
+4. Cart screen shows: item name, quantity, unit price, subtotal, tax, grand_total (delivery fee sourced from Chargebee)
 5. Pricing: subtotal = quantity × unit_price (from bmjServer, not calculated locally)
 6. No subscription options visible in cart
 
@@ -183,13 +183,13 @@ Before executing these tests, ensure:
 **Test Steps:**
 1. Navigate to Cart screen
 2. Observe pricing section
-3. Verify subtotal, tax, delivery_fee, grand_total against API response
+3. Verify subtotal, tax, grand_total against API response
 
 **Expected Results:**
 1. Subtotal displayed correctly (sum of item totals from server)
 2. Tax displayed (sourced from Chargebee, passthrough via bmjServer)
-3. Delivery fee = ₹0 (MVP, BR-023)
-4. Grand total = subtotal + tax + delivery_fee - discount (from server)
+3. Delivery fee not displayed as separate line item — sourced from Chargebee pricing data (BR-023)
+4. Grand total = subtotal + tax - discount (from server; delivery fee included in Chargebee pricing)
 5. Mobile app does NOT calculate any of these values — display only
 
 **Test Data:**

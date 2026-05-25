@@ -74,11 +74,18 @@ This document provides detailed use case specifications for the BookMyJuice plat
 - User has valid 10-digit phone number
 - User is not already registered
 
-**Main Success Scenario:**
+**Main Success Scenario (Updated for Dashboard-First):**
 
-1. User opens app and sees login/signup screen
-2. User taps "Sign up with Email"
-3. System displays email entry screen
+1. User opens app and sees **Dashboard (public mode)** with promotions, plans, juice catalog preview, and a "Sign In" prompt
+2. User taps "Sign In" on Dashboard
+3. System shows login/signup screen
+4. User taps "Sign up with Email"
+5. System displays email entry screen
+>>>>>>> after
+Wait, this won't work because the SEARCH text needs to exactly match. Let me re-read the file and craft precise replacements.<｜end▁of▁thinking｜>
+
+<｜｜DSML｜｜tool_calls>
+<｜｜DSML｜｜invoke name="read_file">
 4. User enters email address
 5. User taps "Continue"
 6. System sends 6-digit verification code to email
@@ -153,8 +160,13 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 **Main Success Scenario:**
 
-1. User opens app and sees login/signup screen
-2. User taps "Sign up with Phone"
+1. User opens app and sees Dashboard (public mode) with promotions, plans, and a "Sign In" prompt
+2. User taps "Sign In" on Dashboard, then taps "Sign up with Phone"
+>>>>>>> after
+Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking｜>
+
+<｜｜DSML｜｜tool_calls>
+<｜｜DSML｜｜invoke name="read_file">
 3. System displays phone entry screen
 4. User enters 10-digit phone number
 5. User taps "Send OTP"
@@ -194,8 +206,8 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 **Main Success Scenario:**
 
-1. User opens app and sees login/signup screen
-2. User taps "Sign up with Google"
+1. User opens app and sees Dashboard (public mode) with promotions, plans, and a "Sign In" prompt
+2. User taps "Sign In" on Dashboard, then taps "Sign up with Google"
 3. System opens Google authentication
 4. User selects Google account
 5. Google returns verified email, name, and picture
@@ -241,14 +253,16 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 **Main Success Scenario:**
 
-1. User opens app, sees login screen
-2. User enters email and password
-3. User taps "Login"
-4. System validates credentials (find user, verify BCrypt hash)
-5. System generates JWT token (30-day expiry)
-6. System stores token in SharedPreferences
-7. System navigates to dashboard
-8. On subsequent launches, auto-login checks token validity ONLY (no Google/phone)
+1. User opens app and sees Dashboard (public mode) with promotions, plans, and a "Sign In" prompt
+2. User taps "Sign In" on Dashboard
+3. System shows login screen
+4. User enters email and password
+5. User taps "Login"
+6. System validates credentials (find user, verify BCrypt hash)
+7. System generates JWT token (30-day expiry)
+8. System stores token in SharedPreferences
+9. System navigates to dashboard
+10. On subsequent launches, auto-login checks token validity ONLY (no Google/phone)
 
 **Note:** Username for login is the user's 10-digit phone number. The phone number serves as both the login identifier and the `username` field in the database.
 
@@ -256,7 +270,7 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 - **4a. Invalid credentials:** System shows "Invalid email or password"
 - **4b. Account locked (5 failed attempts):** System shows "Account locked, reset password"
-- **8a. Token expired:** System clears token, shows login screen
+- **8a. Token expired:** System clears token, shows Dashboard in public mode with toast notification: "Session expired. Please sign in again."
 
 ---
 
@@ -477,7 +491,7 @@ This document provides detailed use case specifications for the BookMyJuice plat
 2. Guest taps product → views Product Detail screen
 3. Guest taps "Add to Cart" → item added with quantity 1
 4. Guest adds more items → cart type locked to first item type (one-time or subscription)
-5. Guest opens Cart screen → sees items + pricing breakdown (subtotal, tax, delivery_fee=0, grand_total)
+5. Guest opens Cart screen → sees items + pricing breakdown (subtotal, tax, delivery fee from Chargebee, grand_total)
 6. Guest modifies quantities or removes items
 
 **Postcondition:** Guest cart persisted in SharedPreferences + bmjServer with `user_id = NULL`
@@ -696,7 +710,7 @@ This document provides detailed use case specifications for the BookMyJuice plat
 5. Mobile reads deep-link data → navigates to Order Detail screen for `ord_xxx`
 6. Mobile calls `GET /api/v1/orders/ord_xxx` → displays confirmed order state with `payment_status: failed`
 
-**Postcondition:** User sees failed order details and can retry payment (post-MVP) or contact support
+**Postcondition:** User sees failed order details and can retry payment or contact support
 
 ### UC-11: FCM Foreground Notification Display
 
@@ -745,47 +759,52 @@ This document provides detailed use case specifications for the BookMyJuice plat
 └──────────┬──────────┘
            │
            ▼
-┌─────────────────────┐
-│  Login / Signup     │
-│  Selection Screen   │
-└──────────┬──────────┘
-           │
-    ┌──────┼──────┬──────────┐
-    │      │      │          │
-    ▼      ▼      ▼          ▼
-┌──────┐ ┌──────┐ ┌────────┐ │
-│ Email│ │ Phone│ │ Google │ │
-│Signup│ │Signup│ │ Signup │ │
-└──┬───┘ └──┬───┘ └───┬────┘ │
-   │        │         │      │
-   │        │         │      │
-   ▼        ▼         ▼      │
-   ┌────────────────┐       │
-   │ Email Verified │◄──────┘
-   └───────┬────────┘
-           │
-           ▼
-   ┌────────────────┐
-   │ Phone Verified │
-   └───────┬────────┘
-           │
-           ▼
-   ┌────────────────┐
-   │ Address Entry  │
-   └───────┬────────┘
-           │
-           ▼
-   ┌────────────────┐
-   │ Create Password│
-   └───────┬────────┘
-           │
-           ▼
-   ┌─────────────────────┐
-   │  Dashboard          │
-   │  ├─ Subscription    │
-   │  ├─ Quick Actions   │
-   │  └─ Navigation      │
-   └──────┬──────────────┘
+┌──────────────────────────────────┐
+│  Dashboard (Public Mode)         │
+│  ├─ Promotions / Catalog Preview │
+│  ├─ Subscription Plans           │
+│  ├─ Juice Catalog                │
+│  └─ [Sign In] prompt             │
+└──────┬──────────────────────┬────┘
+       │                      │
+       │ Tap "Sign In"        │ Auto-login succeeds
+       ▼                      ▼
+┌──────────────────┐  ┌─────────────────────┐
+│ Login / Signup   │  │  Dashboard          │
+│ Selection Screen │  │  (Full/Authenticated)│
+└──────┬───────────┘  ├─ Subscription       │
+       │              ├─ Quick Actions      │
+       │              └─ Navigation         │
+       │                  │                 │
+    ┌──┼──┐               │                 │
+    │  │  │               │                 │
+    ▼  ▼  ▼               │                 │
+┌────┐┌──┐┌────┐         │                 │
+│Email││Ph││Google│        │                 │
+│Signp││ne││Signup│       │                 │
+│     ││Sg││      │       │                 │
+└──┬──┘│np│└──┬───┘       │                 │
+   │   │up│    │           │                 │
+   │   └──┘    │           │                 │
+   ▼          ▼           │                 │
+   ┌──────────────┐       │                 │
+   │OTP / Code    │       │                 │
+   │ Verification │       │                 │
+   └──────┬───────┘       │                 │
+          │               │                 │
+          ▼               │                 │
+   ┌──────────────┐       │                 │
+   │ Address+Pwd  │       │                 │
+   │ Entry        │       │                 │
+   └──────┬───────┘       │                 │
+          │               │                 │
+          ▼               ▼                 │
+   ┌──────────────────────────────────┐     │
+   │  Dashboard (Full/Authenticated)  │◄────┘
+   │  ├─ Subscription                 │
+   │  ├─ Quick Actions                │
+   │  └─ Navigation                   │
+   └──────┬───────────────────────────┘
           │
    ┌──────┼────────┬─────────────┐
    │      │        │             │
@@ -806,6 +825,6 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 **Document Control:**
 - **Created:** April 11, 2026 (Consolidated from UNIFIED_SIGNUP_USE_CASES.md and BOOKMYJUICE_SPECIFICATION.md)
-- **Updated:** May 12, 2026 (Added UC-AUTH-007a Firebase Phone Signup, UC-AUTH-007b Firebase Phone Login, UC-11 FCM Foreground Notifications)
-- **Version:** 1.1
-- **Status:** ✅ Approved for Development
+- **Updated:** May 25, 2026 (Dashboard-First Landing: Updated UC-AUTH-001/002/003/004 flow steps and Screen Flow Map)
+- **Version:** 1.2
+- **Status:** ✅ Updated for Dashboard-First Flow

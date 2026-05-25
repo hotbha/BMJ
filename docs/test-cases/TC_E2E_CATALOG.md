@@ -212,7 +212,7 @@ Before executing these tests, ensure:
 
 **Expected Results:**
 1. Products render within 2 seconds on stable connection
-2. Lazy loading or pagination if many products (but MVP < 20 products expected)
+2. Lazy loading or pagination for efficient product display
 3. No blank screen > 2 seconds
 
 **Test Data:**

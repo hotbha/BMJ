@@ -24,7 +24,7 @@ Refer to **`TEST_PREREQUISITES.md`** for full environment setup. Key items for t
 
 **Linked BRs:** BR-060, BR-061, BR-062  
 **Linked UCs:** UC-10, UC-11  
-**MVP Note:** Local-only notifications using flutter_local_notifications. FCM infrastructure exists (FirebaseNotificationService + token endpoint) but NO FCM server push for MVP. Notifications triggered locally on webhook processing results.
+**Note:** FCM server push notifications via Firebase Cloud Messaging. Backend sends push notifications for payment failures, subscription actions, and order events. Flutter FirebaseNotificationService handles display in all app states (foreground, background, closed).
 
 ---
 

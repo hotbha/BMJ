@@ -15,7 +15,7 @@
 | P-01 | bmjServer deployed to staging environment with public URL (e.g., `https://staging-api.bookmyjuice.co.in`) | ALL API tests | 🔴 Must Do | DevOps |
 | P-02 | MySQL 8.0+ database running with Flyway migrations applied (V1→V5) | ALL tests | 🔴 Must Do | DevOps |
 | P-03 | `.env` file configured on staging server with all secrets: `CHARGEBEE_SITE`, `CHARGEBEE_API_KEY`, `JWT_SECRET`, `MAIL_*`, `GOOGLE_CLIENT_ID`, `DB_*`, `WEBHOOK_*` | ALL tests | 🔴 Must Do | DevOps |
-| P-04 | Redis server running (optional for MVP, required for cache fallback tests) | CACHE, BILLING | 🟡 Nice to Have | DevOps |
+| P-04 | Redis server running (required for cache fallback tests) | CACHE, BILLING | 🟡 Nice to Have | DevOps |
 | P-05 | SMTP mail server configured with verified sender email | AUTH (email verification) | 🔴 Must Do | Admin |
 | P-06 | Health endpoint accessible: `GET /api/health` returns 200 | Smoke test | 🔴 Must Do | DevOps |
 

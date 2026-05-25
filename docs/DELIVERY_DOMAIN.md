@@ -23,6 +23,8 @@ Pincode-based serviceability configuration.
 ### delivery_slots
 Available delivery time windows for each service area.
 
+The `delivery_slots` table provides granular time-window selection (pre-booking specific 2-hour delivery windows) for each service area. The table schema and APIs are fully operational for time-window based delivery scheduling.
+
 | Column | Type | Description |
 |--------|------|-------------|
 | id | BIGINT (PK) | Auto-increment primary key |
@@ -38,6 +40,8 @@ Available delivery time windows for each service area.
 
 ### user_addresses
 Multi-address management for users.
+
+The `user_addresses` table supports multiple delivery addresses per user. Users can add, edit, delete, and set default addresses. The "Add Address" button is always available for adding new addresses. Address is captured during signup as part of the registration flow.
 
 | Column | Type | Description |
 |--------|------|-------------|

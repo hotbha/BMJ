@@ -1066,7 +1066,7 @@ Before executing these tests, ensure:
 
 ---
 
-### TC-E2E-AUTH-032: Auto-login with expired JWT → login screen
+### TC-E2E-AUTH-032: Auto-login with expired JWT → Dashboard public mode with toast
 
 | Field | Value |
 |-------|-------|
@@ -1088,17 +1088,18 @@ Before executing these tests, ensure:
 4. Reopen app
 
 **Expected Results:**
-1. App checks JWT → finds expired token
-2. Clears expired token from SharedPreferences
-3. Shows login screen
-4. User must re-authenticate
+1. App immediately shows Dashboard (public mode) with catalog preview and "Sign In" prompt
+2. Background auto-login checks JWT → finds expired token
+3. Clears expired token from SharedPreferences
+4. Dashboard stays in public mode, shows toast notification: "Session expired. Please sign in again."
+5. User can browse products and catalog without signing in
 
 **Test Data:**
 - Expired JWT token
 
 ---
 
-### TC-E2E-AUTH-033: Auto-login with missing token → login screen
+### TC-E2E-AUTH-033: Auto-login with missing token → Dashboard public mode
 
 | Field | Value |
 |-------|-------|
@@ -1119,8 +1120,9 @@ Before executing these tests, ensure:
 
 **Expected Results:**
 1. No JWT in SharedPreferences
-2. Login screen displayed directly
-3. Signup/Login options available
+2. Dashboard (public mode) displayed with catalog preview, promotions, subscription plans, and a "Sign In" prompt
+3. User can browse products and plans without signing in
+4. "Sign In" button visible to navigate to login/signup selection screen
 
 **Test Data:**
 - No token

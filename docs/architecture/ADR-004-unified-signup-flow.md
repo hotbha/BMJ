@@ -558,7 +558,7 @@ routes: {
 
 ## Future Enhancements
 
-### Phase 2 (Post-MVP)
+### Phase 2
 
 - [ ] Biometric authentication (fingerprint, face ID)
 - [ ] Social login (Facebook, Apple)

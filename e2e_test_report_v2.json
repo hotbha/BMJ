@@ -1,9 +1,9 @@
 {
   "summary": {
     "total": 34,
-    "passed": 18,
-    "failed": 16,
-    "pass_rate": "52.9%"
+    "passed": 17,
+    "failed": 17,
+    "pass_rate": "50.0%"
   },
   "results": [
     {
@@ -12,8 +12,8 @@
       "status": 200,
       "expected": 200,
       "response": {
-        "timestamp": "2026-05-19T18:12:00.075699078",
-        "status": "UP"
+        "status": "UP",
+        "timestamp": "2026-05-21T18:06:06.741189343"
       },
       "path": "/api/health",
       "method": "GET"
@@ -31,11 +31,11 @@
     },
     {
       "name": "Sign Up (correct fields)",
-      "passed": false,
-      "status": 500,
+      "passed": true,
+      "status": 200,
       "expected": 200,
       "response": {
-        "message": "Error: Failed to create Chargebee customer - id : The value 500 is already present."
+        "message": "User registered successfully!"
       },
       "path": "/api/auth/signup",
       "method": "POST"
@@ -87,13 +87,40 @@
     {
       "name": "Unified Signup (correct fields)",
       "passed": false,
-      "status": 401,
+      "status": 400,
       "expected": 200,
       "response": {
-        "path": "/error",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "path": "/api/auth/unified-signup",
+        "error": "Bad Request",
+        "message": "Validation failed",
+        "errors": [
+          {
+            "field": "firstName",
+            "message": "First name is required"
+          },
+          {
+            "field": "address",
+            "message": "Address is required"
+          },
+          {
+            "field": "state",
+            "message": "State is required"
+          },
+          {
+            "field": "city",
+            "message": "City is required"
+          },
+          {
+            "field": "zip",
+            "message": "ZIP code is required"
+          },
+          {
+            "field": "country",
+            "message": "Country is required"
+          }
+        ],
+        "timestamp": "2026-05-21T18:06:11.362640159Z",
+        "status": 400
       },
       "path": "/api/auth/unified-signup",
       "method": "POST"
@@ -101,13 +128,13 @@
     {
       "name": "Auto Login (no auth header)",
       "passed": false,
-      "status": 401,
+      "status": 404,
       "expected": 400,
       "response": {
-        "path": "/error",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "path": "/api/auth/autologin",
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
       },
       "path": "/api/auth/autologin",
       "method": "POST"
@@ -158,42 +185,62 @@
     },
     {
       "name": "Link Google Account (invalid params)",
-      "passed": false,
-      "status": 401,
+      "passed": true,
+      "status": 400,
       "expected": 400,
       "response": {
-        "path": "/error",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "path": "/api/auth/link-google-account",
+        "error": "Bad Request",
+        "message": "Validation failed",
+        "errors": [
+          {
+            "field": "googleId",
+            "message": "must not be blank"
+          },
+          {
+            "field": "otp",
+            "message": "size must be between 6 and 6"
+          },
+          {
+            "field": "phone",
+            "message": "must not be blank"
+          },
+          {
+            "field": "otp",
+            "message": "must not be blank"
+          }
+        ],
+        "timestamp": "2026-05-21T18:06:11.793137645Z",
+        "status": 400
       },
       "path": "/api/auth/link-google-account",
       "method": "POST"
     },
     {
       "name": "Get Account (no auth)",
-      "passed": true,
-      "status": 401,
+      "passed": false,
+      "status": 404,
       "expected": 401,
       "response": {
-        "path": "/error",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "path": "/api/auth/account",
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
       },
       "path": "/api/auth/account",
       "method": "GET"
     },
     {
       "name": "Delete Account (no auth)",
-      "passed": true,
-      "status": 401,
+      "passed": false,
+      "status": 403,
       "expected": 401,
       "response": {
         "path": "/api/auth/account",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "error": "Forbidden",
+        "message": "Access denied",
+        "timestamp": "2026-05-21T18:06:11.911048853Z",
+        "status": 403
       },
       "path": "/api/auth/account",
       "method": "DELETE"
@@ -207,6 +254,7 @@
         "path": "/api/v1/products",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.961706384Z",
         "status": 401
       },
       "path": "/api/v1/products",
@@ -214,14 +262,12 @@
     },
     {
       "name": "Get Pricing Plans (no auth)",
-      "passed": false,
-      "status": 401,
+      "passed": true,
+      "status": 200,
       "expected": 200,
       "response": {
-        "path": "/api/subscriptions/pricing/plans",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "status": "success",
+        "data": []
       },
       "path": "/api/subscriptions/pricing/plans",
       "method": "GET"
@@ -235,6 +281,7 @@
         "path": "/api/subscriptions/my",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.513541986Z",
         "status": 401
       },
       "path": "/api/subscriptions/my",
@@ -249,6 +296,7 @@
         "path": "/api/subscriptions/create",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.541241334Z",
         "status": 401
       },
       "path": "/api/subscriptions/create",
@@ -263,6 +311,7 @@
         "path": "/api/subscriptions/test-123/pause",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.574864901Z",
         "status": 401
       },
       "path": "/api/subscriptions/test-123/pause",
@@ -277,6 +326,7 @@
         "path": "/api/v1/cart",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.594121854Z",
         "status": 401
       },
       "path": "/api/v1/cart",
@@ -291,6 +341,7 @@
         "path": "/api/v1/cart/items",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.612760537Z",
         "status": 401
       },
       "path": "/api/v1/cart/items",
@@ -305,6 +356,7 @@
         "path": "/api/v1/cart/clear",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.637431208Z",
         "status": 401
       },
       "path": "/api/v1/cart/clear",
@@ -319,6 +371,7 @@
         "path": "/api/test/oneTimeCheckoutPageUrl",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.654212023Z",
         "status": 401
       },
       "path": "/api/test/oneTimeCheckoutPageUrl",
@@ -333,6 +386,7 @@
         "path": "/api/test/cartCheckout",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.713834856Z",
         "status": 401
       },
       "path": "/api/test/cartCheckout",
@@ -347,6 +401,7 @@
         "path": "/api/orders/my",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.736851970Z",
         "status": 401
       },
       "path": "/api/orders/my",
@@ -361,6 +416,7 @@
         "path": "/api/orders/test-order-123",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:10.897307044Z",
         "status": 401
       },
       "path": "/api/orders/test-order-123",
@@ -375,6 +431,7 @@
         "path": "/api/invoices/my",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:10.923210364Z",
         "status": 401
       },
       "path": "/api/invoices/my",
@@ -382,28 +439,28 @@
     },
     {
       "name": "Get Addresses (no auth)",
-      "passed": true,
-      "status": 401,
+      "passed": false,
+      "status": 404,
       "expected": 401,
       "response": {
         "path": "/api/delivery/addresses",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
       },
       "path": "/api/delivery/addresses",
       "method": "GET"
     },
     {
       "name": "Add Address (no auth)",
-      "passed": true,
-      "status": 401,
+      "passed": false,
+      "status": 404,
       "expected": 401,
       "response": {
         "path": "/api/delivery/addresses",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
       },
       "path": "/api/delivery/addresses",
       "method": "POST"
@@ -417,6 +474,7 @@
         "path": "/api/webhooks/chargebee",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:10.967518035Z",
         "status": 401
       },
       "path": "/api/webhooks/chargebee",
@@ -431,6 +489,7 @@
         "path": "/api/v1/auth/signin",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:10.985815196Z",
         "status": 401
       },
       "path": "/api/v1/auth/signin",
@@ -456,17 +515,6 @@
         "message": "Error: Invalid username or password!"
       },
       "path": "/api/auth/signin",
-      "method": "POST"
-    },
-    {
-      "name": "Sign Up (correct fields)",
-      "passed": false,
-      "status": 500,
-      "expected": 200,
-      "response": {
-        "message": "Error: Failed to create Chargebee customer - id : The value 500 is already present."
-      },
-      "path": "/api/auth/signup",
       "method": "POST"
     },
     {
@@ -505,13 +553,40 @@
     {
       "name": "Unified Signup (correct fields)",
       "passed": false,
-      "status": 401,
+      "status": 400,
       "expected": 200,
       "response": {
-        "path": "/error",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "path": "/api/auth/unified-signup",
+        "error": "Bad Request",
+        "message": "Validation failed",
+        "errors": [
+          {
+            "field": "firstName",
+            "message": "First name is required"
+          },
+          {
+            "field": "address",
+            "message": "Address is required"
+          },
+          {
+            "field": "state",
+            "message": "State is required"
+          },
+          {
+            "field": "city",
+            "message": "City is required"
+          },
+          {
+            "field": "zip",
+            "message": "ZIP code is required"
+          },
+          {
+            "field": "country",
+            "message": "Country is required"
+          }
+        ],
+        "timestamp": "2026-05-21T18:06:11.362640159Z",
+        "status": 400
       },
       "path": "/api/auth/unified-signup",
       "method": "POST"
@@ -519,13 +594,13 @@
     {
       "name": "Auto Login (no auth header)",
       "passed": false,
-      "status": 401,
+      "status": 404,
       "expected": 400,
       "response": {
-        "path": "/error",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "path": "/api/auth/autologin",
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
       },
       "path": "/api/auth/autologin",
       "method": "POST"
@@ -564,32 +639,33 @@
       "method": "POST"
     },
     {
-      "name": "Link Google Account (invalid params)",
+      "name": "Get Account (no auth)",
       "passed": false,
-      "status": 401,
-      "expected": 400,
+      "status": 404,
+      "expected": 401,
       "response": {
-        "path": "/error",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "path": "/api/auth/account",
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
       },
-      "path": "/api/auth/link-google-account",
-      "method": "POST"
+      "path": "/api/auth/account",
+      "method": "GET"
     },
     {
-      "name": "Get Pricing Plans (no auth)",
+      "name": "Delete Account (no auth)",
       "passed": false,
-      "status": 401,
-      "expected": 200,
+      "status": 403,
+      "expected": 401,
       "response": {
-        "path": "/api/subscriptions/pricing/plans",
-        "error": "Unauthorized",
-        "message": "Full authentication is required to access this resource",
-        "status": 401
+        "path": "/api/auth/account",
+        "error": "Forbidden",
+        "message": "Access denied",
+        "timestamp": "2026-05-21T18:06:11.911048853Z",
+        "status": 403
       },
-      "path": "/api/subscriptions/pricing/plans",
-      "method": "GET"
+      "path": "/api/auth/account",
+      "method": "DELETE"
     },
     {
       "name": "One-time Checkout URL (no auth)",
@@ -600,6 +676,7 @@
         "path": "/api/test/oneTimeCheckoutPageUrl",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.654212023Z",
         "status": 401
       },
       "path": "/api/test/oneTimeCheckoutPageUrl",
@@ -614,9 +691,38 @@
         "path": "/api/test/cartCheckout",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:11.713834856Z",
         "status": 401
       },
       "path": "/api/test/cartCheckout",
+      "method": "POST"
+    },
+    {
+      "name": "Get Addresses (no auth)",
+      "passed": false,
+      "status": 404,
+      "expected": 401,
+      "response": {
+        "path": "/api/delivery/addresses",
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
+      },
+      "path": "/api/delivery/addresses",
+      "method": "GET"
+    },
+    {
+      "name": "Add Address (no auth)",
+      "passed": false,
+      "status": 404,
+      "expected": 401,
+      "response": {
+        "path": "/api/delivery/addresses",
+        "error": "Not Found",
+        "message": "No handler found for this route",
+        "status": 404
+      },
+      "path": "/api/delivery/addresses",
       "method": "POST"
     },
     {
@@ -628,6 +734,7 @@
         "path": "/api/v1/auth/signin",
         "error": "Unauthorized",
         "message": "Full authentication is required to access this resource",
+        "timestamp": "2026-05-21T18:06:10.985815196Z",
         "status": 401
       },
       "path": "/api/v1/auth/signin",
