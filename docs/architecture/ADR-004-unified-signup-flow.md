@@ -309,7 +309,7 @@ EXPIRE verification:email:user@example.com 600  // 10 minutes
 
 #### JWT Token
 
-- **Expiration:** 15 minutes (900000ms)
+- **Expiration:** 30 days (2592000000ms) ⚠️ **CORRECTED FROM 15min (2026-05-27) — see CONTRA-001 in data_models_map.md. Code confirms 30 days.**
 - **Algorithm:** HS256
 - **Secret:** Configured via `JWT_SECRET` environment variable
 - **Claims:** username (email), issuedAt, expiration
@@ -492,7 +492,7 @@ routes: {
 - [x] `EmailVerificationRequest.java` - DTO
 - [x] `VerifyEmailCodeRequest.java` - DTO
 - [x] `AuthController.java` - New endpoints
-- [x] `application.properties` - JWT expiration (15 min)
+- [x] `application.properties` - JWT expiration (30 days) ⚠️ CORRECTED: was 15 min — code uses 30 days
 - [ ] Rate limiting implementation (future)
 - [ ] Redis integration for code storage (production)
 
@@ -530,7 +530,7 @@ routes: {
 
 - ✅ User authentication with verified contact information
 - ✅ Strong password policy
-- ✅ Session timeout (15-minute JWT)
+- ✅ Session timeout (30-day JWT) ⚠️ CORRECTED: was 15 min — ADR was outdated
 - ✅ Audit trail (signup logs)
 
 ### GDPR Considerations

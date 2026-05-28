@@ -1,0 +1,1873 @@
+{
+  "itemFamilies": [
+    {
+      "id": "delight",
+      "name": "Delight",
+      "description": "Entry-level juice subscription category"
+    },
+    {
+      "id": "signature",
+      "name": "Signature",
+      "description": "Mid-range juice subscription category"
+    },
+    {
+      "id": "premium",
+      "name": "Premium",
+      "description": "Premium juice subscription category"
+    }
+  ],
+  "items": [
+    {
+      "id": "delight-orange-200ml",
+      "name": "Delight Orange 200ml",
+      "description": "Delight - Orange - 200ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-orange-300ml",
+      "name": "Delight Orange 300ml",
+      "description": "Delight - Orange - 300ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-orange-500ml",
+      "name": "Delight Orange 500ml",
+      "description": "Delight - Orange - 500ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-apple-200ml",
+      "name": "Delight Apple 200ml",
+      "description": "Delight - Apple - 200ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-apple-300ml",
+      "name": "Delight Apple 300ml",
+      "description": "Delight - Apple - 300ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-apple-500ml",
+      "name": "Delight Apple 500ml",
+      "description": "Delight - Apple - 500ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-mango-200ml",
+      "name": "Delight Mango 200ml",
+      "description": "Delight - Mango - 200ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-mango-300ml",
+      "name": "Delight Mango 300ml",
+      "description": "Delight - Mango - 300ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-mango-500ml",
+      "name": "Delight Mango 500ml",
+      "description": "Delight - Mango - 500ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-mixed-200ml",
+      "name": "Delight Mixed 200ml",
+      "description": "Delight - Mixed - 200ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-mixed-300ml",
+      "name": "Delight Mixed 300ml",
+      "description": "Delight - Mixed - 300ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-mixed-500ml",
+      "name": "Delight Mixed 500ml",
+      "description": "Delight - Mixed - 500ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-black-grapes-200ml",
+      "name": "Delight Black Grapes 200ml",
+      "description": "Delight - Black Grapes - 200ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-black-grapes-300ml",
+      "name": "Delight Black Grapes 300ml",
+      "description": "Delight - Black Grapes - 300ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "delight-black-grapes-500ml",
+      "name": "Delight Black Grapes 500ml",
+      "description": "Delight - Black Grapes - 500ml",
+      "type": "plan",
+      "item_family_id": "delight",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-orange-200ml",
+      "name": "Signature Orange 200ml",
+      "description": "Signature - Orange - 200ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-orange-300ml",
+      "name": "Signature Orange 300ml",
+      "description": "Signature - Orange - 300ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-orange-500ml",
+      "name": "Signature Orange 500ml",
+      "description": "Signature - Orange - 500ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-apple-200ml",
+      "name": "Signature Apple 200ml",
+      "description": "Signature - Apple - 200ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-apple-300ml",
+      "name": "Signature Apple 300ml",
+      "description": "Signature - Apple - 300ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-apple-500ml",
+      "name": "Signature Apple 500ml",
+      "description": "Signature - Apple - 500ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-mango-200ml",
+      "name": "Signature Mango 200ml",
+      "description": "Signature - Mango - 200ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-mango-300ml",
+      "name": "Signature Mango 300ml",
+      "description": "Signature - Mango - 300ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-mango-500ml",
+      "name": "Signature Mango 500ml",
+      "description": "Signature - Mango - 500ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-mixed-200ml",
+      "name": "Signature Mixed 200ml",
+      "description": "Signature - Mixed - 200ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-mixed-300ml",
+      "name": "Signature Mixed 300ml",
+      "description": "Signature - Mixed - 300ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-mixed-500ml",
+      "name": "Signature Mixed 500ml",
+      "description": "Signature - Mixed - 500ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-black-grapes-200ml",
+      "name": "Signature Black Grapes 200ml",
+      "description": "Signature - Black Grapes - 200ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-black-grapes-300ml",
+      "name": "Signature Black Grapes 300ml",
+      "description": "Signature - Black Grapes - 300ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "signature-black-grapes-500ml",
+      "name": "Signature Black Grapes 500ml",
+      "description": "Signature - Black Grapes - 500ml",
+      "type": "plan",
+      "item_family_id": "signature",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-orange-200ml",
+      "name": "Premium Orange 200ml",
+      "description": "Premium - Orange - 200ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-orange-300ml",
+      "name": "Premium Orange 300ml",
+      "description": "Premium - Orange - 300ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-orange-500ml",
+      "name": "Premium Orange 500ml",
+      "description": "Premium - Orange - 500ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-apple-200ml",
+      "name": "Premium Apple 200ml",
+      "description": "Premium - Apple - 200ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-apple-300ml",
+      "name": "Premium Apple 300ml",
+      "description": "Premium - Apple - 300ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-apple-500ml",
+      "name": "Premium Apple 500ml",
+      "description": "Premium - Apple - 500ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-mango-200ml",
+      "name": "Premium Mango 200ml",
+      "description": "Premium - Mango - 200ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-mango-300ml",
+      "name": "Premium Mango 300ml",
+      "description": "Premium - Mango - 300ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-mango-500ml",
+      "name": "Premium Mango 500ml",
+      "description": "Premium - Mango - 500ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-mixed-200ml",
+      "name": "Premium Mixed 200ml",
+      "description": "Premium - Mixed - 200ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-mixed-300ml",
+      "name": "Premium Mixed 300ml",
+      "description": "Premium - Mixed - 300ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-mixed-500ml",
+      "name": "Premium Mixed 500ml",
+      "description": "Premium - Mixed - 500ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-black-grapes-200ml",
+      "name": "Premium Black Grapes 200ml",
+      "description": "Premium - Black Grapes - 200ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-black-grapes-300ml",
+      "name": "Premium Black Grapes 300ml",
+      "description": "Premium - Black Grapes - 300ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    },
+    {
+      "id": "premium-black-grapes-500ml",
+      "name": "Premium Black Grapes 500ml",
+      "description": "Premium - Black Grapes - 500ml",
+      "type": "plan",
+      "item_family_id": "premium",
+      "metered": false,
+      "metadata": {
+        "is_custom_pricing": false
+      }
+    }
+  ],
+  "itemPrices": [
+    {
+      "id": "delight-orange-200ml-weekly",
+      "name": "Delight Orange 200ml (Weekly)",
+      "description": "Delight - Orange - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-orange-200ml",
+      "item_family_id": "delight",
+      "price": 77400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-orange-200ml-monthly",
+      "name": "Delight Orange 200ml (Monthly)",
+      "description": "Delight - Orange - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-orange-200ml",
+      "item_family_id": "delight",
+      "price": 309600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-orange-300ml-weekly",
+      "name": "Delight Orange 300ml (Weekly)",
+      "description": "Delight - Orange - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-orange-300ml",
+      "item_family_id": "delight",
+      "price": 95400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-orange-300ml-monthly",
+      "name": "Delight Orange 300ml (Monthly)",
+      "description": "Delight - Orange - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-orange-300ml",
+      "item_family_id": "delight",
+      "price": 381600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-orange-500ml-weekly",
+      "name": "Delight Orange 500ml (Weekly)",
+      "description": "Delight - Orange - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-orange-500ml",
+      "item_family_id": "delight",
+      "price": 137400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-orange-500ml-monthly",
+      "name": "Delight Orange 500ml (Monthly)",
+      "description": "Delight - Orange - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-orange-500ml",
+      "item_family_id": "delight",
+      "price": 549600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-apple-200ml-weekly",
+      "name": "Delight Apple 200ml (Weekly)",
+      "description": "Delight - Apple - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-apple-200ml",
+      "item_family_id": "delight",
+      "price": 77400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-apple-200ml-monthly",
+      "name": "Delight Apple 200ml (Monthly)",
+      "description": "Delight - Apple - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-apple-200ml",
+      "item_family_id": "delight",
+      "price": 309600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-apple-300ml-weekly",
+      "name": "Delight Apple 300ml (Weekly)",
+      "description": "Delight - Apple - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-apple-300ml",
+      "item_family_id": "delight",
+      "price": 95400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-apple-300ml-monthly",
+      "name": "Delight Apple 300ml (Monthly)",
+      "description": "Delight - Apple - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-apple-300ml",
+      "item_family_id": "delight",
+      "price": 381600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-apple-500ml-weekly",
+      "name": "Delight Apple 500ml (Weekly)",
+      "description": "Delight - Apple - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-apple-500ml",
+      "item_family_id": "delight",
+      "price": 137400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-apple-500ml-monthly",
+      "name": "Delight Apple 500ml (Monthly)",
+      "description": "Delight - Apple - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-apple-500ml",
+      "item_family_id": "delight",
+      "price": 549600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mango-200ml-weekly",
+      "name": "Delight Mango 200ml (Weekly)",
+      "description": "Delight - Mango - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mango-200ml",
+      "item_family_id": "delight",
+      "price": 77400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mango-200ml-monthly",
+      "name": "Delight Mango 200ml (Monthly)",
+      "description": "Delight - Mango - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mango-200ml",
+      "item_family_id": "delight",
+      "price": 309600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mango-300ml-weekly",
+      "name": "Delight Mango 300ml (Weekly)",
+      "description": "Delight - Mango - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mango-300ml",
+      "item_family_id": "delight",
+      "price": 95400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mango-300ml-monthly",
+      "name": "Delight Mango 300ml (Monthly)",
+      "description": "Delight - Mango - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mango-300ml",
+      "item_family_id": "delight",
+      "price": 381600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mango-500ml-weekly",
+      "name": "Delight Mango 500ml (Weekly)",
+      "description": "Delight - Mango - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mango-500ml",
+      "item_family_id": "delight",
+      "price": 137400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mango-500ml-monthly",
+      "name": "Delight Mango 500ml (Monthly)",
+      "description": "Delight - Mango - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mango-500ml",
+      "item_family_id": "delight",
+      "price": 549600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mixed-200ml-weekly",
+      "name": "Delight Mixed 200ml (Weekly)",
+      "description": "Delight - Mixed - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mixed-200ml",
+      "item_family_id": "delight",
+      "price": 77400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mixed-200ml-monthly",
+      "name": "Delight Mixed 200ml (Monthly)",
+      "description": "Delight - Mixed - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mixed-200ml",
+      "item_family_id": "delight",
+      "price": 309600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mixed-300ml-weekly",
+      "name": "Delight Mixed 300ml (Weekly)",
+      "description": "Delight - Mixed - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mixed-300ml",
+      "item_family_id": "delight",
+      "price": 95400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mixed-300ml-monthly",
+      "name": "Delight Mixed 300ml (Monthly)",
+      "description": "Delight - Mixed - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mixed-300ml",
+      "item_family_id": "delight",
+      "price": 381600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mixed-500ml-weekly",
+      "name": "Delight Mixed 500ml (Weekly)",
+      "description": "Delight - Mixed - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mixed-500ml",
+      "item_family_id": "delight",
+      "price": 137400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-mixed-500ml-monthly",
+      "name": "Delight Mixed 500ml (Monthly)",
+      "description": "Delight - Mixed - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-mixed-500ml",
+      "item_family_id": "delight",
+      "price": 549600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-black-grapes-200ml-weekly",
+      "name": "Delight Black Grapes 200ml (Weekly)",
+      "description": "Delight - Black Grapes - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-black-grapes-200ml",
+      "item_family_id": "delight",
+      "price": 77400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-black-grapes-200ml-monthly",
+      "name": "Delight Black Grapes 200ml (Monthly)",
+      "description": "Delight - Black Grapes - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-black-grapes-200ml",
+      "item_family_id": "delight",
+      "price": 309600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-black-grapes-300ml-weekly",
+      "name": "Delight Black Grapes 300ml (Weekly)",
+      "description": "Delight - Black Grapes - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-black-grapes-300ml",
+      "item_family_id": "delight",
+      "price": 95400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-black-grapes-300ml-monthly",
+      "name": "Delight Black Grapes 300ml (Monthly)",
+      "description": "Delight - Black Grapes - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-black-grapes-300ml",
+      "item_family_id": "delight",
+      "price": 381600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-black-grapes-500ml-weekly",
+      "name": "Delight Black Grapes 500ml (Weekly)",
+      "description": "Delight - Black Grapes - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-black-grapes-500ml",
+      "item_family_id": "delight",
+      "price": 137400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "delight-black-grapes-500ml-monthly",
+      "name": "Delight Black Grapes 500ml (Monthly)",
+      "description": "Delight - Black Grapes - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "delight-black-grapes-500ml",
+      "item_family_id": "delight",
+      "price": 549600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-orange-200ml-weekly",
+      "name": "Signature Orange 200ml (Weekly)",
+      "description": "Signature - Orange - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-orange-200ml",
+      "item_family_id": "signature",
+      "price": 119400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-orange-200ml-monthly",
+      "name": "Signature Orange 200ml (Monthly)",
+      "description": "Signature - Orange - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-orange-200ml",
+      "item_family_id": "signature",
+      "price": 477600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-orange-300ml-weekly",
+      "name": "Signature Orange 300ml (Weekly)",
+      "description": "Signature - Orange - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-orange-300ml",
+      "item_family_id": "signature",
+      "price": 149400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-orange-300ml-monthly",
+      "name": "Signature Orange 300ml (Monthly)",
+      "description": "Signature - Orange - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-orange-300ml",
+      "item_family_id": "signature",
+      "price": 597600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-orange-500ml-weekly",
+      "name": "Signature Orange 500ml (Weekly)",
+      "description": "Signature - Orange - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-orange-500ml",
+      "item_family_id": "signature",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-orange-500ml-monthly",
+      "name": "Signature Orange 500ml (Monthly)",
+      "description": "Signature - Orange - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-orange-500ml",
+      "item_family_id": "signature",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-apple-200ml-weekly",
+      "name": "Signature Apple 200ml (Weekly)",
+      "description": "Signature - Apple - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-apple-200ml",
+      "item_family_id": "signature",
+      "price": 119400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-apple-200ml-monthly",
+      "name": "Signature Apple 200ml (Monthly)",
+      "description": "Signature - Apple - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-apple-200ml",
+      "item_family_id": "signature",
+      "price": 477600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-apple-300ml-weekly",
+      "name": "Signature Apple 300ml (Weekly)",
+      "description": "Signature - Apple - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-apple-300ml",
+      "item_family_id": "signature",
+      "price": 149400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-apple-300ml-monthly",
+      "name": "Signature Apple 300ml (Monthly)",
+      "description": "Signature - Apple - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-apple-300ml",
+      "item_family_id": "signature",
+      "price": 597600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-apple-500ml-weekly",
+      "name": "Signature Apple 500ml (Weekly)",
+      "description": "Signature - Apple - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-apple-500ml",
+      "item_family_id": "signature",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-apple-500ml-monthly",
+      "name": "Signature Apple 500ml (Monthly)",
+      "description": "Signature - Apple - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-apple-500ml",
+      "item_family_id": "signature",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mango-200ml-weekly",
+      "name": "Signature Mango 200ml (Weekly)",
+      "description": "Signature - Mango - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mango-200ml",
+      "item_family_id": "signature",
+      "price": 119400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mango-200ml-monthly",
+      "name": "Signature Mango 200ml (Monthly)",
+      "description": "Signature - Mango - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mango-200ml",
+      "item_family_id": "signature",
+      "price": 477600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mango-300ml-weekly",
+      "name": "Signature Mango 300ml (Weekly)",
+      "description": "Signature - Mango - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mango-300ml",
+      "item_family_id": "signature",
+      "price": 149400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mango-300ml-monthly",
+      "name": "Signature Mango 300ml (Monthly)",
+      "description": "Signature - Mango - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mango-300ml",
+      "item_family_id": "signature",
+      "price": 597600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mango-500ml-weekly",
+      "name": "Signature Mango 500ml (Weekly)",
+      "description": "Signature - Mango - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mango-500ml",
+      "item_family_id": "signature",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mango-500ml-monthly",
+      "name": "Signature Mango 500ml (Monthly)",
+      "description": "Signature - Mango - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mango-500ml",
+      "item_family_id": "signature",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mixed-200ml-weekly",
+      "name": "Signature Mixed 200ml (Weekly)",
+      "description": "Signature - Mixed - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mixed-200ml",
+      "item_family_id": "signature",
+      "price": 119400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mixed-200ml-monthly",
+      "name": "Signature Mixed 200ml (Monthly)",
+      "description": "Signature - Mixed - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mixed-200ml",
+      "item_family_id": "signature",
+      "price": 477600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mixed-300ml-weekly",
+      "name": "Signature Mixed 300ml (Weekly)",
+      "description": "Signature - Mixed - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mixed-300ml",
+      "item_family_id": "signature",
+      "price": 149400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mixed-300ml-monthly",
+      "name": "Signature Mixed 300ml (Monthly)",
+      "description": "Signature - Mixed - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mixed-300ml",
+      "item_family_id": "signature",
+      "price": 597600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mixed-500ml-weekly",
+      "name": "Signature Mixed 500ml (Weekly)",
+      "description": "Signature - Mixed - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mixed-500ml",
+      "item_family_id": "signature",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-mixed-500ml-monthly",
+      "name": "Signature Mixed 500ml (Monthly)",
+      "description": "Signature - Mixed - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-mixed-500ml",
+      "item_family_id": "signature",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-black-grapes-200ml-weekly",
+      "name": "Signature Black Grapes 200ml (Weekly)",
+      "description": "Signature - Black Grapes - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-black-grapes-200ml",
+      "item_family_id": "signature",
+      "price": 119400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-black-grapes-200ml-monthly",
+      "name": "Signature Black Grapes 200ml (Monthly)",
+      "description": "Signature - Black Grapes - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-black-grapes-200ml",
+      "item_family_id": "signature",
+      "price": 477600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-black-grapes-300ml-weekly",
+      "name": "Signature Black Grapes 300ml (Weekly)",
+      "description": "Signature - Black Grapes - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-black-grapes-300ml",
+      "item_family_id": "signature",
+      "price": 149400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-black-grapes-300ml-monthly",
+      "name": "Signature Black Grapes 300ml (Monthly)",
+      "description": "Signature - Black Grapes - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-black-grapes-300ml",
+      "item_family_id": "signature",
+      "price": 597600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-black-grapes-500ml-weekly",
+      "name": "Signature Black Grapes 500ml (Weekly)",
+      "description": "Signature - Black Grapes - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-black-grapes-500ml",
+      "item_family_id": "signature",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "signature-black-grapes-500ml-monthly",
+      "name": "Signature Black Grapes 500ml (Monthly)",
+      "description": "Signature - Black Grapes - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "signature-black-grapes-500ml",
+      "item_family_id": "signature",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-orange-200ml-weekly",
+      "name": "Premium Orange 200ml (Weekly)",
+      "description": "Premium - Orange - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-orange-200ml",
+      "item_family_id": "premium",
+      "price": 179400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-orange-200ml-monthly",
+      "name": "Premium Orange 200ml (Monthly)",
+      "description": "Premium - Orange - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-orange-200ml",
+      "item_family_id": "premium",
+      "price": 717600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-orange-300ml-weekly",
+      "name": "Premium Orange 300ml (Weekly)",
+      "description": "Premium - Orange - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-orange-300ml",
+      "item_family_id": "premium",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-orange-300ml-monthly",
+      "name": "Premium Orange 300ml (Monthly)",
+      "description": "Premium - Orange - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-orange-300ml",
+      "item_family_id": "premium",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-orange-500ml-weekly",
+      "name": "Premium Orange 500ml (Weekly)",
+      "description": "Premium - Orange - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-orange-500ml",
+      "item_family_id": "premium",
+      "price": 269400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-orange-500ml-monthly",
+      "name": "Premium Orange 500ml (Monthly)",
+      "description": "Premium - Orange - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-orange-500ml",
+      "item_family_id": "premium",
+      "price": 1077600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-apple-200ml-weekly",
+      "name": "Premium Apple 200ml (Weekly)",
+      "description": "Premium - Apple - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-apple-200ml",
+      "item_family_id": "premium",
+      "price": 179400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-apple-200ml-monthly",
+      "name": "Premium Apple 200ml (Monthly)",
+      "description": "Premium - Apple - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-apple-200ml",
+      "item_family_id": "premium",
+      "price": 717600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-apple-300ml-weekly",
+      "name": "Premium Apple 300ml (Weekly)",
+      "description": "Premium - Apple - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-apple-300ml",
+      "item_family_id": "premium",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-apple-300ml-monthly",
+      "name": "Premium Apple 300ml (Monthly)",
+      "description": "Premium - Apple - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-apple-300ml",
+      "item_family_id": "premium",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-apple-500ml-weekly",
+      "name": "Premium Apple 500ml (Weekly)",
+      "description": "Premium - Apple - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-apple-500ml",
+      "item_family_id": "premium",
+      "price": 269400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-apple-500ml-monthly",
+      "name": "Premium Apple 500ml (Monthly)",
+      "description": "Premium - Apple - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-apple-500ml",
+      "item_family_id": "premium",
+      "price": 1077600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mango-200ml-weekly",
+      "name": "Premium Mango 200ml (Weekly)",
+      "description": "Premium - Mango - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mango-200ml",
+      "item_family_id": "premium",
+      "price": 179400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mango-200ml-monthly",
+      "name": "Premium Mango 200ml (Monthly)",
+      "description": "Premium - Mango - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mango-200ml",
+      "item_family_id": "premium",
+      "price": 717600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mango-300ml-weekly",
+      "name": "Premium Mango 300ml (Weekly)",
+      "description": "Premium - Mango - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mango-300ml",
+      "item_family_id": "premium",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mango-300ml-monthly",
+      "name": "Premium Mango 300ml (Monthly)",
+      "description": "Premium - Mango - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mango-300ml",
+      "item_family_id": "premium",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mango-500ml-weekly",
+      "name": "Premium Mango 500ml (Weekly)",
+      "description": "Premium - Mango - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mango-500ml",
+      "item_family_id": "premium",
+      "price": 269400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mango-500ml-monthly",
+      "name": "Premium Mango 500ml (Monthly)",
+      "description": "Premium - Mango - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mango-500ml",
+      "item_family_id": "premium",
+      "price": 1077600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mixed-200ml-weekly",
+      "name": "Premium Mixed 200ml (Weekly)",
+      "description": "Premium - Mixed - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mixed-200ml",
+      "item_family_id": "premium",
+      "price": 179400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mixed-200ml-monthly",
+      "name": "Premium Mixed 200ml (Monthly)",
+      "description": "Premium - Mixed - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mixed-200ml",
+      "item_family_id": "premium",
+      "price": 717600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mixed-300ml-weekly",
+      "name": "Premium Mixed 300ml (Weekly)",
+      "description": "Premium - Mixed - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mixed-300ml",
+      "item_family_id": "premium",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mixed-300ml-monthly",
+      "name": "Premium Mixed 300ml (Monthly)",
+      "description": "Premium - Mixed - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mixed-300ml",
+      "item_family_id": "premium",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mixed-500ml-weekly",
+      "name": "Premium Mixed 500ml (Weekly)",
+      "description": "Premium - Mixed - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mixed-500ml",
+      "item_family_id": "premium",
+      "price": 269400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-mixed-500ml-monthly",
+      "name": "Premium Mixed 500ml (Monthly)",
+      "description": "Premium - Mixed - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-mixed-500ml",
+      "item_family_id": "premium",
+      "price": 1077600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-black-grapes-200ml-weekly",
+      "name": "Premium Black Grapes 200ml (Weekly)",
+      "description": "Premium - Black Grapes - 200ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-black-grapes-200ml",
+      "item_family_id": "premium",
+      "price": 179400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-black-grapes-200ml-monthly",
+      "name": "Premium Black Grapes 200ml (Monthly)",
+      "description": "Premium - Black Grapes - 200ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-black-grapes-200ml",
+      "item_family_id": "premium",
+      "price": 717600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-black-grapes-300ml-weekly",
+      "name": "Premium Black Grapes 300ml (Weekly)",
+      "description": "Premium - Black Grapes - 300ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-black-grapes-300ml",
+      "item_family_id": "premium",
+      "price": 209400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-black-grapes-300ml-monthly",
+      "name": "Premium Black Grapes 300ml (Monthly)",
+      "description": "Premium - Black Grapes - 300ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-black-grapes-300ml",
+      "item_family_id": "premium",
+      "price": 837600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-black-grapes-500ml-weekly",
+      "name": "Premium Black Grapes 500ml (Weekly)",
+      "description": "Premium - Black Grapes - 500ml - Weekly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-black-grapes-500ml",
+      "item_family_id": "premium",
+      "price": 269400,
+      "currency_code": "INR",
+      "period": 6,
+      "period_unit": "day",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    },
+    {
+      "id": "premium-black-grapes-500ml-monthly",
+      "name": "Premium Black Grapes 500ml (Monthly)",
+      "description": "Premium - Black Grapes - 500ml - Monthly",
+      "pricing_model": "flat_fee",
+      "item_id": "premium-black-grapes-500ml",
+      "item_family_id": "premium",
+      "price": 1077600,
+      "currency_code": "INR",
+      "period": 1,
+      "period_unit": "month",
+      "trial_period": 0,
+      "trial_period_unit": "day",
+      "tiers": []
+    }
+  ],
+  "currencies": [
+    {
+      "currency_code": "INR"
+    }
+  ]
+}

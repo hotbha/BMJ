@@ -24,7 +24,7 @@ function New-Session {
         }
     } | ConvertTo-Json -Compress
 
-    $response = Invoke-WebRequest -Uri $baseUrl -Method Post -Headers @{
+    $response = Invoke-WebRequest -UseBasicParsing -Uri $baseUrl -Method Post -Headers @{
         "Authorization" = "Bearer $token"
         "Content-Type" = "application/json"
         "Accept" = "text/event-stream"
@@ -42,7 +42,7 @@ function Get-Tools {
         params = @{}
     } | ConvertTo-Json -Compress
 
-    $response = Invoke-WebRequest -Uri $baseUrl -Method Post -Headers @{
+    $response = Invoke-WebRequest -UseBasicParsing -Uri $baseUrl -Method Post -Headers @{
         "Authorization" = "Bearer $token"
         "mcp-session-id" = $sessionId
         "Content-Type" = "application/json"
@@ -64,7 +64,7 @@ function Call-Tool {
         }
     } | ConvertTo-Json -Compress -Depth 10
 
-    $response = Invoke-WebRequest -Uri $baseUrl -Method Post -Headers @{
+    $response = Invoke-WebRequest -UseBasicParsing -Uri $baseUrl -Method Post -Headers @{
         "Authorization" = "Bearer $token"
         "mcp-session-id" = $sessionId
         "Content-Type" = "application/json"

@@ -1,0 +1,14 @@
+{
+  "platformName": "Android",
+  "appium:automationName": "UiAutomator2",
+  "appium:deviceName": "Android Device",
+  "appium:noReset": false,
+  "appium:fullReset": false,
+  "appium:autoGrantPermissions": true,
+  "appium:appPackage": "com.bookmyjuice.lush",
+  "appium:appActivity": ".MainActivity",
+  "appium:ensureWebviewsHavePages": true,
+  "appium:nativeWebScreenshot": true,
+  "appium:newCommandTimeout": 3600,
+  "appium:connectHardwareKeyboard": true
+}

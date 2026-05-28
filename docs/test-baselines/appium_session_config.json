@@ -1,0 +1,27 @@
+{
+  "capturedAt": "2026-05-26T17:41:00+05:30",
+  "project": "BookMyJuice (lush)",
+  "session": {
+    "sessionId": "696d5157-5818-4775-ab1b-527525e25e00",
+    "driverInstance": "AndroidUiautomator2Driver",
+    "ownership": "owned",
+    "platform": "Android"
+  },
+  "device": {
+    "platformName": "Android",
+    "automationName": "UiAutomator2",
+    "deviceName": "Android Device"
+  },
+  "app": {
+    "appPackage": "com.bookmyjuice.app",
+    "appActivity": ".MainActivity"
+  },
+  "baselines": {
+    "flow1_app_launch": "flow1_app_launch_before.png",
+    "flow2_otp_auth": "flow2_otp_auth_before.png",
+    "flow3_dashboard": "flow3_dashboard_before.png",
+    "flow4_cart": "flow4_cart_before.png",
+    "flow5_subscription": "flow5_subscription_before.png"
+  },
+  "purpose": "Pre-change baseline screenshots for visual/functional regression testing across core app flows (C1-C8 before any code modifications)"
+}

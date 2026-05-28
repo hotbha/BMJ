@@ -10,6 +10,7 @@
 - [Error Handling](#error-handling)
 - [Rate Limiting](#rate-limiting)
 - [Webhooks](#webhooks)
+- [Bottle Tracking](#bottle-tracking)
 - [SDKs & Examples](#sdks--examples)
 
 ---
@@ -406,6 +407,39 @@ Set an address as the default delivery address.
 ---
 
 ### Subscription Management
+
+#### GET /api/subscriptions/my
+
+Get all subscriptions for the authenticated user.
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "subscriptions": [
+    {
+      "id": "sub_123",
+      "planId": "plan_30_30",
+      "planName": "30:30 Plan",
+      "status": "active",
+      "startDate": "2026-03-01T00:00:00Z",
+      "currentPeriodStart": "2026-03-27T00:00:00Z",
+      "currentPeriodEnd": "2026-04-26T23:59:59Z",
+      "nextBillingDate": "2026-04-27T00:00:00Z",
+      "amount": 2999,
+      "currency": "INR"
+    }
+  ]
+}
+```
+
+**Notes:** Discovered in `subscription_service.dart` during D7 preparation. Token is read internally by the service via `SecureStorageService`; the caller does not pass it explicitly. Added `2026-05-27`.
+
+---
 
 #### GET /api/v1/subscriptions/plans
 
@@ -1053,6 +1087,177 @@ X-Chargebee-Signature: t=<timestamp>,v1=<hmac_signature>
 
 ---
 
+### Bottle Tracking
+
+Bottle Tracking endpoints manage the lifecycle of reusable juice bottles. The system records issuance (auto-dispatched on payment), returns, and breakage/loss reports.
+
+#### GET /api/bottles/ledger
+
+Get the computed bottle ledger for the authenticated user. Returns per-bottle-type balances (issued, returned, broken, outstanding).
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "customerId": "cb_cus_xxx",
+      "bottleType": "glass_500ml",
+      "totalIssued": 15,
+      "totalReturned": 8,
+      "totalBroken": 1,
+      "outstanding": 6,
+      "lastTransactionAt": "2026-05-25T14:30:00Z"
+    }
+  ]
+}
+```
+
+**Error Responses:**
+- `401 Unauthorized` — User not authenticated
+- `400 Bad Request` — Chargebee customer ID not found
+- `500 Internal Server Error` — Failed to fetch ledger
+
+**cURL Example:**
+```bash
+curl -X GET http://localhost:8080/api/bottles/ledger \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Accept: application/json"
+```
+
+---
+
+#### GET /api/bottles/transactions
+
+Get the raw bottle transaction history for the authenticated user. Optionally filter by order ID.
+
+**Query Parameters:**
+- `orderId` (optional): Filter by Chargebee order ID
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "count": 5,
+  "data": [
+    {
+      "id": 1,
+      "orderId": "cb_order_xxx",
+      "customerId": "cb_cus_xxx",
+      "bottleType": "glass_500ml",
+      "quantity": 5,
+      "action": "ISSUED",
+      "referenceId": null,
+      "notes": "Auto-dispatched on payment",
+      "createdAt": "2026-05-25T10:00:00Z",
+      "updatedAt": "2026-05-25T10:00:00Z"
+    }
+  ]
+}
+```
+
+**cURL Example:**
+```bash
+# All transactions
+curl -X GET http://localhost:8080/api/bottles/transactions \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+
+# Filter by order ID
+curl -X GET "http://localhost:8080/api/bottles/transactions?orderId=cb_order_xxx" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+---
+
+#### POST /api/bottles/return
+
+Record bottles returned by the customer.
+
+**Request:**
+```json
+{
+  "orderId": "cb_order_xxx",
+  "bottleType": "glass_500ml",
+  "quantity": 5
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Bottle return recorded successfully",
+  "data": {
+    "id": 10,
+    "orderId": "cb_order_xxx",
+    "customerId": "cb_cus_xxx",
+    "bottleType": "glass_500ml",
+    "quantity": 5,
+    "action": "RETURNED",
+    "notes": "Customer-reported return",
+    "createdAt": "2026-05-25T14:30:00Z",
+    "updatedAt": "2026-05-25T14:30:00Z"
+  }
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST http://localhost:8080/api/bottles/return \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"orderId": "cb_order_xxx", "bottleType": "glass_500ml", "quantity": 5}'
+```
+
+---
+
+#### POST /api/bottles/broken
+
+Report bottles as broken or lost.
+
+**Request:**
+```json
+{
+  "orderId": "cb_order_xxx",
+  "bottleType": "glass_500ml",
+  "quantity": 2
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "status": "success",
+  "message": "Bottle broken/lost reported successfully",
+  "data": {
+    "id": 11,
+    "orderId": "cb_order_xxx",
+    "customerId": "cb_cus_xxx",
+    "bottleType": "glass_500ml",
+    "quantity": 2,
+    "action": "BROKEN",
+    "notes": "Customer-reported broken/lost",
+    "createdAt": "2026-05-25T15:00:00Z",
+    "updatedAt": "2026-05-25T15:00:00Z"
+  }
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST http://localhost:8080/api/bottles/broken \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"orderId": "cb_order_xxx", "bottleType": "glass_500ml", "quantity": 2}'
+```
+
+---
+
 ## Error Handling
 
 ### Standard Error Response Format
@@ -1263,6 +1468,27 @@ curl -X POST http://localhost:8080/api/v1/address \
 # Check Pincode Serviceability
 curl -X GET "http://localhost:8080/api/v1/serviceability?pincode=400001" \
   -H "Accept: application/json"
+
+# Bottle Tracking - Get Ledger
+curl -X GET http://localhost:8080/api/bottles/ledger \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Accept: application/json"
+
+# Bottle Tracking - Get Transactions
+curl -X GET http://localhost:8080/api/bottles/transactions \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+
+# Bottle Tracking - Record Return
+curl -X POST http://localhost:8080/api/bottles/return \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"orderId": "cb_order_xxx", "bottleType": "glass_500ml", "quantity": 5}'
+
+# Bottle Tracking - Report Broken
+curl -X POST http://localhost:8080/api/bottles/broken \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"orderId": "cb_order_xxx", "bottleType": "glass_500ml", "quantity": 2}'
 ```
 
 ---
@@ -1280,5 +1506,5 @@ Interactive API documentation is available at:
 
 ---
 
-*Last Updated: May 20, 2026*
+*Last Updated: May 26, 2026*
 *API Version: 1.0.0*

@@ -301,3 +301,16 @@ Spring Boot handles the request → Breakpoint hits → You debug!
 - `bmjServer/Dockerfile.dev` — Development Dockerfile with JDWP
 - `ops/find_active_ip.ps1` — IP detection utility
 - `ops/build_flutter_for_phone.ps1` — Phone build/run helper
+
+---
+
+## Cross-Reference Verification
+
+### `docs/auth_flows.md` cross-reference — **CONCLUDED ✅** (2026-05-27)
+
+Verification result: **No contradictions, no duplicates, no phantoms.**
+
+- `PHONE_DEBUG_CHECKPOINTS.md` is a pure operational/CI workflow guide
+- `auth_flows.md` documents auth state machine flows and BLoC event chains
+- These two docs serve independent purposes and do not overlap in content
+- No stale or outdated cross-references detected

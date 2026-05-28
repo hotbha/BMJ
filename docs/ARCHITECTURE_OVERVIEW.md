@@ -1,7 +1,7 @@
 # BookMyJuice Architecture Overview
 
 > **Version:** 3.0 (Enterprise)  
-> **Last Updated:** 2026-05-09  
+> **Last Updated:** 2026-05-26  
 > **Status:** ✅ Active — authoritative source
 
 ## Architecture Principles
@@ -99,6 +99,7 @@ Flutter opens WebView → Chargebee Hosted Checkout ← SECURE PAYMENT ONLY
   ▼
 Chargebee sends webhook → bmjServer → webhook_events table
   │ Update local subscription/order read model
+  │ Auto-dispatch bottles on INVOICE_PAID
   │
   ▼
 Flutter polls GET /api/billing/purchases/{id}/status → Success!
@@ -109,11 +110,12 @@ Flutter polls GET /api/billing/purchases/{id}/status → Success!
 | Module | Ownership | Description |
 |--------|-----------|-------------|
 | Auth | BMJ Server | JWT-based auth, refresh tokens, Google OAuth |
-| Products/Plans | Chargebee (SOT) → BMJ (Cache) | Synced read model |
-| Subscriptions | Chargebee (SOT) → BMJ (Cache) | BMJ manages local references |
+| Products/Plans 🔴 STUB | Chargebee (SOT) → BMJ (Cache) | Synced read model — ProductsBloc is a stub (BEM-007), all 6 handlers use mock data |
+| Subscriptions 🔴 STUB | Chargebee (SOT) → BMJ (Cache) | BMJ manages local references — SubscriptionBloc is a stub (BEM-006), all 7 handlers use mock data |
 | Orders | Chargebee (SOT) → BMJ (Cache) | BMJ manages delivery locally |
 | Invoices | Chargebee (SOT) → BMJ (Cache) | Read-only view |
 | Payments | Chargebee (SOT) | Handled in hosted checkout |
 | Delivery | BMJ (SOT) | Addresses, slots, serviceability |
+| Bottle Tracking | BMJ Server (SOT) | bottle_transactions table, ledger computation, auto-dispatch |
 | Webhooks | BMJ Server | Idempotent ingestion, DLQ |
 | Cache | Redis (BMJ-managed) | TTL-based, graceful degradation |
