@@ -1,12 +1,10 @@
-#requires -Version 5.1
-
 <#
 .SYNOPSIS
-    Detects your current active WiFi/Ethernet IPv4 address for full-stack testing.
+    Detects your current active WiFi IPv4 address for full-stack testing.
 .DESCRIPTION
-    This script finds your machine's active IPv4 address on the network.
+    Prefers Wi-Fi adapter over Ethernet. Filters out virtual adapters.
     Use it to determine what IP to use when testing on a physical phone.
-    
+
     For Android emulator, always use: 10.0.2.2
     For physical device on same WiFi, use the IP this script returns.
 .EXAMPLE
@@ -17,22 +15,28 @@
 $ErrorActionPreference = 'Stop'
 
 try {
-    # Get all IPv4 addresses, filtering out 127.0.0.1 and Docker/virtual adapter ranges
-    $ip = Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp |
-        Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '172.*' -and $_.IPAddress -notlike '169.254.*' } |
-        Select-Object -First 1 -ExpandProperty IPAddress
-    
-    if (-not $ip) {
-        # Fallback: try any non-loopback IPv4
-        $ip = Get-NetIPAddress -AddressFamily IPv4 |
-            Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' } |
-            Select-Object -First 1 -ExpandProperty IPAddress
-    }
-    
+    $ip = Get-NetIPAddress -AddressFamily IPv4 |
+      Where-Object {
+        $_.IPAddress -notlike '127.*' -and
+        $_.IPAddress -notlike '169.254.*' -and
+        ($_.IPAddress -like '10.*' -or $_.IPAddress -like '192.168.*') -and
+        $_.InterfaceAlias -notlike '*vEthernet*' -and
+        $_.InterfaceAlias -notlike '*VMware*' -and
+        $_.InterfaceAlias -notlike '*VPN*' -and
+        $_.InterfaceAlias -notlike '*Tailscale*' -and
+        $_.InterfaceAlias -notlike '*Loopback*'
+      } |
+      Sort-Object {
+        if ($_.InterfaceAlias -like '*Wi-Fi*') { 0 }
+        elseif ($_.InterfaceAlias -like '*Wireless*') { 1 }
+        else { 2 }
+      } |
+      Select-Object -First 1 -ExpandProperty IPAddress
+
     if ($ip) {
-        Write-Output $ip
+        Write-Host $ip
     } else {
-        Write-Error "Could not detect active IP address."
+        Write-Error "No WiFi IP found. Connect phone and laptop to same WiFi."
         exit 1
     }
 } catch {

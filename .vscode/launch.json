@@ -99,7 +99,7 @@
       "id": "machineIP",
       "type": "promptString",
       "description": "Enter your machine's LAN IP address (run .\\ops\\find_active_ip.ps1 to get it)",
-      "default": "192.168.1.100"
+      "default": ""
     }
   ]
 }
