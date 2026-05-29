@@ -511,23 +511,6 @@
       }
     },
     {
-      "id": "bmj-premium-black-grapes-200ml",
-      "name": "Premium Black Grapes 200ml",
-      "description": "Premium - Black Grapes - 200ml",
-      "type": "plan",
-      "item_family_id": "premium",
-      "metered": false,
-      "metadata": {
-        "plan_type": "juice_specific",
-        "family": "premium",
-        "size": "200ml",
-        "default_juice": "black-grapes",
-        "has_bottle_deposit": true,
-        "bottle_count_weekly": 6,
-        "bottle_count_monthly": 24
-      }
-    },
-    {
       "id": "bmj-premium-antioxidant-juice-200ml",
       "name": "Premium Antioxidant Juice 200ml",
       "description": "Premium - Antioxidant Juice - 200ml",
@@ -596,23 +579,6 @@
       }
     },
     {
-      "id": "bmj-premium-black-grapes-300ml",
-      "name": "Premium Black Grapes 300ml",
-      "description": "Premium - Black Grapes - 300ml",
-      "type": "plan",
-      "item_family_id": "premium",
-      "metered": false,
-      "metadata": {
-        "plan_type": "juice_specific",
-        "family": "premium",
-        "size": "300ml",
-        "default_juice": "black-grapes",
-        "has_bottle_deposit": true,
-        "bottle_count_weekly": 6,
-        "bottle_count_monthly": 24
-      }
-    },
-    {
       "id": "bmj-premium-antioxidant-juice-300ml",
       "name": "Premium Antioxidant Juice 300ml",
       "description": "Premium - Antioxidant Juice - 300ml",
@@ -675,23 +641,6 @@
         "family": "premium",
         "size": "300ml",
         "default_juice": "detox-smoothie",
-        "has_bottle_deposit": true,
-        "bottle_count_weekly": 6,
-        "bottle_count_monthly": 24
-      }
-    },
-    {
-      "id": "bmj-premium-black-grapes-500ml",
-      "name": "Premium Black Grapes 500ml",
-      "description": "Premium - Black Grapes - 500ml",
-      "type": "plan",
-      "item_family_id": "premium",
-      "metered": false,
-      "metadata": {
-        "plan_type": "juice_specific",
-        "family": "premium",
-        "size": "500ml",
-        "default_juice": "black-grapes",
         "has_bottle_deposit": true,
         "bottle_count_weekly": 6,
         "bottle_count_monthly": 24
@@ -1685,36 +1634,6 @@
       "tiers": []
     },
     {
-      "id": "bmj-premium-black-grapes-200ml-weekly",
-      "name": "Premium Black Grapes 200ml Weekly",
-      "description": "Premium - Black Grapes - 200ml - Weekly",
-      "pricing_model": "flat_fee",
-      "item_id": "bmj-premium-black-grapes-200ml",
-      "item_family_id": "premium",
-      "price": 55400,
-      "currency_code": "INR",
-      "period": 1,
-      "period_unit": "week",
-      "trial_period": 0,
-      "trial_period_unit": "day",
-      "tiers": []
-    },
-    {
-      "id": "bmj-premium-black-grapes-200ml-monthly",
-      "name": "Premium Black Grapes 200ml Monthly",
-      "description": "Premium - Black Grapes - 200ml - Monthly",
-      "pricing_model": "flat_fee",
-      "item_id": "bmj-premium-black-grapes-200ml",
-      "item_family_id": "premium",
-      "price": 204200,
-      "currency_code": "INR",
-      "period": 1,
-      "period_unit": "month",
-      "trial_period": 0,
-      "trial_period_unit": "day",
-      "tiers": []
-    },
-    {
       "id": "bmj-premium-antioxidant-juice-200ml-weekly",
       "name": "Premium Antioxidant Juice 200ml Weekly",
       "description": "Premium - Antioxidant Juice - 200ml - Weekly",
@@ -1835,36 +1754,6 @@
       "tiers": []
     },
     {
-      "id": "bmj-premium-black-grapes-300ml-weekly",
-      "name": "Premium Black Grapes 300ml Weekly",
-      "description": "Premium - Black Grapes - 300ml - Weekly",
-      "pricing_model": "flat_fee",
-      "item_id": "bmj-premium-black-grapes-300ml",
-      "item_family_id": "premium",
-      "price": 67000,
-      "currency_code": "INR",
-      "period": 1,
-      "period_unit": "week",
-      "trial_period": 0,
-      "trial_period_unit": "day",
-      "tiers": []
-    },
-    {
-      "id": "bmj-premium-black-grapes-300ml-monthly",
-      "name": "Premium Black Grapes 300ml Monthly",
-      "description": "Premium - Black Grapes - 300ml - Monthly",
-      "pricing_model": "flat_fee",
-      "item_id": "bmj-premium-black-grapes-300ml",
-      "item_family_id": "premium",
-      "price": 243500,
-      "currency_code": "INR",
-      "period": 1,
-      "period_unit": "month",
-      "trial_period": 0,
-      "trial_period_unit": "day",
-      "tiers": []
-    },
-    {
       "id": "bmj-premium-antioxidant-juice-300ml-weekly",
       "name": "Premium Antioxidant Juice 300ml Weekly",
       "description": "Premium - Antioxidant Juice - 300ml - Weekly",
@@ -1977,36 +1866,6 @@
       "item_id": "bmj-premium-detox-smoothie-300ml",
       "item_family_id": "premium",
       "price": 243500,
-      "currency_code": "INR",
-      "period": 1,
-      "period_unit": "month",
-      "trial_period": 0,
-      "trial_period_unit": "day",
-      "tiers": []
-    },
-    {
-      "id": "bmj-premium-black-grapes-500ml-weekly",
-      "name": "Premium Black Grapes 500ml Weekly",
-      "description": "Premium - Black Grapes - 500ml - Weekly",
-      "pricing_model": "flat_fee",
-      "item_id": "bmj-premium-black-grapes-500ml",
-      "item_family_id": "premium",
-      "price": 112500,
-      "currency_code": "INR",
-      "period": 1,
-      "period_unit": "week",
-      "trial_period": 0,
-      "trial_period_unit": "day",
-      "tiers": []
-    },
-    {
-      "id": "bmj-premium-black-grapes-500ml-monthly",
-      "name": "Premium Black Grapes 500ml Monthly",
-      "description": "Premium - Black Grapes - 500ml - Monthly",
-      "pricing_model": "flat_fee",
-      "item_id": "bmj-premium-black-grapes-500ml",
-      "item_family_id": "premium",
-      "price": 440300,
       "currency_code": "INR",
       "period": 1,
       "period_unit": "month",
