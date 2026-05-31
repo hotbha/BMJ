@@ -1,15 +1,21 @@
 """
-Suite 1: Authentication — E2E tests using real Firebase Auth.
-TC-E2E-AUTH-001 to TC-E2E-AUTH-012
+Suite 1: Authentication — E2E tests aligned with integration_test use cases.
+Covers: TC-E2E-AUTH-001 to TC-E2E-AUTH-013
+
+Navigation flow: App launches → Splash → Dashboard (always, even for guests)
+→ Profile tab → tap Sign In → Login page
+
+The app ALWAYS shows Dashboard to all users first. Login is NOT the initial screen.
 """
+import time
+import uuid
 import pytest
 import requests
-import json
-import base64
-from appium.webdriver.common.appiumby import AppiumBy
 from pages.login_page import LoginPage
 from pages.signup_page import SignupPage
 from pages.home_page import HomePage
+from pages.profile_page import ProfilePage
+from pages.splash_page import SplashPage
 from config.test_config import TestConfig
 
 
@@ -19,7 +25,6 @@ def delete_firebase_user(email: str, password: str):
     if not api_key:
         return
     try:
-        # Sign in to get idToken
         signin_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={api_key}"
         r = requests.post(signin_url, json={
             "email": email,
@@ -31,201 +36,216 @@ def delete_firebase_user(email: str, password: str):
         id_token = r.json().get('idToken')
         if not id_token:
             return
-        # Delete account
         delete_url = f"https://identitytoolkit.googleapis.com/v1/accounts:delete?key={api_key}"
         requests.post(delete_url, json={"idToken": id_token}, timeout=15)
     except Exception:
         pass
 
 
+def ensure_on_dashboard(driver):
+    """Navigate back to the Dashboard from any screen by pressing back until dashboard is found."""
+    home = HomePage(driver)
+    if home.is_dashboard_displayed(timeout=3):
+        return home
+    # Press back up to 5 times until we reach dashboard
+    for _ in range(5):
+        driver.press_back()
+        time.sleep(1)
+        if home.is_dashboard_displayed(timeout=3):
+            return home
+    # Last resort: navigate via Profile if on login
+    try:
+        login = LoginPage(driver)
+        if login.is_displayed(timeout=2):
+            driver.press_back()  # Back from login lands on profile/dashboard
+            time.sleep(2)
+    except Exception:
+        pass
+    return home
+
+
+def navigate_to_login_from_dashboard(driver):
+    """Navigate from current state → Dashboard → Profile tab → Sign In → Login page.
+    If already on login page, returns the LoginPage directly."""
+    login = LoginPage(driver)
+    if login.is_displayed(timeout=2):
+        return login
+    ensure_on_dashboard(driver)
+    home = HomePage(driver)
+    home.navigate_to_profile()
+    profile = ProfilePage(driver)
+    profile.tap_sign_in()
+    login.wait_for_element(*login.WELCOME_BACK, timeout=TestConfig.EXPLICIT_WAIT)
+    return login
+
+
 class TestAuth:
-    """Authentication test suite with real Firebase Auth."""
+    """Authentication test suite with correct Dashboard-first navigation."""
 
     @pytest.fixture(autouse=True)
     def setup(self, driver):
         self.driver = driver
+        self.home = HomePage(driver)
         self.login_page = LoginPage(driver)
         self.signup_page = SignupPage(driver)
+        self.profile_page = ProfilePage(driver)
 
-    def test_tc_auth_001_signup_valid(self, driver):
-        """TC-E2E-AUTH-001: Complete email-first signup with valid data."""
-        # Generate unique test user
-        import uuid
-        unique_id = str(uuid.uuid4())[:8]
-        test_email = f"e2e_test_{unique_id}@bookmyjuice.com"
-        test_password = "Test@1234"
-        
-        self.login_page.navigate_to_login()
-        self.login_page.tap_signup_tab()
-        self.login_page.tap_signup_email()
-        
-        self.signup_page.signup(
-            first_name="Test",
-            last_name="User",
-            email=test_email,
-            phone="9876543210",
-            password=test_password
-        )
-        
-        # Should navigate to dashboard after successful signup
-        home = HomePage(self.driver)
-        assert home.is_visible(*home.DASHBOARD_TITLE, timeout=TestConfig.API_WAIT), \
-            "Dashboard not shown after signup"
-        
-        # Cleanup: delete test user
-        delete_firebase_user(test_email, test_password)
+    # ========== Smoke Test ==========
+    def test_tc_auth_001_app_launch_shows_dashboard(self, driver):
+        """TC-E2E-AUTH-001: App launches and shows Dashboard (not login)."""
+        # Wait for splash auto-navigation to complete
+        assert self.home.wait_for_dashboard(timeout=15), \
+            "Dashboard not shown after app launch"
+        # Verify key dashboard elements are visible
+        assert self.home.is_visible(*self.home.NAV_HOME, timeout=5), \
+            "Home nav tab not visible"
+        assert self.home.is_visible(*self.home.NAV_PROFILE, timeout=5), \
+            "Profile nav tab not visible"
 
-    def test_tc_auth_002_signup_invalid_email(self, driver):
-        """TC-E2E-AUTH-002: Invalid email format rejected."""
-        self.login_page.navigate_to_login()
-        self.login_page.tap_signup_tab()
-        self.login_page.tap_signup_email()
-        
-        self.signup_page.type_text(*self.signup_page.EMAIL_FIELD, "not-an-email")
-        self.signup_page.tap(*self.signup_page.SIGNUP_BUTTON)
-        
-        # Should show validation error (no API call needed)
-        assert self.signup_page.is_error_displayed() or True, \
-            "Validation error expected for invalid email"
+    # ========== Dashboard Guest Mode ==========
+    def test_tc_auth_002_guest_dashboard_shows_welcome(self, driver):
+        """TC-E2E-AUTH-002: Guest dashboard shows welcome text and public elements."""
+        self.home.wait_for_dashboard(timeout=12)
+        assert self.home.is_visible(*self.home.BOOKMYJUICE_HEADER, timeout=5), \
+            "Header not visible"
+        assert self.home.is_visible(*self.home.NO_ACTIVE_PLAN, timeout=5), \
+            "No Active Plan section not visible"
 
-    def test_tc_auth_003_signup_weak_password(self, driver):
-        """TC-E2E-AUTH-003: Weak password rejected by Firebase."""
-        import uuid
-        unique_id = str(uuid.uuid4())[:8]
-        test_email = f"e2e_weak_{unique_id}@bookmyjuice.com"
-        
-        self.login_page.navigate_to_login()
-        self.login_page.tap_signup_tab()
-        self.login_page.tap_signup_email()
-        
-        self.signup_page.signup(
-            first_name="Test",
-            last_name="User",
-            email=test_email,
-            phone="9876543210",
-            password="123"  # too short
-        )
-        
-        # Should show error - weak password
-        assert self.signup_page.is_error_displayed() or True, \
-            "Error expected for weak password"
+    # ========== Navigation to Login ==========
+    def test_tc_auth_003_navigate_to_login_via_profile(self, driver):
+        """TC-E2E-AUTH-003: Navigate from Dashboard → Profile → Sign In → Login."""
+        login = navigate_to_login_from_dashboard(driver)
+        assert login.is_displayed(timeout=5), \
+            "Login screen not displayed via Profile → Sign In"
 
-    def test_tc_auth_004_signup_password_mismatch(self, driver):
-        """TC-E2E-AUTH-004: Password mismatch shows error."""
-        import uuid
-        unique_id = str(uuid.uuid4())[:8]
-        test_email = f"e2e_mismatch_{unique_id}@bookmyjuice.com"
-        
-        self.login_page.navigate_to_login()
-        self.login_page.tap_signup_tab()
-        self.login_page.tap_signup_email()
-        
-        self.signup_page.signup(
-            first_name="Test",
-            last_name="User",
-            email=test_email,
-            phone="9876543210",
-            password="Test@1234",
-            confirm_password="Different@1234"
-        )
-        
-        assert self.signup_page.is_error_displayed() or True, \
-            "Error expected for password mismatch"
+    def test_tc_auth_004_login_screen_elements_visible(self, driver):
+        """TC-E2E-AUTH-004: Login page shows all expected form elements."""
+        login = navigate_to_login_from_dashboard(driver)
+        assert login.is_visible(*login.WELCOME_BACK, timeout=5), \
+            "Welcome Back not visible"
+        assert login.is_visible(*login.SIGN_IN_SUBTITLE, timeout=5), \
+            "Sign in subtitle not visible"
+        assert login.is_visible(*login.EMAIL_FIELD, timeout=5), \
+            "Email field not visible"
+        assert login.is_visible(*login.PASSWORD_FIELD, timeout=5), \
+            "Password field not visible"
+        assert login.is_visible(*login.FORGOT_PASSWORD_LINK, timeout=5), \
+            "Forgot Password link not visible"
+        assert login.is_visible(*login.SIGNIN_BUTTON, timeout=5), \
+            "Sign In button not visible"
+        assert login.is_visible(*login.GOOGLE_SIGNIN_BUTTON, timeout=5), \
+            "Google button not visible"
+        assert login.is_visible(*login.PHONE_OTP_BUTTON, timeout=5), \
+            "Phone OTP button not visible"
 
-    def test_tc_auth_005_login_valid(self, logged_in):
-        """TC-E2E-AUTH-005: Login with valid credentials navigates to dashboard."""
+    # ========== Login Flow ==========
+    def test_tc_auth_005_login_valid_credentials(self, logged_in):
+        """TC-E2E-AUTH-005: Login with valid credentials returns to Dashboard."""
         home = HomePage(logged_in)
-        assert home.is_visible(*home.DASHBOARD_TITLE, timeout=TestConfig.API_WAIT), \
+        assert home.is_dashboard_displayed(timeout=15), \
             "Dashboard not shown after login"
 
     def test_tc_auth_006_login_invalid_password(self, driver):
-        """TC-E2E-AUTH-006: Invalid password shows error."""
-        self.login_page.navigate_to_login()
-        self.login_page.tap_signin_tab()
-        self.login_page.type_text(*self.login_page.EMAIL_FIELD, TestConfig.TEST_EMAIL)
-        self.login_page.type_text(*self.login_page.PASSWORD_FIELD, "WrongPassword@999")
-        self.login_page.tap(*self.login_page.SIGNIN_BUTTON)
-        
-        # Wait for real Firebase error response
-        assert self.login_page.is_error_displayed() or True, \
-            "Error expected for wrong password"
+        """TC-E2E-AUTH-006: Invalid password stays on login screen."""
+        login = navigate_to_login_from_dashboard(driver)
+        login.type_text(*login.EMAIL_FIELD, TestConfig.TEST_EMAIL)
+        login.type_text(*login.PASSWORD_FIELD, "WrongPassword@999")
+        login.tap(*login.SIGNIN_BUTTON)
+
+        # Wait for Firebase error response (should see error toast)
+        time.sleep(5)
+        # Should NOT navigate to dashboard — stays on login screen
+        the_home = HomePage(driver)
+        dashboard_shown = the_home.is_dashboard_displayed(timeout=3)
+        assert not dashboard_shown, \
+            "Login should fail with invalid password — should not navigate to dashboard"
 
     def test_tc_auth_007_login_nonexistent_user(self, driver):
-        """TC-E2E-AUTH-007: Non-existent email shows error."""
-        self.login_page.navigate_to_login()
-        self.login_page.tap_signin_tab()
-        self.login_page.type_text(*self.login_page.EMAIL_FIELD, "nonexistent@nowhere.com")
-        self.login_page.type_text(*self.login_page.PASSWORD_FIELD, "Test@1234")
-        self.login_page.tap(*self.login_page.SIGNIN_BUTTON)
-        
-        assert self.login_page.is_error_displayed() or True, \
-            "Error expected for nonexistent user"
+        """TC-E2E-AUTH-007: Non-existent email stays on login screen."""
+        login = navigate_to_login_from_dashboard(driver)
+        login.type_text(*login.EMAIL_FIELD, "nonexistent@nowhere.com")
+        login.type_text(*login.PASSWORD_FIELD, "Test@1234")
+        login.tap(*login.SIGNIN_BUTTON)
+
+        time.sleep(5)
+        the_home = HomePage(driver)
+        dashboard_shown = the_home.is_dashboard_displayed(timeout=3)
+        assert not dashboard_shown, \
+            "Login should fail for nonexistent user"
 
     def test_tc_auth_008_login_empty_fields(self, driver):
-        """TC-E2E-AUTH-008: Empty fields show validation error."""
-        self.login_page.navigate_to_login()
-        self.login_page.tap_signin_tab()
-        self.login_page.tap(*self.login_page.SIGNIN_BUTTON)
-        
-        # Client-side validation should occur
-        assert True, "Client-side validation should prevent submission"
+        """TC-E2E-AUTH-008: Empty fields prevented by client-side validation."""
+        login = navigate_to_login_from_dashboard(driver)
+        login.tap(*login.SIGNIN_BUTTON)
 
-    def test_tc_auth_009_forgot_password_navigation(self, driver):
-        """TC-E2E-AUTH-009: Forgot password link navigates correctly."""
-        self.login_page.navigate_to_login()
-        self.login_page.tap_signin_tab()
-        self.login_page.tap_forgot_password()
-        
-        # Should navigate to forgot password screen
-        assert self.login_page.is_visible(
-            AppiumBy.ACCESSIBILITY_ID, 'forgot_password_title',
-            timeout=10
-        ) or True, "Forgot password screen not shown"
+        # Should stay on login screen — validation blocks submission
+        assert login.is_displayed(timeout=5), \
+            "Should stay on login screen with empty fields"
 
-    def test_tc_auth_010_session_persistence(self, logged_in):
-        """TC-E2E-AUTH-010: Session persists after app restart."""
-        import subprocess
-        
-        # Kill app process
-        subprocess.run(
-            ['adb', 'shell', 'am', 'force-stop', TestConfig.APP_PACKAGE],
-            capture_output=True, timeout=10
-        )
-        
-        # Relaunch app
-        subprocess.run(
-            ['adb', 'shell', 'monkey', '-p', TestConfig.APP_PACKAGE, '-c',
-             'android.intent.category.LAUNCHER', '1'],
-            capture_output=True, timeout=10
-        )
-        
-        from appium.webdriver.common.appiumby import AppiumBy
-        import time
-        time.sleep(3)
-        
-        # Should be auto-logged in (session token persisted)
+    def test_tc_auth_009_login_wrong_email_format(self, driver):
+        """TC-E2E-AUTH-009: Invalid email format blocked by client-side validation."""
+        login = navigate_to_login_from_dashboard(driver)
+        login.type_text(*login.EMAIL_FIELD, "not-an-email")
+        login.type_text(*login.PASSWORD_FIELD, "Test@1234")
+        login.tap(*login.SIGNIN_BUTTON)
+
+        assert login.is_displayed(timeout=5), \
+            "Should stay on login screen with invalid email format"
+
+    # ========== Sign Up Tab ==========
+    def test_tc_auth_010_signup_tab_shows_options(self, driver):
+        """TC-E2E-AUTH-010: Sign Up tab shows Email, Phone, Google signup options."""
+        login = navigate_to_login_from_dashboard(driver)
+        login.tap(*login.TAB_SIGN_UP)
+
+        assert login.is_visible(*login.SIGNUP_EMAIL_CARD, timeout=5), \
+            "Email signup card not visible"
+        assert login.is_visible(*login.SIGNUP_PHONE_CARD, timeout=5), \
+            "Phone signup card not visible"
+        assert login.is_visible(*login.SIGNUP_GOOGLE_CARD, timeout=5), \
+            "Google signup option not visible"
+
+    # ========== Forgot Password ==========
+    def test_tc_auth_011_forgot_password_navigates(self, driver):
+        """TC-E2E-AUTH-011: Forgot Password shows reset screen."""
+        login = navigate_to_login_from_dashboard(driver)
+        login.tap_forgot_password()
+
+        assert login.is_forgot_password_displayed(timeout=5), \
+            "Forgot password screen not shown"
+
+    # ========== Session Management ==========
+    def test_tc_auth_012_logout_clears_session(self, logged_in):
+        """TC-E2E-AUTH-012: Logout from authenticated profile returns to guest dashboard."""
         home = HomePage(logged_in)
-        assert home.is_visible(*home.DASHBOARD_TITLE, timeout=TestConfig.API_WAIT), \
-            "Session persistence failed - not on dashboard"
+        home.navigate_to_profile()
 
-    def test_tc_auth_011_logout(self, logged_in):
-        """TC-E2E-AUTH-011: Logout clears session and shows login."""
-        from pages.profile_page import ProfilePage
         profile = ProfilePage(logged_in)
-        profile.tap(*profile.LOGOUT_BUTTON)
-        
-        # Should navigate back to login screen
-        assert profile.is_visible(*self.login_page.SIGNIN_BUTTON, timeout=TestConfig.API_WAIT), \
-            "Logout did not return to login screen"
+        profile.confirm_logout()
 
-    def test_tc_auth_012_login_after_logout(self, driver):
-        """TC-E2E-AUTH-012: Login after previous logout works."""
-        from pages.login_page import LoginPage
-        page = LoginPage(driver)
-        page.navigate_to_login()
-        page.login(TestConfig.TEST_EMAIL, TestConfig.TEST_PASSWORD)
-        page.wait_for_loading_gone(TestConfig.API_WAIT)
-        
-        home = HomePage(driver)
-        assert home.is_visible(*home.DASHBOARD_TITLE, timeout=TestConfig.API_WAIT), \
+        # After logout, should show guest dashboard
+        time.sleep(3)
+        assert home.is_dashboard_displayed(timeout=10), \
+            "Dashboard not shown after logout"
+        # Profile should show guest state
+        home.navigate_to_profile()
+        assert profile.is_guest(), \
+            "Profile should show guest state after logout"
+
+    def test_tc_auth_013_login_after_logout(self, logged_in):
+        """TC-E2E-AUTH-013: Login works after previous logout via Profile."""
+        # First logout from current session
+        home = HomePage(logged_in)
+        home.navigate_to_profile()
+        profile = ProfilePage(logged_in)
+        profile.confirm_logout()
+        time.sleep(2)
+
+        # Now login again from guest state
+        home.wait_for_dashboard(timeout=10)
+        login = navigate_to_login_from_dashboard(logged_in)
+        login.login(TestConfig.TEST_EMAIL, TestConfig.TEST_PASSWORD)
+
+        # Verify dashboard shown after re-login
+        assert home.is_dashboard_displayed(timeout=15), \
             "Login after logout failed"

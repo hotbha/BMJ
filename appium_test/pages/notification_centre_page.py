@@ -1,5 +1,6 @@
 """
 Notification Centre Page Object — maps to notification_centre_screen.dart
+Uses text-based selectors (no ACCESSIBILITY_ID).
 """
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.base_page import BasePage
@@ -8,17 +9,36 @@ from pages.base_page import BasePage
 class NotificationCentrePage(BasePage):
     """Page object for notification centre."""
 
-    NOTIFICATION_LIST = (AppiumBy.ACCESSIBILITY_ID, 'notification_list')
-    EMPTY_NOTIFICATION_TEXT = (AppiumBy.ACCESSIBILITY_ID, 'empty_notification_text')
-    MARK_ALL_READ_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'mark_all_read_button')
-    BACK_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'notification_back_button')
+    # Screen title
+    NOTIFICATION_TITLE = (AppiumBy.ANDROID_UIAUTOMATOR,
+        'new UiSelector().descriptionContains("Notifications")')
+    # Empty state
+    EMPTY_NOTIFICATION = (AppiumBy.ANDROID_UIAUTOMATOR,
+        'new UiSelector().descriptionContains("No notifications")')
+    # Back button — XPath for ImageButton (arrow back)
+    BACK_BUTTON = (AppiumBy.XPATH, '//android.widget.ImageButton[@content-desc="Navigate up" or @content-desc="Back"]')
+    # Notification list container
+    NOTIFICATION_LIST = (AppiumBy.ANDROID_UIAUTOMATOR,
+        'new UiSelector().className("android.widget.ListView")')
+    # Mark all as read button
+    MARK_ALL_READ = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="Mark all read" or @content-desc="Mark All Read"]')
+    # Notification bell in home
+    NOTIFICATION_BELL = (AppiumBy.XPATH, '//android.widget.ImageButton[@content-desc="Notifications"] | //android.widget.ImageView[@content-desc="Notifications"]')
+
+    def is_empty(self) -> bool:
+        """Check if notification list is empty."""
+        return self.is_visible(*self.EMPTY_NOTIFICATION)
+
+    def go_back(self):
+        """Navigate back from notifications."""
+        self.tap(*self.BACK_BUTTON)
+        return self
 
     def get_notification_count(self) -> int:
-        """Get number of visible notifications."""
+        """Count visible notification items."""
         els = self.find_elements(
             AppiumBy.ANDROID_UIAUTOMATOR,
-            'new UiSelector().descriptionContains("notification_item_")',
-            timeout=5
+            'new UiSelector().className("android.view.View")'
         )
         return len(els)
 
@@ -26,21 +46,14 @@ class NotificationCentrePage(BasePage):
         """Tap a notification by index."""
         els = self.find_elements(
             AppiumBy.ANDROID_UIAUTOMATOR,
-            'new UiSelector().descriptionContains("notification_item_")',
-            timeout=5
+            'new UiSelector().className("android.view.View")'
         )
-        if els and len(els) > index:
+        if index < len(els):
             els[index].click()
         return self
 
     def mark_all_read(self):
-        self.tap(*self.MARK_ALL_READ_BUTTON)
-        self.wait_for_loading_gone()
-        return self
-
-    def is_empty(self) -> bool:
-        return self.is_visible(*self.EMPTY_NOTIFICATION_TEXT, timeout=5)
-
-    def go_back(self):
-        self.tap(*self.BACK_BUTTON)
+        """Tap mark all as read."""
+        if self.is_visible(*self.MARK_ALL_READ, timeout=3):
+            self.tap(*self.MARK_ALL_READ)
         return self

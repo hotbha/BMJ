@@ -1,34 +1,45 @@
 """
 Item Detail Page Object — maps to detail.dart
+Uses text-based selectors.
 """
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.base_page import BasePage
+from config.test_config import TestConfig
 
 
 class ItemDetailPage(BasePage):
     """Page object for product detail screen."""
 
-    ITEM_NAME = (AppiumBy.ACCESSIBILITY_ID, 'item_detail_name')
-    ITEM_PRICE = (AppiumBy.ACCESSIBILITY_ID, 'item_detail_price')
-    ITEM_DESCRIPTION = (AppiumBy.ACCESSIBILITY_ID, 'item_detail_description')
-    ADD_TO_CART_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'add_to_cart_button')
-    ADD_SUBSCRIPTION_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'add_subscription_button')
-    QUANTITY_SELECTOR = (AppiumBy.ACCESSIBILITY_ID, 'quantity_selector')
-    BACK_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'item_detail_back')
-
-    def get_item_name(self) -> str:
-        return self.get_text(*self.ITEM_NAME)
-
-    def get_item_price(self) -> str:
-        return self.get_text(*self.ITEM_PRICE)
+    ADD_TO_CART_BUTTON = (AppiumBy.XPATH, '//android.widget.TextView[contains(@content-desc, "Add to Cart")]')
+    ADD_TO_SUBSCRIPTION = (AppiumBy.XPATH, '//android.widget.TextView[contains(@content-desc, "Add to Subscription")]')
+    BACK_BUTTON = (AppiumBy.XPATH, '//android.widget.EditText/preceding-sibling::android.widget.TextView')
 
     def add_to_cart(self):
-        """Tap add to cart button."""
+        """Add item to cart."""
+        self.scroll_to_text("Add to Cart")
         self.tap(*self.ADD_TO_CART_BUTTON)
-        self.wait_for_loading_gone()
+        self.wait_for_loading_gone(TestConfig.API_WAIT)
         return self
 
     def go_back(self):
-        """Navigate back to catalog."""
+        """Navigate back."""
         self.tap(*self.BACK_BUTTON)
         return self
+
+    def get_item_name(self) -> str:
+        """Get item name from screen."""
+        els = self.find_elements(AppiumBy.CLASS_NAME, 'android.widget.TextView')
+        # First large text is typically the name
+        for el in els:
+            text = el.text
+            if text and len(text) > 2 and text not in ('Menu', 'Add to Cart',
+                'Add to Subscription', '+', '-'):
+                return text
+        return ''
+
+    def get_item_price(self) -> str:
+        """Get item price text."""
+        try:
+            return self.get_text(AppiumBy.XPATH, '//android.widget.TextView[starts-with(@content-desc, "₹")]')
+        except Exception:
+            return ''

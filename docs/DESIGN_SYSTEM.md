@@ -1098,5 +1098,141 @@ For design system questions or contributions:
 
 ---
 
-*Last Updated: March 27, 2026*
-*Version: 1.0.0*
+## Glassmorphism Design (v2.0)
+
+> Implemented April 2026 — a premium glassmorphism design layer on top of the core design system, applied to the Dashboard, Menu, Orders, and Profile screens.
+
+### Glassmorphism Principles
+
+- **Frosted Glass Surfaces:** Semi-transparent backgrounds with backdrop blur (`BackdropFilter` + `ImageFilter.blur`) create depth.
+- **Subtle Borders:** 0.5px borders with `Colors.white.withOpacity(0.15)` for dark, `Colors.black.withOpacity(0.06)` for light.
+- **Gradient Accents:** Product cards use startColor/endColor gradients. Subscription plans and CTAs use brand gradient buttons.
+- **Glow Effects:** Selected/premium elements get `BoxShadow` with colored glow for emphasis.
+
+### Glassmorphism Token Reference
+
+All tokens defined in `lib/theme/app_colors.dart` and `lib/theme/app_radius.dart`.
+
+#### Dark Theme Glass Tokens
+
+| Token | Hex/Value | Usage |
+|-------|-----------|-------|
+| `glassBg` | `#0A0F0D` | Background fill |
+| `glassSurface` | `#FFFFFF` with 6% opacity | Card/surface background |
+| `glassElevated` | `#FFFFFF` with 10% opacity | Elevated surfaces (bottom sheets) |
+| `glassBorder` | `#FFFFFF` with 15% opacity | Card borders |
+| `glassBorderSubtle` | `#FFFFFF` with 6% opacity | Subtle dividers |
+| `glassText` | `#F1F1F1` | Primary text on glass |
+| `glassTextDim` | `#A0A0A0` | Secondary/tertiary text |
+| `glassAccent` | `#22C55E` (neon green) | Accent highlights, prices, active states |
+| `glassGlow` | `#22C55E` with 20% opacity | Drop shadow glow |
+| `glassOrange` | `#FF8C42` | Theme toggle icon accent |
+
+#### Light Theme Glass Tokens
+
+| Token | Hex/Value | Usage |
+|-------|-----------|-------|
+| `glassBgLight` | `#F8FAF9` | Background fill |
+| `glassSurfaceLight` | `#FFFFFF` with 70% opacity | Card/surface background |
+| `glassElevatedLight` | `#FFFFFF` with 90% opacity | Elevated surfaces |
+| `glassBorderLight` | `#000000` with 8% opacity | Card borders |
+| `glassTextPrimary` | `#1A1A1A` | Primary text |
+| `lightTextPrimary` | `#1A1A1A` | Primary text (light theme) |
+| `lightTextSecondary` | `#666666` | Secondary text |
+
+#### Radius Tokens (`lib/theme/app_radius.dart`)
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `sm` | 8.0 | Small chips, small tags |
+| `md` | 12.0 | Buttons, input fields, small cards |
+| `lg` | 16.0 | Cards, search bar, segment toggles |
+| `xl` | 24.0 | GlassCards, bottom sheets, major containers |
+| `xxl` | 32.0 | Hero sections, large containers |
+| `circular` | 48.0 | Circular avatars, icon backgrounds |
+
+### Typography for Glassmorphism
+
+| Font | Weight | Usage |
+|------|--------|-------|
+| `Poppins` | 600 (SemiBold) | Headlines, card titles, prices, plan names |
+| `Poppins` | 700 (Bold) | Prices, emphasis |
+| `Inter` | 400 (Regular) | Body text, descriptions, secondary info |
+| `Inter` | 500 (Medium) | Button labels, list items |
+| `Inter` | 600 (SemiBold) | Category tags, active state labels |
+
+### Glassmorphism Component Library
+
+#### `GlassCard` (`lib/widgets/glass_card.dart`)
+
+Universal glass container. Configurable blur, opacity, border, glow, gradient, and onTap.
+
+```dart
+GlassCard(
+  padding: const EdgeInsets.all(20),
+  borderRadius: AppRadius.xl,    // 24px default
+  blur: 10.0,
+  hasGlow: true,
+  glowColor: AppColors.glassAccent,
+  onTap: () => _handleTap(),
+  child: /* content */,
+)
+```
+
+#### `GlassChip`
+
+Glassmorphism chip/tag for categories and filters.
+
+```dart
+GlassChip(
+  label: 'Orange',
+  isSelected: true,
+  selectedColor: AppColors.glassAccent,
+  onTap: () => _filterByCategory('Orange'),
+)
+```
+
+#### `GlassSegmentToggle`
+
+Glassmorphism toggle for One-Time / Subscribe segment control.
+
+```dart
+GlassSegmentToggle(
+  segments: const ['One-Time', 'Subscribe'],
+  selectedIndex: _segmentIndex,
+  onSegmentChanged: (index) => setState(() => _segmentIndex = index),
+)
+```
+
+#### `CartBadgeIcon` (`lib/widgets/cart_badge_icon.dart`)
+
+Shopping bag icon with neon green badge count. Uses `BlocBuilder<CartBloc>` to compute total quantity.
+
+```dart
+CartBadgeIcon(
+  iconSize: 20,
+  onTap: () => Navigator.pushNamed(context, '/cart'),
+)
+```
+
+### Dashboard Shell Architecture
+
+The Dashboard now uses an `IndexedStack` with 4 tabs and a glassmorphism bottom nav:
+
+| Tab | File | Description |
+|-----|------|-------------|
+| Home | `home_tab.dart` | Hero greeting, subscription card, stats strip, order today |
+| Menu | `menu_tab.dart` | One-Time catalog + Subscribe plans with segment toggle |
+| Orders | `orders_tab.dart` | Order history with glass tiles; sign-in CTA if unauthenticated |
+| Profile | `profile_tab.dart` | Profile header, menu items, theme toggle, logout |
+
+Glass bottom navigation uses `BackdropFilter` with `ClipRRect` and `NavigationBar`.
+
+### Theme Support
+
+Both light and dark themes fully support glassmorphism. The `ThemeCubit` provides `resolvedThemeMode` to determine which glass token set to use. All glass widgets auto-adapt by calling `context.watch<ThemeCubit>()`.
+
+---
+
+*Last Updated: May 29, 2026*
+*Version: 2.0.0*

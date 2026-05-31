@@ -1,46 +1,72 @@
 """
 Cart Page Object — maps to cart_screen.dart
+Uses text-based selectors matching actual UI.
 """
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.base_page import BasePage
+from config.test_config import TestConfig
 
 
 class CartPage(BasePage):
     """Page object for cart screen."""
 
-    CART_LIST = (AppiumBy.ACCESSIBILITY_ID, 'cart_list')
-    CART_TOTAL = (AppiumBy.ACCESSIBILITY_ID, 'cart_total')
-    CHECKOUT_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'checkout_button')
-    EMPTY_CART_MESSAGE = (AppiumBy.ACCESSIBILITY_ID, 'empty_cart_message')
-    QUANTITY_INCREASE = (AppiumBy.ACCESSIBILITY_ID, 'quantity_increase')
-    QUANTITY_DECREASE = (AppiumBy.ACCESSIBILITY_ID, 'quantity_decrease')
-    REMOVE_ITEM_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'remove_item_button')
+    # Cart Screen (cart_screen.dart)
+    # AppBar title
+    CART_TITLE = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="My Cart"]')
+    
+    # Empty cart
+    EMPTY_CART_TEXT = (AppiumBy.ANDROID_UIAUTOMATOR,
+        'new UiSelector().descriptionContains("Your cart is empty")')
+    EMPTY_CART_SUBTITLE = (AppiumBy.ANDROID_UIAUTOMATOR,
+        'new UiSelector().descriptionContains("Add juices")')
+    START_SHOPPING_BUTTON = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="Start Shopping"]')
 
-    @staticmethod
-    def quantity_field(item_id: str):
-        """Get quantity field for a specific item."""
-        return (AppiumBy.ACCESSIBILITY_ID, f'quantity_{item_id}')
+    # Cart items - dynamic text
+    CART_ITEM_PRICE = (AppiumBy.XPATH, '//android.widget.TextView[starts-with(@content-desc, "₹")]')
+    
+    # Quantity controls
+    PLUS_BUTTON = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="+"]')
+    MINUS_BUTTON = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="-"]')
+    
+    # Remove button
+    REMOVE_BUTTON_XPATH = (AppiumBy.XPATH, '//android.widget.TextView[contains(@content-desc, "Remove")]')
 
-    def get_cart_total(self) -> str:
-        return self.get_text(*self.CART_TOTAL)
-
-    def tap_checkout(self):
-        """Proceed to checkout."""
-        self.tap(*self.CHECKOUT_BUTTON)
-        self.wait_for_loading_gone()
-        return self
+    # Bottom checkout bar
+    TOTAL_AMOUNT = (AppiumBy.ANDROID_UIAUTOMATOR,
+        'new UiSelector().descriptionContains("Total")')
+    PLACE_ORDER_BUTTON = (AppiumBy.ANDROID_UIAUTOMATOR,
+        'new UiSelector().descriptionContains("Place Order")')
 
     def is_empty(self) -> bool:
-        return self.is_visible(*self.EMPTY_CART_MESSAGE)
+        """Check if cart is empty."""
+        return self.is_visible(*self.EMPTY_CART_TEXT)
 
-    def increase_quantity(self):
-        self.tap(*self.QUANTITY_INCREASE)
+    def get_total_text(self) -> str:
+        """Get the total amount text."""
+        return self.get_text(*self.TOTAL_AMOUNT)
+
+    def tap_place_order(self):
+        """Proceed to checkout."""
+        self.tap(*self.PLACE_ORDER_BUTTON)
+        self.wait_for_loading_gone(TestConfig.API_WAIT)
         return self
 
-    def decrease_quantity(self):
-        self.tap(*self.QUANTITY_DECREASE)
+    def tap_start_shopping(self):
+        """Navigate to catalog from empty cart."""
+        self.tap(*self.START_SHOPPING_BUTTON)
         return self
 
-    def remove_item(self):
-        self.tap(*self.REMOVE_ITEM_BUTTON)
+    def tap_plus(self):
+        """Increase quantity."""
+        self.tap(*self.PLUS_BUTTON)
+        return self
+
+    def tap_minus(self):
+        """Decrease quantity."""
+        self.tap(*self.MINUS_BUTTON)
+        return self
+
+    def tap_remove(self):
+        """Remove item from cart."""
+        self.tap(*self.REMOVE_BUTTON_XPATH)
         return self

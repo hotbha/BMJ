@@ -21,7 +21,7 @@ class TestConfig:
     API_WAIT = 30  # real API calls take longer
 
     # App package for device operations
-    APP_PACKAGE = 'com.bookmyjuice.lush'
+    APP_PACKAGE = 'com.bookmyjuice.app'
 
     # Chargebee site
     CHARGEBEE_SITE = 'bookmyjuice-test'

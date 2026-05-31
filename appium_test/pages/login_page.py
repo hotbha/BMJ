@@ -1,7 +1,12 @@
 """
 Login Page Object — maps to login_page.dart
+Uses content-desc-based ANDROID_UIAUTOMATOR selectors since Flutter renders
+text in content-desc attribute, not text attribute.
+
+Navigation flow: Dashboard → Profile tab → tap "Sign In" → /login route
 """
 from appium.webdriver.common.appiumby import AppiumBy
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from pages.base_page import BasePage
 from config.test_config import TestConfig
 
@@ -9,37 +14,71 @@ from config.test_config import TestConfig
 class LoginPage(BasePage):
     """Page object for the unified auth screen with Sign In / Sign Up tabs."""
 
-    # ── Tab Locators ──
-    TAB_SIGN_IN = (AppiumBy.ACCESSIBILITY_ID, 'signin_tab')
-    TAB_SIGN_UP = (AppiumBy.ACCESSIBILITY_ID, 'signup_tab')
+    # ── Accessibility IDs (from Semantics labels in login_page.dart) ──
+    ACC_WELCOME_BACK = (AppiumBy.ACCESSIBILITY_ID, "Welcome Back!")
+    ACC_EMAIL_FIELD = (AppiumBy.ACCESSIBILITY_ID, "Email address")
+    ACC_PASSWORD_FIELD = (AppiumBy.ACCESSIBILITY_ID, "Password")
+    ACC_FORGOT_PASSWORD = (AppiumBy.ACCESSIBILITY_ID, "Forgot Password")
+    ACC_SIGNIN_BUTTON = (AppiumBy.ACCESSIBILITY_ID, "Sign In")
+    ACC_GOOGLE_BUTTON = (AppiumBy.ACCESSIBILITY_ID, "Google")
+    ACC_PHONE_OTP_BUTTON = (AppiumBy.ACCESSIBILITY_ID, "Phone OTP")
+    ACC_SIGNUP_EMAIL = (AppiumBy.ACCESSIBILITY_ID, "Sign up with Email")
+    ACC_SIGNUP_PHONE = (AppiumBy.ACCESSIBILITY_ID, "Sign up with Phone")
+    ACC_SIGNUP_GOOGLE = (AppiumBy.ACCESSIBILITY_ID, "Sign up with Google")
 
-    # ── Sign In Form ──
-    EMAIL_FIELD = (AppiumBy.ACCESSIBILITY_ID, 'signin_email_field')
-    PASSWORD_FIELD = (AppiumBy.ACCESSIBILITY_ID, 'signin_password_field')
-    SIGNIN_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'signin_button')
-    FORGOT_PASSWORD_LINK = (AppiumBy.ACCESSIBILITY_ID, 'forgot_password_link')
-    ERROR_MESSAGE = (AppiumBy.ACCESSIBILITY_ID, 'login_error_message')
+    # ── Header (fallback UiAutomator selectors) ──
+    FRESH_JUICES_HEADER = BasePage.desc("Fresh Juices, Delivered Daily")
+    WELCOME_BACK = BasePage.desc("Welcome Back!")
+    SIGN_IN_SUBTITLE = BasePage.desc("Sign in to your account")
+
+    # ── Tab Locators (uses real newline character as in content-desc) ──
+    TAB_SIGN_IN = BasePage.desc_contains("Sign In\nTab 1")
+    TAB_SIGN_UP = BasePage.desc_contains("Sign Up\nTab 2")
+
+    # ── Sign In Form (ACCESSIBILITY_ID preferred for Semantics-labeled elements) ──
+    # Email is EditText instance 0 (hint="Email address")
+    # Password is EditText instance 1 (hint="Password")
+    EMAIL_FIELD = ACC_EMAIL_FIELD
+    PASSWORD_FIELD = ACC_PASSWORD_FIELD
+    SIGNIN_BUTTON = ACC_SIGNIN_BUTTON
+    FORGOT_PASSWORD_LINK = ACC_FORGOT_PASSWORD
 
     # ── Social / Alternative Login ──
-    GOOGLE_SIGNIN_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'google_signin_button')
-    PHONE_OTP_BUTTON = (AppiumBy.ACCESSIBILITY_ID, 'phone_otp_button')
+    GOOGLE_SIGNIN_BUTTON = ACC_GOOGLE_BUTTON
+    PHONE_OTP_BUTTON = ACC_PHONE_OTP_BUTTON
+    OR_LABEL = BasePage.desc("OR")
 
-    # ── Sign Up Tab ──
-    SIGNUP_EMAIL_CARD = (AppiumBy.ACCESSIBILITY_ID, 'signup_email_card')
-    SIGNUP_PHONE_CARD = (AppiumBy.ACCESSIBILITY_ID, 'signup_phone_card')
-    SIGNUP_GOOGLE_CARD = (AppiumBy.ACCESSIBILITY_ID, 'signup_google_card')
+    # ── Error / Toast ──
+    ERROR_MESSAGE = BasePage.desc_contains("Login Failed")
+
+    # ── Sign Up Tab — method cards (ACCESSIBILITY_ID preferred) ──
+    SIGNUP_EMAIL_CARD = ACC_SIGNUP_EMAIL
+    SIGNUP_PHONE_CARD = ACC_SIGNUP_PHONE
+    SIGNUP_GOOGLE_CARD = ACC_SIGNUP_GOOGLE
+
+    # ── Sign Up Tab Labels ──
+    CREATE_ACCOUNT_LABEL = BasePage.desc("Create Your Account")
+    SIGNUP_SUBTITLE = BasePage.desc("Choose your preferred signup method")
+
+    # ── Forgot Password screen markers ──
+    FORGOT_PASSWORD_SCREEN = BasePage.desc_contains("Reset")
+    RESET_PASSWORD_BUTTON = BasePage.desc_contains("Reset")
+    RESET_EMAIL_FIELD = BasePage.edit_text_instance(0)
 
     def navigate_to_login(self):
-        """Navigate to login screen. App should first launch to splash."""
-        from pages.splash_page import SplashPage
-        splash = SplashPage(self.driver)
-        splash.wait_for_splash()
-        splash.navigate_to_login()
+        """Navigate to login screen from Dashboard via Profile tab.
+        Flow: Dashboard → tap Profile tab → tap Sign In → login page"""
+        from pages.home_page import HomePage
+        home = HomePage(self.driver)
+        home.navigate_to_profile()
+        from pages.profile_page import ProfilePage
+        profile = ProfilePage(self.driver)
+        profile.tap_sign_in()
+        self.wait_for_element(*self.TAB_SIGN_IN, timeout=TestConfig.API_WAIT)
         return self
 
     def login(self, email: str, password: str):
         """Perform login with email and password."""
-        self.tap(*self.TAB_SIGN_IN)
         self.type_text(*self.EMAIL_FIELD, email)
         self.type_text(*self.PASSWORD_FIELD, password)
         self.tap(*self.SIGNIN_BUTTON)
@@ -57,7 +96,12 @@ class LoginPage(BasePage):
         return self
 
     def tap_forgot_password(self):
-        """Navigate to forgot password screen."""
+        """Navigate to forgot password screen. Scrolls to element first, then taps."""
+        # Forgot Password link is at bottom of scrollable form; scroll to it first
+        try:
+            self.scroll_to_desc("Forgot Password")
+        except (TimeoutException, NoSuchElementException):
+            pass  # May already be visible
         self.tap(*self.FORGOT_PASSWORD_LINK)
         return self
 
@@ -93,3 +137,30 @@ class LoginPage(BasePage):
     def is_error_displayed(self) -> bool:
         """Check if error message is displayed."""
         return self.is_visible(*self.ERROR_MESSAGE)
+
+    def is_displayed(self, timeout: int = None) -> bool:
+        """Check if login page is displayed (any recognisable element)."""
+        return (
+            self.is_visible(*self.TAB_SIGN_IN, timeout=timeout or 5) or
+            self.is_visible(*self.WELCOME_BACK, timeout=timeout or 5) or
+            self.is_visible(*self.EMAIL_FIELD, timeout=2) or
+            self.is_visible(*self.FRESH_JUICES_HEADER, timeout=2)
+        )
+
+    def is_forgot_password_displayed(self) -> bool:
+        """Check if forgot password screen is displayed."""
+        return self.is_visible(*self.FORGOT_PASSWORD_SCREEN)
+
+    def has_navigated_away(self, timeout: int = None) -> bool:
+        """Check if we navigated away from login screen (to dashboard/home)."""
+        from pages.home_page import HomePage
+        home = HomePage(self.driver)
+        try:
+            result = home.is_dashboard_displayed()
+            return result
+        except (TimeoutException, NoSuchElementException):
+            return False
+
+    def wait_for_element(self, by, value, timeout=None):
+        """Wait for an element to be visible."""
+        return self.find_visible_element(by, value, timeout)

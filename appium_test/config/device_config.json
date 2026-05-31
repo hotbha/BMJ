@@ -2,13 +2,16 @@
   "platformName": "Android",
   "appium:automationName": "UiAutomator2",
   "appium:deviceName": "Android Device",
+  "appium:udid": "1f3431ad",
   "appium:noReset": false,
   "appium:fullReset": false,
   "appium:autoGrantPermissions": true,
-  "appium:appPackage": "com.bookmyjuice.lush",
+  "appium:appPackage": "com.bookmyjuice.app",
   "appium:appActivity": ".MainActivity",
   "appium:ensureWebviewsHavePages": true,
   "appium:nativeWebScreenshot": true,
   "appium:newCommandTimeout": 3600,
-  "appium:connectHardwareKeyboard": true
+  "appium:connectHardwareKeyboard": true,
+  "appium:forceAppLaunch": true,
+  "appium:clearDeviceLogsOnStart": true
 }

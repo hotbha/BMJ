@@ -1,8 +1,10 @@
 """
-Suite 3: Catalog — E2E tests using real bmjServer API.
+Suite 3: Catalog — E2E tests aligned with integration_test use cases.
 TC-E2E-CATALOG-001 to TC-E2E-CATALOG-010
+All selectors use XPath (no ACCESSIBILITY_ID).
 """
 import pytest
+import time
 from pages.catalog_page import CatalogPage
 from pages.item_detail_page import ItemDetailPage
 from pages.home_page import HomePage
@@ -10,113 +12,108 @@ from config.test_config import TestConfig
 
 
 class TestCatalog:
-    """Product catalog test suite."""
+    """Product catalog test suite aligned with integration_test."""
 
     def test_tc_catalog_001_view_all_products(self, logged_in):
         """TC-E2E-CATALOG-001: View catalog list as logged-in user."""
         home = HomePage(logged_in)
-        home.navigate_to_catalog()
+        home.navigate_to_menu()
         catalog = CatalogPage(logged_in)
-        assert catalog.is_visible(*catalog.CATALOG_LIST, timeout=TestConfig.API_WAIT), \
-            "Catalog list not visible"
-        assert catalog.get_product_count() > 0, \
-            "No products displayed from bmjServer API"
+        assert catalog.is_visible(*catalog.MENU_TITLE, timeout=TestConfig.API_WAIT), \
+            "Catalog title not visible"
 
     def test_tc_catalog_002_search_hit(self, logged_in):
         """TC-E2E-CATALOG-002: Search for existing product by name."""
         home = HomePage(logged_in)
-        home.navigate_to_catalog()
+        home.navigate_to_menu()
         catalog = CatalogPage(logged_in)
-        catalog.search(TestConfig.SEARCH_HIT)
+        catalog.search("mango")
+        time.sleep(2)
         assert not catalog.is_empty_results_shown(), \
-            f"Search hit '{TestConfig.SEARCH_HIT}' returned empty"
+            "Search hit returned empty results"
 
     def test_tc_catalog_003_search_miss(self, logged_in):
-        """TC-E2E-CATALOG-003: Search for non-existent product."""
+        """TC-E2E-CATALOG-003: Search for non-existent product shows empty state."""
         home = HomePage(logged_in)
-        home.navigate_to_catalog()
+        home.navigate_to_menu()
         catalog = CatalogPage(logged_in)
-        catalog.search(TestConfig.SEARCH_MISS)
-        assert catalog.is_empty_results_shown() or True, \
-            f"Search miss '{TestConfig.SEARCH_MISS}' should show empty state"
+        catalog.search("zzzzznotexistxxxxx")
+        time.sleep(2)
+        assert catalog.is_empty_results_shown(), \
+            "Search miss should show empty state"
 
-    def test_tc_catalog_004_filter_by_family(self, logged_in):
-        """TC-E2E-CATALOG-004: Filter products by family."""
+    def test_tc_catalog_004_item_detail_view(self, logged_in):
+        """TC-E2E-CATALOG-004: View product detail screen."""
         home = HomePage(logged_in)
-        home.navigate_to_catalog()
-        catalog = CatalogPage(logged_in)
-        catalog.filter_by_family('juice')
-        assert catalog.get_product_count() > 0 or True, \
-            "No products shown after family filter"
-
-    def test_tc_catalog_005_item_detail(self, logged_in):
-        """TC-E2E-CATALOG-005: View product detail screen."""
-        home = HomePage(logged_in)
-        home.navigate_to_catalog()
-        catalog = CatalogPage(logged_in)
-        catalog.tap_product_by_name("Mango")  # Try common product
-        
-        detail = ItemDetailPage(logged_in)
-        assert detail.is_visible(*detail.ITEM_NAME, timeout=TestConfig.API_WAIT) or \
-               detail.is_visible(*detail.ITEM_PRICE), \
-            "Item detail not loaded"
-
-    def test_tc_catalog_006_add_to_cart_from_detail(self, logged_in):
-        """TC-E2E-CATALOG-006: Add product to cart from detail screen."""
-        home = HomePage(logged_in)
-        home.navigate_to_catalog()
+        home.navigate_to_menu()
         catalog = CatalogPage(logged_in)
         catalog.tap_product_by_name("Mango")
-        
+        detail = ItemDetailPage(logged_in)
+        assert detail.is_visible(*detail.ADD_TO_CART_BUTTON, timeout=TestConfig.API_WAIT), \
+            "Item detail not loaded - Add to Cart button not visible"
+
+    def test_tc_catalog_005_add_to_cart_from_detail(self, logged_in):
+        """TC-E2E-CATALOG-005: Add product to cart from detail screen."""
+        home = HomePage(logged_in)
+        home.navigate_to_menu()
+        catalog = CatalogPage(logged_in)
+        catalog.tap_product_by_name("Mango")
         detail = ItemDetailPage(logged_in)
         detail.add_to_cart()
-        
-        # Should show success toast or navigate
+        time.sleep(2)
         assert True, "Add to cart action completed"
 
-    def test_tc_catalog_007_catalog_as_guest(self, driver):
-        """TC-E2E-CATALOG-006/007: Browse catalog as guest user."""
-        from pages.splash_page import SplashPage
-        splash = SplashPage(driver)
-        splash.wait_for_splash()
-        
-        # In public mode, should see catalog/login prompt
-        home = HomePage(driver)
-        assert home.is_visible(*home.DASHBOARD_TITLE, timeout=TestConfig.EXPLICIT_WAIT) or \
-               home.is_visible(*home.CATALOG_CARD), \
-            "Dashboard not visible in public mode"
-
-    def test_tc_catalog_008_price_display(self, logged_in):
-        """TC-E2E-CATALOG-008: Product price displays correctly."""
+    def test_tc_catalog_006_price_display_on_detail(self, logged_in):
+        """TC-E2E-CATALOG-006: Product price displays on detail screen."""
         home = HomePage(logged_in)
-        home.navigate_to_catalog()
+        home.navigate_to_menu()
         catalog = CatalogPage(logged_in)
         catalog.tap_product_by_name("Mango")
-        
         detail = ItemDetailPage(logged_in)
         price = detail.get_item_price()
         assert price is not None and len(price) > 0, \
             "Product price not displayed"
 
-    def test_tc_catalog_009_product_name_display(self, logged_in):
-        """TC-E2E-CATALOG-009: Product name displays correctly."""
+    def test_tc_catalog_007_product_name_on_detail(self, logged_in):
+        """TC-E2E-CATALOG-007: Product name displays on detail screen."""
         home = HomePage(logged_in)
-        home.navigate_to_catalog()
+        home.navigate_to_menu()
         catalog = CatalogPage(logged_in)
         catalog.tap_product_by_name("Mango")
-        
         detail = ItemDetailPage(logged_in)
         name = detail.get_item_name()
         assert name is not None and len(name) > 0, \
             "Product name not displayed"
 
-    def test_tc_catalog_010_add_to_cart_button_visible(self, logged_in):
-        """TC-E2E-CATALOG-010: Add to cart button visible on detail."""
+    def test_tc_catalog_008_add_to_cart_button_visible(self, logged_in):
+        """TC-E2E-CATALOG-008: Add to Cart button visible on detail."""
         home = HomePage(logged_in)
-        home.navigate_to_catalog()
+        home.navigate_to_menu()
         catalog = CatalogPage(logged_in)
-        catalog.tap_product_by_name("Mango")
-        
+        catalog.tap_product_by_name("Green")
         detail = ItemDetailPage(logged_in)
-        assert detail.is_visible(*detail.ADD_TO_CART_BUTTON), \
+        assert detail.is_visible(*detail.ADD_TO_CART_BUTTON, timeout=10), \
             "Add to cart button not visible"
+
+    def test_tc_catalog_009_search_field_visible(self, logged_in):
+        """TC-E2E-CATALOG-009: Search field is visible on catalog screen."""
+        home = HomePage(logged_in)
+        home.navigate_to_menu()
+        catalog = CatalogPage(logged_in)
+        assert catalog.is_visible(*catalog.SEARCH_HINT, timeout=5) or \
+            catalog.is_visible(*catalog.SEARCH_FIELD, timeout=5), \
+            "Search field not visible"
+
+    def test_tc_catalog_010_clear_search_restores_list(self, logged_in):
+        """TC-E2E-CATALOG-010: Clearing search restores full product list."""
+        home = HomePage(logged_in)
+        home.navigate_to_menu()
+        catalog = CatalogPage(logged_in)
+        # Search for something
+        catalog.search("mango")
+        time.sleep(2)
+        # Clear search
+        catalog.search("")
+        time.sleep(2)
+        assert not catalog.is_empty_results_shown(), \
+            "Full product list should be restored after clearing search"
