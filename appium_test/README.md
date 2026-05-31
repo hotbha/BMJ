@@ -6,13 +6,27 @@ Real integration E2E tests for the BookMyJuice Flutter mobile app.
 
 - Python 3.10+
 - Appium server (`npm install -g appium`)
-- Android device with USB Debugging enabled
-- bmjServer running locally (`mvn spring-boot:run`)
-- Firebase Auth test account
+- Android device with Wi-Fi ADB Debugging enabled (wireless, port 5555)
+- bmjServer running locally (`mvn spring-boot:run`) or deployed
+- Firebase Auth test account (email/password provider — credentials must be pre-created)
 - Chargebee TEST site API key
 
 ## Setup
 
+### Wireless ADB Connection
+This suite connects to the Android device over Wi-Fi ADB (no USB required after initial pairing).
+```powershell
+# Verify device is connected
+adb devices
+
+# If not found, connect wirelessly
+adb connect <DEVICE_IP>:5555
+
+# Verify connection is stable (ping both ways)
+adb shell ping -c 1 8.8.8.8
+```
+
+### Python Dependencies & Appium
 ```bash
 # Install Python dependencies
 pip install -r requirements.txt
@@ -21,8 +35,8 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with your credentials
 
-# Start Appium
-appium --port 4723
+# Start Appium (PowerShell)
+Start-Process -NoNewWindow appium --port 4723
 ```
 
 ## Project Structure
@@ -95,6 +109,25 @@ python3 -m pytest tests/suite_1_auth/ -v --capture=no
 - **Real FCM**: Push notifications via bmjServer test endpoint
 - **Auto-screenshots**: Captured on any test failure
 - **Cleanup fixtures**: Subscriptions/orders cleaned between tests
+
+## Test Credentials
+
+All test accounts must be pre-created in **Firebase Auth** (email/password provider) before running the suite:
+
+```python
+# Required environment variables (.env)
+TEST_EMAIL=<pre-created-email>@example.com
+TEST_PASSWORD=<pre-created-password>
+```
+
+> **Important:** These credentials must exist in Firebase Auth's email/password provider. The test suite does NOT auto-create them. Use the Firebase Console or Admin SDK to create the test user before running tests.
+
+## Known Limitations
+
+1. **Google OAuth Not Automatable**: Google Sign-In (Google OAuth) **cannot be automated** via Appium on real Android devices. It requires Google Play Services account mocking which is only possible on emulators. Only email/password authentication is used in this test suite.
+2. **Dashboard-First Architecture**: The app starts on the **Dashboard** screen, even for unauthenticated users. Navigation flows in test cases must account for this — they navigate from Dashboard → Profile → Login, not from a standalone Splash/Login screen.
+3. **AutoLoginFailed Race Condition**: On cold launch, the `AutoLoginFailed` event may fire before Appium has settled. Add a **4-second stabilisation wait** (`time.sleep(4)`) before the first Appium interaction to avoid flakiness.
+4. **Wireless ADB Stability**: Intermittent Wi-Fi signal can cause ADB disconnections. The test suite verifies device presence before each phase and reconnects if needed.
 
 ## Reports
 

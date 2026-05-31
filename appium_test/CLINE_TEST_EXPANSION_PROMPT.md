@@ -32,17 +32,17 @@ You are a senior QA automation engineer working on **BookMyJuice (BMJ)**, a Flut
 
 ## PHASE 0 — VERIFY DEVICE CONNECTION (Do This First)
 
-```bash
+```powershell
 adb devices
 # Must show exactly one device with 'device' status (not 'offline')
-# If offline: adb disconnect && adb connect <phone-ip>:5555
+# If offline: adb disconnect ; adb connect <phone-ip>:5555
 
 # Verify Appium server is running
-curl -s http://127.0.0.1:4723/status | python -m json.tool
+Invoke-WebRequest -Uri http://127.0.0.1:4723/status | Select-Object -ExpandProperty Content
 # Must return { "ready": true }
 
 # If Appium not running, start it:
-appium --relaxed-security &
+Start-Process -NoNewWindow appium --relaxed-security
 ```
 
 ---
@@ -73,11 +73,11 @@ For EACH label below, find the corresponding widget in `lush/lib/` and wrap it w
 - `signin_button` → Sign In submit button
 - `forgot_password_link` → Forgot Password text/link
 - `login_error_message` → error Text widget shown on bad credentials
-- `google_signin_button` → Google sign-in button
+- `google_signin_button` → Google sign-in button *(⚠️ Cannot be automated via Appium on real devices — see Known Limitations)*
 - `phone_otp_button` → Phone OTP button
 - `signup_email_card` → Email signup card on Sign Up tab
 - `signup_phone_card` → Phone signup card
-- `signup_google_card` → Google signup card
+- `signup_google_card` → Google signup card *(⚠️ Cannot be automated via Appium on real devices)*
 
 **Forgot Password Screen**
 - `forgot_password_title` → Screen title Text widget
@@ -1080,11 +1080,19 @@ Then show me:
 
 ---
 
+## ⚠️ KNOWN LIMITATIONS
+
+1. **Google OAuth Not Automatable**: Google Sign-In (`google_signin_button`, `signup_google_card`) uses Google Play Services account picker which **cannot be automated** via Appium on real devices. Only email/password auth flows are covered in this test suite. Do not add or modify Semantics labels for Google-specific controls as part of "fixing labels to make tests pass" — these controls are intentionally excluded from the automated test scope.
+2. **Dashboard-First Architecture**: The app starts on the Dashboard even for unauthenticated users. Navigation flows must account for: Dashboard → Profile → Login/SignUp. Auth tests do NOT start from a Splash/Login screen.
+3. **AutoLoginFailed Race Condition**: On cold app launch, add a **4-second stabilisation wait** before the first interaction to avoid flaky failures from `AutoLoginFailed` firing before Appium settles.
+4. **App Package**: Always use `com.bookmyjuice.lush`, NOT `com.bookmyjuice.app`.
+5. **PowerShell Environment**: All commands must use PowerShell syntax. The `&` background operator does not work in Windows; use `Start-Process` instead.
+
 ## SUCCESS CRITERIA
 
 - [ ] All 3 previously failing tests: GREEN
 - [ ] Zero `assert True` or `or True` remaining
 - [ ] Total test count ≥ 150
-- [ ] All Flutter Semantics labels present (verify with `adb shell uiautomator dump /sdcard/ui.xml && adb pull /sdcard/ui.xml && grep 'content-desc' ui.xml | wc -l`)
+- [ ] All Flutter Semantics labels present (verify with `adb shell uiautomator dump /sdcard/ui.xml ; adb pull /sdcard/ui.xml ; findstr "content-desc" ui.xml | Measure-Object -Line`)
 - [ ] HTML report generated at `reports/full_report.html`
 - [ ] All identified bugs fixed and re-confirmed green

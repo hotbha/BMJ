@@ -1,7 +1,7 @@
 # E2E Test Rewrite & Execution Progress
 
 ## Phase 1: Fix Infrastructure
-- [ ] Fix test_config.py APP_PACKAGE to 'com.bookmyjuice.app'
+- [ ] Fix test_config.py APP_PACKAGE to 'com.bookmyjuice.lush'
 - [ ] Rewrite home_page.py with XPath locators
 - [ ] Rewrite profile_page.py with XPath locators
 - [ ] Rewrite remaining page objects with XPath locators

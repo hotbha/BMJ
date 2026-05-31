@@ -1,9 +1,13 @@
 # Appium Test Plan
 
-> **Date:** 2026-05-28
-> **Status:** Planning — requires connected device/emulator
+> **Date:** 2026-06-01  
+> **Status:** Updated — reflects Dashboard-first architecture, known limitations
 
-This document defines Appium test scenarios for manual/automated device testing. Appium tests require a connected device or emulator and are not implemented in this prompt.
+This document defines Appium test scenarios for manual/automated device testing. Appium tests require a connected device or emulator.
+
+> ⚠️ **IMPORTANT: Dashboard-First Navigation**  
+> The app starts on the **Dashboard** screen even for unauthenticated users. There is no standalone Splash or Login screen. To reach authentication screens, navigate:  
+> `Dashboard → Profile (bottom nav) → scroll to "Sign In" / "Sign Up" section`
 
 ## Device Matrix
 
@@ -16,6 +20,18 @@ This document defines Appium test scenarios for manual/automated device testing.
 ## Framework
 
 Use existing `integration_test/` pattern (Flutter `integration_test` package + `flutter test`). For Appium-native, use `flutter_driver` or Appium Flutter plugin.
+
+---
+
+## ⚠️ Known Limitations
+
+1. **Google OAuth Not Automatable**: Google Sign-In uses Google Play Services account picker which **cannot be automated** via Appium on real devices. Only email/password auth flows are covered in this test suite.
+2. **Dashboard-First Architecture**: All test flows start from the Dashboard, not a Login/Splash screen. Account for this in test step definitions.
+3. **AutoLoginFailed Race Condition**: On cold app launch, add a **4-second stabilisation wait** before the first Appium interaction to avoid flaky failures from `AutoLoginFailed` firing before Appium settles.
+4. **App Package Name**: The actual package is `com.bookmyjuice.lush` (not `com.bookmyjuice.app`). Ensure all ADB commands and capabilities use the correct value.
+5. **Known Bug — GoogleSignIn Event Redirect**: The `GoogleSignIn` event handler in `auth_bloc.dart` emits `SignUpStarted` for existing users, causing redirect back to Login instead of the Dashboard. Use email/password login as a workaround.
+
+---
 
 ## Priority 1 — Subscription Flow (Critical Path)
 
@@ -92,16 +108,17 @@ Use existing `integration_test/` pattern (Flutter `integration_test` package + `
 ## Priority 3 — Auth Flows
 
 ### APP-AUTH-01: Phone OTP full flow
-1. Sign Up → Phone → Enter number → Verify OTP → Enter address → Set password → Dashboard
+1. Dashboard → Profile → Sign Up tab → Phone card → Enter number → Verify OTP → Enter address → Set password → Dashboard
 
 ### APP-AUTH-02: Google Sign-In full flow
-1. Sign Up → Google → Authenticate → Link account → Dashboard
+> ⚠️ **Not automatable via Appium on real devices.** Google Sign-In uses Google Play Services account picker, which cannot be automated. Manual testing only.
+1. Dashboard → Profile → Sign In tab → Google button → Authenticate → Link account → Dashboard
 
 ### APP-AUTH-03: Auto-login on app restart
-1. Login successfully → Close app → Reopen → Verify logged in
+1. Login successfully → Close app → Reopen → Wait 4s for stabilisation → Verify logged in
 
 ### APP-AUTH-04: Logout clears session
-1. Logout → Close app → Reopen → Verify login screen shown
+1. Logout → Close app → Reopen → Wait 4s → Verify public Dashboard (login prompt visible)
 
 ## Priority 4 — One-time Orders
 

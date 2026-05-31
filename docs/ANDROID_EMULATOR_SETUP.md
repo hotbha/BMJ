@@ -481,10 +481,10 @@ flutter run -d emulator-5554
 adb shell screencap -p /sdcard/screen.png && adb pull /sdcard/screen.png
 
 # Clear app data
-adb shell pm clear com.bookmyjuice.app
+adb shell pm clear com.bookmyjuice.lush
 
 # View logs
-adb logcat | grep -i bookmyjuice
+adb logcat | findstr /i bookmyjuice
 ```
 
 ### Emulator Keyboard Shortcuts

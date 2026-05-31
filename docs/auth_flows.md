@@ -6,6 +6,33 @@
 
 ---
 
+
+## ⚠️ KNOWN BUG: GoogleSignIn Event Redirect (auth_bloc.dart)
+
+**File:** `lush/lib/bloc/AuthBloc/auth_bloc.dart` (GoogleSignIn event handler)  
+**Severity:** High  
+**Status:** Open — authentication flow needs refactoring
+
+### Bug Description
+
+When an **existing user** signs in via Google, the BLoC emits `SignUpStarted` instead of completing the login flow. This causes the user to be redirected back to the Login screen rather than proceeding to the Dashboard.
+
+### Root Cause
+
+The `GoogleSignIn` event handler checks if the user exists in the backend. If the backend response is `signup_required` (which is used for **both** new users AND existing Google users who haven't linked their account), the handler emits `SignUpStarted`, sending the user into the signup flow instead of the login/success path. The BLoC cannot distinguish between:
+1. A genuinely new user who needs to sign up
+2. An existing user who is trying to link their Google account but does not yet have one linked
+
+### Workaround
+
+Users should use **email/password login** instead of Google Sign-In. Until this bug is fixed, Google Sign-In is not a viable authentication path for existing users.
+
+### Affected Flow Section
+
+See **FLOW 2: Google Sign-In** → **Path 2A: Google Sign-In for Login** → `signup_required` return type handling above.
+
+---
+
 ## ⚠️ Cleanup Required
 
 All issues discovered during audit, organized by severity. Each flag links to the relevant flow section for context.
