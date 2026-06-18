@@ -15,3 +15,13 @@ use chargebee mcp like this:
 use this KEY for onboaring_agent: test_ai_-ZFEjZ3qiK2mW3k7C9M2Q60OK2QmLslRdSnNWt61z4E with AGENT_URL: bookmyjuice-test.mcp.chargebee.com/onboarding_agent
 
 use this KEY for data_lookup_agent: test_ai_WvyPvGTh7AKfZ6vM6UHOrWZduN1xKiU1Ir_MxccF3-Q with AGENT_URL: https://bookmyjuice-test.mcp.chargebee.com/data_lookup_agent
+
+
+
+## DO NOT create anything new in chargebee without taking permission
+
+## ENVIRONMENT: Windows PowerShell (NOT bash)
+
+- Use `;` not `&&` to chain commands
+- Use `Select-Object -Last 5` not `tail -5`  
+- Use `python xml_parser.py` scripts, not inline shell grep

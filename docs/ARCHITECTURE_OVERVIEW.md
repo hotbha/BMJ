@@ -1,7 +1,7 @@
 # BookMyJuice Architecture Overview
 
 > **Version:** 3.0 (Enterprise)  
-> **Last Updated:** 2026-05-26  
+> **Last Updated:** 2026-06-08  
 > **Status:** ✅ Active — authoritative source
 
 ## Architecture Principles
@@ -14,6 +14,17 @@
 6. **Redis caching for high-read data** with graceful degradation.
 7. **Webhook processing is idempotent and reliable** with DLQ support.
 8. **.env file is the single source for all secrets and credentials** — never committed to git.
+9. **Dashboard-First Gateway**: ALL users land on Dashboard (public mode first). Auto-login runs silently in background. If auto-login fails → Dashboard stays visible with toast notification. NEVER auto-navigate to Login.
+10. **Guest/Public Mode**: Unauthenticated users can browse the catalog, view products, and build a guest cart. Auth is only required at checkout.
+
+## Product Size Variants
+
+All juices are available in three size variants as defined in Chargebee:
+| Size | Label |
+|------|-------|
+| 200ml | Small |
+| 300ml | Regular |
+| 500ml | Large/Family |
 
 ## Secrets Management
 
@@ -69,6 +80,20 @@ Flutter uses `--dart-define` for build-time configuration:
 
 ## Data Flow
 
+### Authentication Flow (Dashboard-First Gateway)
+
+```
+1. App Launch
+   ↓
+2. Load Dashboard (always, immediately)
+   ↓
+3. Background: AutoLogin runs
+   ├── JWT found + valid → Dashboard personalizes (user data loads)
+   ├── JWT expired → Silent refresh → Dashboard personalizes or shows toast
+   └── No JWT / refresh fails → Dashboard stays in Public/Guest Mode
+                              → "Sign In" prompt visible on Profile tab
+```
+
 ### Native Plan Discovery → Hosted Checkout
 
 ```
@@ -110,8 +135,8 @@ Flutter polls GET /api/billing/purchases/{id}/status → Success!
 | Module | Ownership | Description |
 |--------|-----------|-------------|
 | Auth | BMJ Server | JWT-based auth, refresh tokens, Google OAuth |
-| Products/Plans 🔴 STUB | Chargebee (SOT) → BMJ (Cache) | Synced read model — ProductsBloc is a stub (BEM-007), all 6 handlers use mock data |
-| Subscriptions 🔴 STUB | Chargebee (SOT) → BMJ (Cache) | BMJ manages local references — SubscriptionBloc is a stub (BEM-006), all 7 handlers use mock data |
+| Products/Plans | Chargebee (SOT) → BMJ (Cache) | Synced read model. 18 subscription plans (3 categories × 3 sizes × 2 frequencies) + one-time items. Size variants: 200ml, 300ml, 500ml |
+| Subscriptions | Chargebee (SOT) → BMJ (Cache) | BMJ manages local references |
 | Orders | Chargebee (SOT) → BMJ (Cache) | BMJ manages delivery locally |
 | Invoices | Chargebee (SOT) → BMJ (Cache) | Read-only view |
 | Payments | Chargebee (SOT) | Handled in hosted checkout |

@@ -1,7 +1,7 @@
 # BookMyJuice - Business Requirements Document (BRD)
 
-**Document Version:** 2.1 (Updated)
-**Date:** May 13, 2026
+**Document Version:** 2.2 (Updated)
+**Date:** June 7, 2026
 **Project:** BookMyJuice - Cold-Pressed Juice Subscription Platform
 **Stakeholders:** Product Owner, Development Team, QA Team, Beta Users
 
@@ -40,7 +40,7 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 2. Mobile app **NEVER** calculates prices locally
 3. Mobile app **NEVER** shows optimistic status — always refetch from bmjServer
 4. bmjServer is the **only** data source for the mobile app
-5. Chargebee is the **only** source of billing truth; bmjServer syncs via webhooks
+5. Chargebee is the **only** source of billing truth; bmjServer syncs via webhooks & sync service
 6. All prices are in **cents** (minor currency units). Mobile divides by 100 for display
 7. All timestamps are **UTC**. Mobile converts to local timezone for display
 
@@ -66,9 +66,10 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 ### 2.1 In Scope (Enterprise)
 - User registration and authentication (Email + Phone OTP + Google Sign-In)
 - Unified signup flow with 3 entry points (Email-First, Phone-First, Google)
-- Product catalog browsing (juices with size variants: 200ml, 300ml, 500ml)
+- Unified signin flow with 4 entry points (Autologin, Email+password, Phone OTP verification, Google-signin)
+- Product catalog browsing (Juices with size variants: 200ml, 300ml, 500ml & category variants: Delight, Signature, Premium)
 - Shopping cart management (single-mode: either one-time OR subscription items)
-- One-time checkout via Chargebee Hosted Pages
+- Both One-time checkout and subscription plan checkout via Chargebee Hosted checkout Pages
 - Subscription plan selection and purchase (18 plans: 3 categories × 3 sizes × 2 frequencies)
 - Subscription management (pause, resume, cancel with 9 PM cutoff)
 - User profile and address management with multiple delivery addresses per user
@@ -79,17 +80,18 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 - Service area management (pincode-based serviceability)
 - Delivery slot allocation (day-wise schedule via subscription metadata)
 - Scheduled delivery time-window selection (pre-booking specific 2-hour delivery windows)
-- iOS native app (App Store) and Android (Play Store) distribution
-- Loyalty points and referral programs (future enhancement)
-- Advanced analytics dashboard (future enhancement)
+- iOS native app (App Store), Android (Play Store) and website distribution
+- Loyalty points and referral programs (stays on bmjServer and MYSql)
+- Coupons (from Chargebee)
+- Firebase user activity analytics
 
 ### 2.2 Platform Support
-| Platform | Support Level |
-|----------|---------------|
-| Android (Mobile) | Play Store Distribution |
-| iOS | App Store Distribution |
-| Web | Browser Access + PWA |
-| Backend API | REST API (Spring Boot) |
+| Platform | Support Level | Package / Identifier |
+|----------|---------------|---------------------|
+| Android (Mobile) | Play Store Distribution | `com.bookmyjuice.app` (Gradle applicationId / namespace) |
+| iOS | App Store Distribution | `com.bookmyjuice.app` (Bundle ID) |
+| Web | Browser Access + PWA | N/A |
+| Backend API | REST API (Spring Boot) | `com.bookmyjuice` (Java package root) |
 
 ---
 
@@ -99,17 +101,17 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
-| BR-001 | Users can register with email/password and verify email | P0 | Email verification code sent, 6-digit, 10-min expiry |
-| BR-002 | Users can register with phone/OTP and verify phone | P0 | 6-digit OTP, 10-min expiry, 10-digit Indian numbers |
-| BR-003 | Users can signup with Google (email pre-verified) | P0 | Google OAuth returns verified email, phone still required |
+| BR-001 | Users can register with email/password and verify email | P0 | Email verification code sent, 6-digit, 10-min expiry, phone verification still required |
+| BR-002 | Users can register with phone/OTP and verify phone | P0 | 6-digit OTP, 10-min expiry, 10-digit Indian numbers, email verification still required |
+| BR-003 | Users can signup with Google (email pre-verified) | P0 | Google OAuth returns verified email, phone verification still required |
 | BR-004 | Guest users can build cart before login | P0 | Cart persisted locally in SharedPreferences **only**. No server-side guest cart exists. On login, local cart payload is sent to bmjServer's merge endpoint and local cart is cleared. |
 | BR-005 | On login, guest cart merges into authenticated server cart | P0 | User chooses which cart to keep on conflict; discarded cart permanently deleted |
-| BR-006 | JWT tokens valid for 30 days with no refresh token workflow | P0 | Token stored in SharedPreferences; **auto-login checks ONLY token validity** — does NOT invoke Google Sign-In or phone OTP. Expired/missing token shows **Dashboard in public mode** with toast notification (not login screen). All users — new or returning — land on Dashboard as the default gateway. JWT expiration configured as `JWT_EXPIRATION_MS=2592000000` (30 days) in application.properties / .env. |
+| BR-006 | JWT tokens valid for 30 days with refresh token workflow | P0 | Token stored in FlutterSecureStorage; auto-login validates token locally (decodes JWT, checks `exp` claim). If valid → full authenticated Dashboard. If expired → attempts silent refresh via `POST /api/auth/refresh` using stored id and password (if user chose to save password) — does NOT invoke Google Sign-In or phone OTP. If refresh succeeds → new JWT saved, full Dashboard. If refresh fails → **Dashboard in public mode** with toast notification (not login screen). All users — new or returning — land on Dashboard as the default gateway after Splash Screen. JWT expiration configured as `JWT_EXPIRATION_MS=2592000000` (30 days) in application.properties / .env. |
 | BR-007 | Users can manage profile information and address | P1 | View/update name, phone, complete address |
 | BR-008 | Guest users can browse product catalog without authentication | P0 | Product endpoints return data with optional auth; cart/checkout require login |
-| BR-009 | Users can reset password via two methods | P0 | (1) Reset via mobile OTP — user enters phone, receives 6-digit OTP, verifies OTP, sets new password. (2) Reset via email OTP — user enters email, receives 6-digit verification code, verifies code, sets new password. Both methods enforce same password complexity rules as signup. |
-| BR-010 | Google Sign-In triggered ONLY by user clicking Google button on login screen | P0 | Auto-login never invokes Google. When guest clicks Google button: (a) show account picker, (b) if user with that Google ID exists → auto-login with JWT, (c) if not → start signup with pre-filled email + name from Google account. |
-| BR-011 | Phone Sign-In triggered ONLY by user clicking Phone button on login screen | P0 | Auto-login never invokes phone OTP. When guest clicks Phone button: (a) show phone input, (b) verify with 6-digit OTP, (c) if user with that verified phone exists → auto-login with JWT, (d) if not → start signup with pre-filled verified phone number. |
+| BR-009 | Users can reset password via any of the two methods | P0 | (1) Reset via mobile OTP — user enters phone, receives 6-digit OTP, verifies OTP, sets new password. (2) Reset via email OTP — user enters email, receives 6-digit verification code, verifies code, sets new password. Both methods enforce same password complexity rules as signup. |
+| BR-010 | Google Sign-In triggered ONLY by user clicking Google button on login screen | P0 | Auto-login never invokes Google. When guest clicks Google button: (a) show account picker, (b) if user with that Google ID exists → auto-login with JWT, (c) if not → start signup with pre-filled email + name from Google account. It still requires unique phone with OTP verification |
+| BR-011 | Phone Sign-In triggered ONLY by user clicking Phone button on login screen | P0 | Auto-login never invokes phone OTP. When guest clicks Phone button: (a) show phone input, (b) verify with 6-digit OTP, (c) if user with that verified phone exists → auto-login with JWT, (d) if not → start signup with pre-filled verified phone number. Still requires email verification via OTP|
 
 ### 3.2 Product Catalog
 
@@ -124,9 +126,9 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
 | BR-020 | Cart is single-mode (one-time OR subscription, never both) | P0 | Adding opposite-type item returns HTTP 409 CONFLICT with response body `{"error": "CART_TYPE_CONFLICT"}`, user prompted to clear cart first or cancel action |
-| BR-021 | Mobile app MUST NOT calculate prices locally | P0 | All pricing from bmjServer API (subtotal, tax, delivery_fee, total) |
-| BR-022 | Cart shows price breakdown | P0 | Subtotal, tax, and grand total displayed. Delivery fee is sourced from Chargebee pricing data (see BR-023). |
-| BR-023 | Delivery fee is sourced from Chargebee pricing data | P0 | Delivery fee is managed entirely in Chargebee item/plan pricing. bmjServer passes through Chargebee delivery fee amount. No independent delivery fee calculation in app or server. |
+| BR-021 | Mobile app MUST NOT calculate prices locally | P0 | All pricing comes in-built in chargebee checkout page having URL shared by bmjServer API |
+| BR-022 | Cart shows price breakdown as received from chargebee | P0 | Subtotal, tax, and grand total displayed. Delivery fee is always ₹0 (see BR-023). |
+| BR-023 | Delivery fee or any other fee comes from chargebee in checkout page, managed through Chargebee pricing | P0 | No independent pricing calculations exists in app or server. Delivery fee is managed entirely through Chargebee item/plan pricing — bmjServer passes through the Chargebee amount|
 | BR-024 | Tax is sourced from Chargebee pricing data only | P0 | bmjServer passes through Chargebee tax amount; no independent tax calculation in app or server |
 
 ### 3.4 Checkout & Payment
@@ -143,7 +145,7 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
 | BR-040 | Users can view all subscriptions (multiple simultaneous allowed) | P0 | List all subscriptions with status, dates, pricing |
-| BR-041 | Users can pause subscription before 9 PM IST for next-day skip | P0 | Pause scheduled, status updates via webhook. 9 PM IST cutoff enforced for all users |
+| BR-041 | Users can pause subscription before 9 PM IST for n-days or untill resumed | P0 | Pause scheduled, status updates via webhook. 9 PM IST cutoff enforced for all users |
 | BR-042 | Users can resume subscription before 9 PM IST for next-day activation | P0 | Resume scheduled, status updates via webhook. 9 PM IST cutoff enforced for all users |
 | BR-043 | Users can cancel subscriptions (immediately/end of term/specific date) | P0 | Cancel option selected, processed via Chargebee |
 | BR-044 | No limit on number of pause/resume cycles | P0 | Unlimited pause/resume allowed |
@@ -177,7 +179,7 @@ BookMyJuice is a cold-pressed juice subscription and on-demand ordering platform
 | BR-070 | Users can enter delivery address during signup | P0 | Address fields (line1, line2, city, state, zip, country) captured during registration |
 | BR-071 | Service areas managed by pincode with serviceability check | P1 | Admin can define serviceable pincodes with cutoff time and lead hours via ServiceAreaEntity |
 | BR-072 | Subscription includes day-wise delivery schedule | P0 | User selects which days (Mon-Sat) receive delivery; schedule stored in subscription metadata |
-| BR-073 | Delivery fee is sourced from Chargebee pricing data | P0 | Delivery fee is managed entirely in Chargebee item/plan pricing. bmjServer passes through Chargebee delivery fee amount. No independent delivery fee calculation in app or server. See BR-023. |
+| BR-073 | Delivery fee is always ₹0, managed through Chargebee pricing | P0 | Delivery fee is always ₹0. No independent delivery fee calculation exists in app or server. Delivery fee is managed entirely through Chargebee item/plan pricing — bmjServer passes through the Chargebee amount (always ₹0). See BR-023. |
 
 ---
 
@@ -215,19 +217,19 @@ User selects juices for specific days in Mobile App. **Week contains 6 days (Sun
   - When checked: User selects one juice → mapped to all 6 active days (Mon–Sat)
   - When unchecked: User selects juice per day independently
 
-**Schedule JSON (sent to bmjServer)** — stores **which days are active** (not which juice per day):
+**Schedule JSON (sent to bmjServer)** — stores **which juice for which day**:
 ```json
 {
-  "Monday": true,
-  "Tuesday": true,
-  "Wednesday": true,
-  "Thursday": true,
-  "Friday": true,
-  "Saturday": true
+  "Monday": "ABC Juice",
+  "Tuesday": "Pineapple Juice",
+  "Wednesday": "Pineapple Juice",
+  "Thursday": "Pineapple Juice",
+  "Friday": "Pineapple Juice",
+  "Saturday": "Pineapple Juice"
 }
 ```
 
-Map: day name → boolean (`true` = delivery active on this day, `false` = no delivery on this day). Sunday is always `false` (holiday). Juice_id is determined by the subscription plan, not per-day. This JSON is stored in the `meta_data` of the Chargebee subscription. Applicable to **all plan types** (weekly and monthly).
+Map: day name → Juice names from selected caterogy and size variant. For example, Delight 200ml would present all 200ml options availble from Delight category. This JSON is stored in the `meta_data` of the Chargebee subscription. Applicable to **all plan types** (weekly and monthly).
 
 **Implementation Status:** ⏳ Not yet implemented — needs to be built.
 
@@ -241,9 +243,9 @@ Map: day name → boolean (`true` = delivery active on this day, `false` = no de
 | UI-004 | Date Formatting | All dates displayed as DD/MM/YYYY |
 | UI-005 | Billing Display | Billing period as "₹X / Frequency" format |
 | UI-006 | Conditional Buttons | Different action buttons based on subscription status |
-| UI-007 | Token Management | JWT retrieved from SharedPreferences for all API calls |
-| UI-008 | Dashboard-First Landing | New users land on Dashboard (public mode) without login requirement. Existing users land on Dashboard after auto-login attempt. If auto-login fails, Dashboard remains visible with toast notification explaining the issue. No login screen is shown automatically — user navigates to login voluntarily. | |
-| UI-009 | Funky & Juicy Dashboard Theme | Dashboard shall use vibrant brand colors, playful emoji accents (🧃🍊🥤). Animated gradients, slide/fade transitions, engaging promo carousel, and a fun "Choose Your Experience" section. Follows centralized AppColors/AppTextStyles theme. | |
+| UI-007 | Token Management | JWT retrieved from FlutterSecureStorage for all API calls |
+| UI-008 | Dashboard-First Landing | New users land on Dashboard (public mode) without login requirement. Existing users land on Dashboard after auto-login attempt. If auto-login fails, Dashboard remains visible with toast notification explaining the issue. No login screen is shown automatically — user navigates to login voluntarily. |
+| UI-009 | Funky & Juicy Dashboard Theme | Dashboard shall use vibrant brand colors with orange being primary color, playful emoji accents (🧃🍊🥤). Animated gradients, slide/fade transitions, engaging promo carousel, and a fun "Choose Your Experience" section. Follows centralized AppColors/AppTextStyles theme. |
 
 ### 4.5 Subscription Cutoff Time Rule
 
@@ -259,6 +261,48 @@ The subscription cutoff time is a **hard-coded constant** in bmjServer — **not
 **Enforcement:** Users who request a pause/resume before 9 PM IST will have the action applied for the next day. Requests after 9 PM IST will be scheduled for the day after next. No database lookup is performed — the constant value is always used.
 
 **Implementation Status:** ✅ Already Implemented — verified in `SubscriptionBusinessRulesService.java`.
+
+### 4.6 Validation Rules
+
+The following validation rules apply across all input fields in the system. These must be enforced consistently at both the **Flutter frontend** (for immediate UX feedback) and the **bmjServer backend** (for security).
+
+| Field | Rule | Regex / Constraint | Error Message |
+|-------|------|-------------------|---------------|
+| **Phone (Username)** | Exactly 10 digits, must start with 6, 7, 8, or 9 | `^[6-9]\d{9}$` | "Enter a valid 10-digit phone number starting with 6, 7, 8, or 9" |
+| **Password** | Min 8 chars, at least 1 uppercase, 1 lowercase, **2 numbers**, 1 special char | `^(?=.*[a-z])(?=.*[A-Z])(?=(?:.*\d){2})(?=.*[@$!%*?&#^()_\-+=.])[A-Za-z\d@$!%*?&#^()_\-+=.]{8,}$` | "Password must be at least 8 characters with uppercase, lowercase, **2 numbers**, and special character" |
+| **Email** | Standard email format | Per HTML5 email type / jakarta.validation `@Email` | "Enter a valid email address" |
+| **OTP (Email & Phone)** | Exactly 6 digits | `^\d{6}$` | "Enter the 6-digit verification code" |
+| **Name** | 2–100 characters, letters, spaces, dots, hyphens, apostrophes | `^[A-Za-zÀ-ÿ'\-.\s]{2,100}$` | "Name must be 2–100 characters" |
+| **Address Line 1** | 1–255 characters, alphanumeric with common punctuation | `^[\w\s,.\-#/()]{1,255}$` | "Address is too long (max 255 characters)" |
+| **Address Line 2** | 0–255 characters (optional) | Same as Line 1, but allows empty | — |
+| **City** | 2–100 characters, letters and spaces only | `^[A-Za-zÀ-ÿ\s]{2,100}$` | "Enter a valid city name" |
+| **State** | 2–100 characters, letters and spaces only | `^[A-Za-zÀ-ÿ\s]{2,100}$` | "Enter a valid state name" |
+| **Pincode** | Exactly 6 digits (Indian PIN) | `^\d{6}$` | "Enter a valid 6-digit pincode" |
+| **Item/Plan ID** | Lowercase alphanumeric with hyphens/underscores | `^[a-z0-9_\-]+$` | — (server-generated) |
+| **Price ID** | Lowercase alphanumeric with hyphens/underscores | `^[a-z0-9_\-]+$` | — (server-generated) |
+
+**OTP Configuration** (shared across email and phone OTP flows):
+| Property | Value |
+|----------|-------|
+| **Length** | 6 digits |
+| **Expiry** | 10 minutes from generation |
+| **Rate Limit** | 5 requests per 5 minutes per IP (both email and phone) |
+| **One-time use** | OTP is invalidated after successful verification |
+| **Storage** | In-memory store (not persisted to database); lost on server restart |
+
+**Field Length Limits** (enforced by backend Jakarta Validation):
+| Entity | Field | Max Length |
+|--------|-------|------------|
+| User | email | 100 chars |
+| User | password (BCrypt hash) | 255 chars |
+| User | name | 100 chars |
+| User | phone | 20 chars |
+| UserAddress | address_line1 | 255 chars |
+| UserAddress | address_line2 | 255 chars |
+| UserAddress | landmark | 255 chars |
+| UserAddress | city | 100 chars |
+| UserAddress | state | 100 chars |
+| UserAddress | pincode | 10 chars |
 
 ---
 
@@ -278,7 +322,7 @@ The subscription cutoff time is a **hard-coded constant** in bmjServer — **not
 |----|-------------|--------|-------------|
 | NFR-004 | All API calls over HTTPS | 100% HTTPS | Network inspection |
 | NFR-005 | Passwords hashed with BCrypt (cost factor 10) | 100% compliance | Code review, security scan |
-| NFR-006 | JWT tokens stored securely | SharedPreferences with encryption | Code review |
+| NFR-006 | JWT tokens stored securely | FlutterSecureStorage | Code review |
 | NFR-007 | Webhook signature validation | Reject invalid with 401 | X-Chargebee-Webhook-Signature header check |
 | NFR-011 | Rate Limiting - OTP endpoints limited using RateLimitService | 10 attempts/5min per IP | Bucket4j token bucket enforcement in RateLimitingFilter |
 | NFR-013 | Profile-based Config - Spring @Profile("dev") gates test controllers | Dev-only access | Profile annotation on TestController and MetadataTestController |
@@ -338,20 +382,25 @@ The subscription cutoff time is a **hard-coded constant** in bmjServer — **not
 
 | Module | Backend Tests | Flutter Tests | Total | Status |
 |--------|--------------|---------------|-------|--------|
-| **Authentication (AUTH)** | 18 (10 controller + 8 util) | 81 (30 auth_bloc + 21 login + 14 signup + 8 email + 8 phone) | 99 | ✅ Fully Tested |
-| **Cart (CART)** | 7 | 14 (cart_bloc) | 21 | ✅ Fully Tested |
+| **Authentication (AUTH)** | 18 (10 controller + 8 util) | 98 (21 auth_bloc + 21 login + 10 signup + 19 signup_validation + 6 user_bloc + 12 notification_bloc + 9 notification_model) | 116 | ✅ Fully Tested |
+| **Cart (CART)** | 7 | 33 (14 cart_bloc + 19 cart_service) | 40 | ✅ Fully Tested |
+| **Products (PRODUCTS)** | 0 | 27 (4 products_bloc + 6 product_catalog_bloc + 3 products_model + 17 products_repository) | 27 | ✅ Fully Tested |
+| **Orders (ORDERS)** | 0 | 40 (17 order_model + 13 order_service + 6 order_flow + 2 order_history + 2 order_history_widget) | 40 | ✅ Fully Tested |
+| **Subscriptions (SUBSCRIPTION)** | 0 | 54 (17 subscription_bloc + 23 subscription_service + 14 subscription_screens) | 54 | ✅ Fully Tested |
+| **Referral (REFERRAL)** | 0 | 20 (7 referral_info + 7 referral_repository + 1 referral_bloc + 5 referral_screen) | 20 | ✅ Fully Tested |
 | **Billing/Checkout (BILLING)** | 5 | 0 | 5 | 🟡 Needs Flutter widget tests |
 | **Theme (THEME)** | 0 | 38 (26 app_theme + 12 theme_cubit) | 38 | ✅ Fully Tested |
 | **Security (SECURITY)** | 7 | 0 | 7 | ✅ Fully Tested |
 | **Webhook (WEBHOOK)** | 7 | 0 | 7 | ✅ Fully Tested |
 | **Cache (CACHE)** | 5 | 0 | 5 | ✅ Fully Tested |
 | **Profile (PROFILE)** | 3 | 0 | 3 | 🟡 Needs Flutter tests |
-| ****Grand Total** | **52 backend** | **133 Flutter** | **185** | **✅ 185/185 passing** |
+| **Other** | 0 | 1 (widget_test) | 1 | ✅ |
+| ****Grand Total** | **52 backend** | **368 Flutter** | **420** | **✅ 420/420 passing** |
 
-> **Last Updated:** 2026-05-13  
-> **Total Automated Tests:** 185 (77 backend + 108 Flutter across 210 total test scripts including integration)  
-> **Flutter Test Run Results:** All 133 Flutter tests pass ✅ (verified 2026-05-13)  
-> **Backend Test Run Results:** All 77 backend tests pass ✅  
+> **Last Updated:** 2026-06-12  
+> **Total Automated Tests:** 420 (52 backend + 368 Flutter across 28 test files)  
+> **Flutter Test Run Results:** All 368 Flutter tests pass ✅ (verified 2026-06-10)  
+> **Backend Test Run Results:** All 52 backend tests pass ✅
 
 
 ---
@@ -443,7 +492,7 @@ During subscription card integration and testing, the following requirements wer
 | REQ-SUB-001 | Dashboard shall automatically fetch and display user's subscription data on load | Subscription Display | ✅ Implemented |
 | REQ-SUB-002 | Dashboard shall display loading indicator while fetching subscription data | Loading State | ✅ Implemented |
 | REQ-SUB-003 | Dashboard shall handle subscription fetch errors gracefully with fallback UI | Error Handling | ✅ Implemented |
-| REQ-AUTH-004 | Application shall retrieve JWT token from SharedPreferences for authenticating API requests | Token Management | ✅ Implemented |
+| REQ-AUTH-004 | Application shall retrieve JWT token from FlutterSecureStorage for authenticating API requests | Token Management | ✅ Implemented |
 | REQ-SUB-004 | Subscription status displayed with color-coded badges (Active:Green, Paused:Orange, Cancelled:Red, Expired:Grey) | Status Display | ✅ Implemented |
 | REQ-SUB-005 | Subscription dates formatted as DD/MM/YYYY for display | Date Formatting | ✅ Implemented |
 | REQ-SUB-006 | Billing period displayed as "₹X / Frequency" format | Billing Display | ✅ Implemented |
@@ -486,6 +535,6 @@ During subscription card integration and testing, the following requirements wer
 
 **Document Control:**
 - **Created:** March 27, 2026
-- **Last Updated:** May 13, 2026 (Delivery, NFR, FCM)
-- **Version:** 2.1
+- **Last Updated:** June 7, 2026 (BR-006 expansion, NFR, FCM)
+- **Version:** 2.2
 - **Status:** ✅ Approved for Beta Release

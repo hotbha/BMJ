@@ -20,7 +20,7 @@
 | **FLAG-007** | 🟡 Medium | `dynamic_juice.dart` | Has `toOldJuiceFormat()` (legacy) but **no standard `toJson()`**. Cannot serialize to current API format. |
 | **FLAG-008** | 🔍 Low | `user.dart`, `signup_request.dart` | Both have `toJson()` → camelCase keys. **Neither has `fromJson()`.** ADR-004's user table SQL (`first_name`, `last_name`, `extended_addr`) uses snake_case — conflicting convention. |
 | **FLAG-009** | 🟡 Medium | `item.dart` | **MISSING** Chargebee field: `metered` (boolean in Chargebee catalog). Has extra JuiceItem UI fields (`imagePath`, `titleTxt`, `startColor`, `endColor`, `meals`, `kacl`, `price`, `rating`, `servingSize`) that are presentation-layer, not Chargebee catalog. |
-| **FLAG-010** | 🔍 Low | Docs Contradiction | **JWT lifetime mismatch:** ADR-004 §6 says "15 minutes (900000ms)", API.md §Token says "30 days (2592000000ms)". Code (`user_repository.dart` autoLogin) confirms **30 days** — ADR-004 is outdated/wrong. |
+| **FLAG-010** | ✅ **RESOLVED** | Docs Contradiction | **JWT lifetime mismatch:** ~~ADR-004 §6 says "15 minutes (900000ms)", API.md §Token says "30 days (2592000000ms)"~~. **RESOLVED 2026-06-08:** All docs unified to 30-day JWT (2592000000ms) per BR-006 v2.2. ADR-004 updated. `.env.example` updated with `JWT_EXPIRATION_MS=2592000000`. |
 | **FLAG-011** | 🟡 Medium | `plan.dart` | **Empty file** (1 blank line, no code). Plan model is a skeleton/no-op. |
 | **FLAG-012** | 🔴 **HIGH** | `chargebee_final_state.md` | **Reference doc does not exist.** User's requested cross-reference document is not in codebase. Used `chargebee_catalog.json` (1873 lines of actual Chargebee data) instead. |
 | **FLAG-013** | 🟢 Info | `item.dart` — `ItemPrice` | `ItemPrice.fromJson()` handles **both** snake_case AND camelCase with `??` fallback: `json['accounting_category1'] ?? json['accountingCategory1'`. Most robust dual-format serialization in codebase. |
@@ -449,7 +449,7 @@ Model scan result: ❌ **No.** Only `bottle_ledger.dart` itself references bottl
 
 | Contradiction | Source 1 | Source 2 | Verdict |
 |---|---|---|---|
-| **JWT expiration** 🔴 | ADR-004 §6: **15 minutes** (900000ms) | API.md §Token Lifecycle: **30 days** (2592000000ms) | **CONTRA-001** — Code confirms 30 days (`user_repository.dart` autoLogin checks JWT). ADR-004 is outdated/wrong. |
+| **JWT expiration** ✅ **RESOLVED** | ADR-004 §6: ~~**15 minutes**~~→ **30 days** (2592000000ms) | API.md §Token Lifecycle: **30 days** (2592000000ms) | **CONTRA-001 — RESOLVED 2026-06-08.** BR-006 v2.2 confirms 30 days. All docs updated. `.env.example` set to `2592000000`. ADR-004 updated. |
 | `metadata` vs `metaData` | Chargebee catalog: `"metadata"` | All Dart models: `metaData` | Minor naming mismatch. fromJson key in `item.dart` correctly uses `meta_data`. |
 | `giftable` field name | Chargebee: `giftable` | DynamicItem: `isGiftable` with fromJson key `'isGiftable'` | ⚠️ Name mismatch. `Item.dart` correctly uses `json['giftable']`. |
 

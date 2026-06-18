@@ -10,7 +10,8 @@ BookMyJuice requires a relational database to store:
 - User accounts and authentication data
 - Subscription records (synced with Chargebee)
 - Order history
-- Product catalog (synced with Chargebee)
+- Subscription Plans catalog (synced with 'Plans' in Chargebee)
+- One-Time Order Items catalog (synced with 'Charges' in Chargebee )
 - Address books
 - Audit logs
 
@@ -20,7 +21,6 @@ Key requirements:
 - Integration with Spring Boot / Hibernate
 - Support for complex queries and reporting
 - Familiarity for the development team
-- Cost-effective for startup phase
 
 ## Decision
 
@@ -77,10 +77,12 @@ We selected **MySQL 8.0** as our primary database.
 ## Implementation
 
 - MySQL 8.0 via Docker for local development
-- Production: AWS RDS MySQL or similar managed service
+- Production: Docker with MySQL in Ubuntu VPS
 - Flyway for database migrations
 - Connection pooling via HikariCP
-- Read replicas for reporting queries (future)
+- Chargebee Data synced with MYSQL database via webhooks and sync service
+- MYSQL entities should be compatible with chargebee objects, including object attributes and relations
+- DAO to serve frontend requests via controllers+services
 
 ## References
 
@@ -90,5 +92,5 @@ We selected **MySQL 8.0** as our primary database.
 
 ---
 
-*Date: 2026-03-27*
+*Date Updated: 2026-06-04*
 *Authors: BookMyJuice Engineering Team*

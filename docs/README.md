@@ -1,14 +1,14 @@
 # BookMyJuice - Documentation Index
 
-**Last Updated:** April 11, 2026
-**Version:** 2.0 (Consolidated)
+**Last Updated:** June 8, 2026
+**Version:** 2.1 (Post-Cleanup)
 **Status:** ✅ Complete & Organized
 
 ---
 
 ## 📚 Documentation Structure
 
-All BookMyJuice documentation is now organized into **7 categories** within the `docs/` folder:
+All BookMyJuice documentation is organized into **categories** within the `docs/` folder:
 
 ```
 docs/
@@ -16,9 +16,10 @@ docs/
 ├── functional-specs/           # System behavior, APIs, data models
 ├── use-cases/                  # User interaction flows
 ├── test-cases/                 # Testing specifications
+├── test-registry/              # Test tracking, bug registry, coverage
 ├── architecture/               # Technical decisions, system design
-├── implementation-status/      # Progress tracking, build status
-└── guides/                     # How-to guides, setup instructions
+├── guides/                     # How-to guides, setup instructions
+└── (root-level .md files)     # Standalone reference docs
 ```
 
 ---
@@ -116,36 +117,31 @@ docs/
 - **Security Tests (3 cases):** TC-SEC-001 to TC-SEC-003
 - Test execution log template
 
+Additional E2E test specs in `docs/test-cases/`:
+- TC_E2E_AUTH.md, TC_E2E_AUTH_SIGNUP_GAPS.md, TC_E2E_CART.md, TC_E2E_CATALOG.md, TC_E2E_CHECKOUT.md, TC_E2E_CROSS_MODULE.md, TC_E2E_DELIVERY.md, TC_E2E_NFR.md, TC_E2E_NOTIFICATIONS.md, TC_E2E_ORDERS.md, TC_E2E_PHONE_UX.md, TC_E2E_PROFILE.md, TC_E2E_SUBSCRIPTIONS.md
+- TC_AUTH.md, TC_BILLING.md, TC_CACHE.md, TC_CART.md, TC_PROFILE.md, TC_WEBHOOK.md
+- RTM_MATRIX.md, ps_test.md, TEST_PREREQUISITES.md
+
 ---
 
-### 5. Architecture (`docs/architecture/`)
+### 5. Test Registry (`docs/test-registry/`)
+
+| Document | Description |
+|----------|-------------|
+| [TEST_REGISTRY.md](test-registry/TEST_REGISTRY.md) | Central test case registry with cross-references to requirements |
+| [BUG_REGISTRY.md](test-registry/BUG_REGISTRY.md) | Bug tracking and resolution log |
+| [COVERAGE_REPORT.md](test-registry/COVERAGE_REPORT.md) | Test coverage metrics by module |
+
+---
+
+### 6. Architecture (`docs/architecture/`)
 
 | Document | Description | Status |
 |----------|-------------|--------|
-| [ARCHITECTURE_OVERVIEW.md](architecture/ARCHITECTURE_OVERVIEW.md) | High-level system architecture, data flow, security architecture | ✅ Complete |
 | [ADR-001-database-selection.md](architecture/ADR-001-database-selection.md) | Decision: MySQL 8.0 as primary database | ✅ Accepted |
 | [ADR-002-state-management-pattern.md](architecture/ADR-002-state-management-pattern.md) | Decision: BLoC Pattern with flutter_bloc | ✅ Accepted |
 | [ADR-003-chargebee-integration-strategy.md](architecture/ADR-003-chargebee-integration-strategy.md) | Decision: Webhooks + Local Cache for Chargebee sync | ✅ Accepted |
 | [ADR-004-unified-signup-flow.md](architecture/ADR-004-unified-signup-flow.md) | Decision: Multi-step signup with 3 entry points | ✅ Accepted |
-
----
-
-### 6. Implementation Status (`docs/implementation-status/`)
-
-| Document | Description | Status |
-|----------|-------------|--------|
-| [IMPLEMENTATION_STATUS.md](implementation-status/IMPLEMENTATION_STATUS.md) | Complete Enterprise implementation status, feature checklist, deployment readiness | ✅ Enterprise Complete |
-
-**Contains:**
-- Executive summary
-- Feature implementation status (all modules)
-- Backend implementation (controllers, services, database)
-- Frontend implementation (BLoCs, screens, widgets)
-- Integration status (external & internal)
-- Testing status (automated & manual)
-- Known issues (non-blocking)
-- Deployment readiness checklist
-- Beta testing metrics
 
 ---
 
@@ -155,40 +151,69 @@ docs/
 |----------|-------------|----------|
 | [CONTRIBUTING.md](guides/CONTRIBUTING.md) | Development guidelines, coding standards, git workflow, PR process | Developers |
 | [DEVELOPMENT_TOOLS.md](guides/DEVELOPMENT_TOOLS.md) | VS Code extensions, MCP servers, test dependencies, CI/CD setup | Developers, DevOps |
+| [DEVELOPMENT_SETUP.md](guides/DEVELOPMENT_SETUP.md) | Environment setup instructions | Developers |
 | [RELEASE_NOTES.md](guides/RELEASE_NOTES.md) | Release history, beta testing guide, known issues | QA, Product, Beta Users |
+
+---
+
+### 8. Root-Level Reference Documents
+
+The `docs/` root contains standalone reference documents for specific domains:
+
+| Document | Description |
+|----------|-------------|
+| [API.md](API.md) | Complete API reference for all endpoints |
+| [DELIVERY.md](DELIVERY.md) | Delivery domain — schema, endpoints, Flutter screens, cart integration |
+| [SUBSCRIPTIONS.md](SUBSCRIPTIONS.md) | Subscription system — screen flow, service/BLoC mapping, Chargebee integration |
+| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Design tokens, components, glassmorphism, theming, Flutter integration |
+| [AUDIT_MASTER_REPORT.md](AUDIT_MASTER_REPORT.md) | Codebase audit findings and recommendations |
+| [ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md) | High-level system architecture |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Deployment instructions and environment config |
+| [CICD_PIPELINE.md](CICD_PIPELINE.md) | CI/CD pipeline configuration |
+| [QUALITY_MANAGEMENT.md](QUALITY_MANAGEMENT.md) | QA processes, test pyramid, coverage thresholds |
+| [HUMAN_INTERVENTION_REQUIRED.md](HUMAN_INTERVENTION_REQUIRED.md) | Manual steps for setup and maintenance |
+| [AUTH_REQUIREMENTS.md](AUTH_REQUIREMENTS.md) | Authentication requirements and flow details |
+| [auth_flows.md](auth_flows.md) | Auth flow state machine diagrams |
+| [bloc_event_map.md](bloc_event_map.md) | BLoC event-to-state mapping reference |
+| [data_models_map.md](data_models_map.md) | Data model cross-reference across layers |
+| [CACHING_STRATEGY.md](CACHING_STRATEGY.md) | Caching architecture and invalidation |
+| [chargebee_final_state.md](chargebee_final_state.md) | Chargebee integration final state reference |
+| [PRICING_STRUCTURE.md](PRICING_STRUCTURE.md) | Pricing model and subscription plans |
+| [WEBHOOK_RELIABILITY.md](WEBHOOK_RELIABILITY.md) | Webhook processing reliability |
+| [ANDROID_EMULATOR_SETUP.md](ANDROID_EMULATOR_SETUP.md) | Emulator configuration guide |
+| [APPIUM_TEST_PLAN.md](APPIUM_TEST_PLAN.md) | Appium test plan and execution guide |
 
 ---
 
 ## 🎯 Quick Start by Role
 
 ### For New Developers
-1. Read [CONTRIBUTING.md](guides/CONTRIBUTING.md) - Development setup & guidelines
-2. Read [BRD_Business_Requirements.md](business-requirements/BRD_Business_Requirements.md) - Understand what the product does
-3. Review [FUNCTIONAL_SPEC.md](functional-specs/FUNCTIONAL_SPEC.md) - Understand system architecture
-4. Follow [DEVELOPMENT_TOOLS.md](guides/DEVELOPMENT_TOOLS.md) - Tooling setup
+1. Read [CONTRIBUTING.md](guides/CONTRIBUTING.md) — Development setup & guidelines
+2. Read [BRD_Business_Requirements.md](business-requirements/BRD_Business_Requirements.md) — Understand what the product does
+3. Review [FUNCTIONAL_SPEC.md](functional-specs/FUNCTIONAL_SPEC.md) — Understand system architecture
+4. Follow [DEVELOPMENT_TOOLS.md](guides/DEVELOPMENT_TOOLS.md) — Tooling setup
 
 ### For Developers (Daily Work)
-1. [FUNCTIONAL_SPEC.md](functional-specs/FUNCTIONAL_SPEC.md) - API reference, data models
-2. [USE_CASES.md](use-cases/USE_CASES.md) - User flows to implement
-3. [architecture/ADR-*.md](architecture/) - Architecture decisions
-4. [TEST_CASES.md](test-cases/TEST_CASES.md) - What to test
+1. [FUNCTIONAL_SPEC.md](functional-specs/FUNCTIONAL_SPEC.md) — API reference, data models
+2. [USE_CASES.md](use-cases/USE_CASES.md) — User flows to implement
+3. [architecture/ADR-*.md](architecture/) — Architecture decisions
+4. [TEST_CASES.md](test-cases/TEST_CASES.md) — What to test
 
 ### For QA/Testers
-1. [TEST_CASES.md](test-cases/TEST_CASES.md) - Complete test specifications
-2. [BRD_Business_Requirements.md](business-requirements/BRD_Business_Requirements.md) - Requirements traceability
-3. [IMPLEMENTATION_STATUS.md](implementation-status/IMPLEMENTATION_STATUS.md) - What's ready to test
-4. [RELEASE_NOTES.md](guides/RELEASE_NOTES.md) - Known issues
+1. [TEST_CASES.md](test-cases/TEST_CASES.md) — Complete test specifications
+2. [BRD_Business_Requirements.md](business-requirements/BRD_Business_Requirements.md) — Requirements traceability
+3. [TEST_REGISTRY.md](test-registry/TEST_REGISTRY.md) — Test case coverage & bug tracking
+4. [RELEASE_NOTES.md](guides/RELEASE_NOTES.md) — Known issues
 
 ### For Product Managers
-1. [BRD_Business_Requirements.md](business-requirements/BRD_Business_Requirements.md) - Scope & requirements
-2. [IMPLEMENTATION_STATUS.md](implementation-status/IMPLEMENTATION_STATUS.md) - Timeline & progress
-3. [USE_CASES.md](use-cases/USE_CASES.md) - User experience flows
-4. [RELEASE_NOTES.md](guides/RELEASE_NOTES.md) - Release history & metrics
+1. [BRD_Business_Requirements.md](business-requirements/BRD_Business_Requirements.md) — Scope & requirements
+2. [USE_CASES.md](use-cases/USE_CASES.md) — User experience flows
+3. [RELEASE_NOTES.md](guides/RELEASE_NOTES.md) — Release history & metrics
 
 ### For Beta Users
-1. [RELEASE_NOTES.md](guides/RELEASE_NOTES.md) - What's included, how to test
-2. [USE_CASES.md](use-cases/USE_CASES.md) - Expected user flows
-3. [TEST_CASES.md](test-cases/TEST_CASES.md) - What to verify
+1. [RELEASE_NOTES.md](guides/RELEASE_NOTES.md) — What's included, how to test
+2. [USE_CASES.md](use-cases/USE_CASES.md) — Expected user flows
+3. [TEST_CASES.md](test-cases/TEST_CASES.md) — What to verify
 
 ---
 
@@ -198,12 +223,13 @@ docs/
 |----------|-------|---------------------|
 | Business Requirements | 1 | 500+ lines |
 | Functional Specifications | 1 | 800+ lines |
-| Use Cases | 1 | 600+ lines |
-| Test Cases | 1 | 900+ lines |
-| Architecture | 5 (4 ADRs + 1 overview) | 1000+ lines |
-| Implementation Status | 1 | 500+ lines |
-| Guides | 3 | 1500+ lines |
-| **TOTAL** | **13** | **5,800+ lines** |
+| Use Cases | 2 | 700+ lines |
+| Test Cases | 22 | 3,000+ lines |
+| Test Registry | 3 | 600+ lines |
+| Architecture (ADRs) | 4 | 400+ lines |
+| Guides | 4 | 1,600+ lines |
+| Root-Level Reference Docs | 20 | 4,500+ lines |
+| **TOTAL** | **57** | **12,000+ lines** |
 
 ---
 
@@ -217,10 +243,22 @@ This documentation structure was created by consolidating **61 scattered .md fil
 - .github/ folder (1 file)
 
 **Redundant files removed:**
-- Multiple status update files (MVP_LAUNCH_SUCCESS, PROJECT_STATUS_SUMMARY, etc.)
+- Multiple status update files (PROJECT_STATUS_SUMMARY, etc.)
 - Duplicate implementation completion notices
 - Separate undocumented requirements files (now in BRD appendix)
 - Component-specific README files (consolidated into guides)
+- Compliance/Privacy doc (described non-existent endpoints)
+- Native billing doc (superseded by Chargebee Hosted Pages)
+- Transient debugging notes
+- One-time test artifacts
+- Duplicate E2E bug tracker (consolidated into test-registry/)
+- Manual testing guide (superseded by automated tests)
+- Full backlog (not a living document)
+
+**Files merged:**
+- Delivery domain + Flutter delivery integration → single `DELIVERY.md`
+- Subscription screens spec + service map → single `SUBSCRIPTIONS.md`
+- Color system + Design system + Flutter integration → single `DESIGN_SYSTEM.md`
 
 **Result:** Clean, minimal structure with maximum content per document.
 
@@ -234,7 +272,6 @@ This documentation structure was created by consolidating **61 scattered .md fil
 - **Use Cases:** Update when user flows change
 - **Test Cases:** Update during test execution
 - **Architecture:** Update only when new ADRs are created
-- **Implementation Status:** Update at end of each development phase
 - **Guides:** Update when tooling or processes change
 
 ### Version Control
@@ -247,9 +284,8 @@ All documentation is version-controlled in Git. Major updates should be committe
 For questions about documentation:
 - **Email:** dev@bookmyjuice.co.in
 - **Slack:** #bookmyjuice-dev
-- **Next Review:** April 25, 2026 (Post-Beta Review)
 
 ---
 
 **Documentation Status:** ✅ Complete & Organized
-**Next Review:** April 25, 2026
+**Next Review:** June 22, 2026

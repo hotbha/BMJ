@@ -1,9 +1,9 @@
 # BookMyJuice - Use Case Specifications
 
-**Document Version:** 1.0 (Consolidated)
-**Date:** April 11, 2026
-**Linked to:** BRD_Business_Requirements.md, FUNCTIONAL_SPEC.md
-**Status:** ✅ Approved for Development
+**Document Version:** 1.3
+**Date:** June 8, 2026
+**Linked to:** BRD_Business_Requirements.md, FUNCTIONAL_SPEC.md, AUTH_REQUIREMENTS.md
+**Status:** ✅ Updated for Auth v2.1 Consistency
 
 ---
 
@@ -81,15 +81,9 @@ This document provides detailed use case specifications for the BookMyJuice plat
 3. System shows login/signup screen
 4. User taps "Sign up with Email"
 5. System displays email entry screen
->>>>>>> after
-Wait, this won't work because the SEARCH text needs to exactly match. Let me re-read the file and craft precise replacements.<｜end▁of▁thinking｜>
-
-<｜｜DSML｜｜tool_calls>
-<｜｜DSML｜｜invoke name="read_file">
-4. User enters email address
-5. User taps "Continue"
-6. System sends 6-digit verification code to email
-7. System displays code entry screen
+6. User enters email address
+7. System sends 6-digit verification code to email
+8. System displays code entry screen
 8. User enters 6-digit code
 9. User taps "Verify Email"
 10. System validates code
@@ -101,19 +95,20 @@ Wait, this won't work because the SEARCH text needs to exactly match. Let me re-
 16. User enters 6-digit OTP
 17. User taps "Verify OTP"
 18. System validates OTP
-19. System displays address entry screen
-20. User enters all address fields (flat/house, society, area, city, state, ZIP, country)
-21. User taps "Continue"
-22. System displays password creation screen
-23. User enters password meeting requirements
-24. User confirms password
-25. User taps "Create Account"
-26. System validates all data
-27. System creates user in database with BCrypt password hash
-28. System creates Chargebee customer
-29. System generates JWT token (30-day expiry)
-30. System logs user in automatically
-31. System navigates to dashboard with welcome message
+ 19. System displays password creation screen
+ 20. User enters password meeting requirements
+ 21. User confirms password
+ 22. User taps "Continue"
+ 23. System displays address entry screen
+ 24. User enters all address fields (flat/house, society, area, city, state, ZIP, country)
+ 25. User taps "Create Account"
+ 26. System validates all data
+ 27. System creates user in database with BCrypt password hash
+ 28. System creates Chargebee customer
+ 29. System generates JWT token (30-day expiry)
+ 30. System stores JWT in FlutterSecureStorage
+ 31. System logs user in automatically
+ 32. System navigates to dashboard with welcome message
 
 **Extensions:**
 
@@ -162,11 +157,6 @@ Wait, this won't work because the SEARCH text needs to exactly match. Let me re-
 
 1. User opens app and sees Dashboard (public mode) with promotions, plans, and a "Sign In" prompt
 2. User taps "Sign In" on Dashboard, then taps "Sign up with Phone"
->>>>>>> after
-Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking｜>
-
-<｜｜DSML｜｜tool_calls>
-<｜｜DSML｜｜invoke name="read_file">
 3. System displays phone entry screen
 4. User enters 10-digit phone number
 5. User taps "Send OTP"
@@ -183,11 +173,16 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 16. User enters 6-digit code
 17. User taps "Verify Email"
 18. System validates code
-19. System displays address entry screen
-20. User enters all address fields
-21. User enters password and confirms
-22. System creates account, Chargebee customer, generates JWT
-23. System logs user in, navigates to dashboard
+ 19. System displays password creation screen
+ 20. User enters password meeting requirements
+ 21. User confirms password
+ 22. User taps "Continue"
+ 23. System displays address entry screen
+ 24. User enters all address fields
+ 25. User taps "Create Account"
+ 26. System creates account, Chargebee customer, generates JWT (30-day expiry)
+ 27. System stores JWT in FlutterSecureStorage
+ 28. System logs user in, navigates to dashboard
 
 **Extensions:** Similar to UC-AUTH-001, with phone/email order reversed
 
@@ -222,14 +217,18 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 14. User enters 6-digit OTP
 15. User taps "Verify OTP"
 16. System validates OTP
-17. System displays address entry screen
-18. User enters all address fields
-19. User enters password and confirms
-20. User taps "Create Account"
-21. System creates account with Google email
-22. System creates Chargebee customer
-23. System generates JWT token
-24. System logs user in, navigates to dashboard
+ 17. System displays password creation screen
+ 18. User enters password meeting requirements
+ 19. User confirms password
+ 20. User taps "Continue"
+ 21. System displays address entry screen
+ 22. User enters all address fields
+ 23. User taps "Create Account"
+ 24. System creates account with Google email
+ 25. System creates Chargebee customer
+ 26. System generates JWT token (30-day expiry)
+ 27. System stores JWT in FlutterSecureStorage
+ 28. System logs user in, navigates to dashboard
 
 **Extensions:**
 
@@ -259,10 +258,10 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 4. User enters email and password
 5. User taps "Login"
 6. System validates credentials (find user, verify BCrypt hash)
-7. System generates JWT token (30-day expiry)
-8. System stores token in SharedPreferences
-9. System navigates to dashboard
-10. On subsequent launches, auto-login checks token validity ONLY (no Google/phone)
+ 7. System generates JWT token (30-day expiry)
+ 8. System stores token in FlutterSecureStorage (key: `bmj_jwt`)
+ 9. System navigates to dashboard
+ 10. On subsequent launches, auto-login checks token validity ONLY (no Google/phone): splash screen → read JWT → if valid → Dashboard; if expired → `POST /api/auth/refresh` with stored credentials → if success → Dashboard (full); if fails → Dashboard (public/guest) with toast
 
 **Note:** Username for login is the user's 10-digit phone number. The phone number serves as both the login identifier and the `username` field in the database.
 
@@ -291,7 +290,7 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 3. User selects a Google account
 4. Google returns verified email, name, and Google ID
 5. System searches for user with matching Google ID or email
-6. **User found:** System generates JWT token, stores in SharedPreferences, navigates to dashboard
+ 6. **User found:** System generates JWT token (30-day expiry), stores in FlutterSecureStorage, navigates to dashboard
 
 **Alternate Flow (New User — Signup):**
 
@@ -302,7 +301,7 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
     - First name pre-filled from Google (editable)
     - Last name pre-filled from Google (editable)
     - Google photo URL stored
-  5a3. User continues signup: enters phone → verifies OTP → enters address → creates password
+   5a3. User continues signup: enters phone → verifies OTP → creates password → enters address
   5a4. System creates account, links Google ID, generates JWT
   5a5. System navigates to dashboard
 
@@ -342,7 +341,7 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 8. User taps "Verify OTP"
 9. System validates OTP
 10. System searches for user with matching verified phone number
-11. **User found:** System generates JWT token, stores in SharedPreferences, navigates to dashboard
+ 11. **User found:** System generates JWT token (30-day expiry), stores in FlutterSecureStorage, navigates to dashboard
 
 **Alternate Flow (New User — Signup):**
 
@@ -350,7 +349,7 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
   10a1. System starts signup flow with pre-filled data
   10a2. System navigates to signup screen with:
     - Phone pre-filled from verified OTP (read-only)
-  10a3. User continues signup: enters email → verifies email code → enters address → creates password
+   10a3. User continues signup: enters email → verifies email code → creates password → enters address
   10a4. System creates account, generates JWT
   10a5. System navigates to dashboard
 
@@ -491,7 +490,7 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 2. Guest taps product → views Product Detail screen
 3. Guest taps "Add to Cart" → item added with quantity 1
 4. Guest adds more items → cart type locked to first item type (one-time or subscription)
-5. Guest opens Cart screen → sees items + pricing breakdown (subtotal, tax, delivery fee from Chargebee, grand_total)
+5. Guest opens Cart screen → sees items + pricing breakdown (subtotal, tax, delivery fee (always ₹0 — see BR-023), grand_total)
 6. Guest modifies quantities or removes items
 
 **Postcondition:** Guest cart persisted in SharedPreferences + bmjServer with `user_id = NULL`
@@ -551,6 +550,8 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 13. Mobile calls `GET /api/v1/orders/ord_xxx` to fetch confirmed state
 14. Mobile displays confirmed order details
 
+**Pricing Note:** Delivery fee displayed in the checkout flow is always ₹0 (see BR-023). The Chargebee hosted page shows the total as computed from Chargebee item/plan pricing — no independent delivery fee calculation exists in the app or server.
+
 **Postcondition:** Order created in MySQL; cart cleared; push notification sent on payment failure (if any)
 
 ---
@@ -566,6 +567,8 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 - After checkout complete, bmjServer creates both order AND subscription records
 - Response includes `{ order_id: "ord_xxx", subscription_id: "sub_xxx", status: "active" }`
 - Mobile navigates to Order Confirmation → shows subscription info: "Your subscription is active. Next delivery: [date]"
+
+**Pricing Note:** Same as UC-03 — delivery fee is always ₹0 (see BR-023). The Chargebee hosted page for subscription checkout includes plan pricing; no separate delivery fee line item is charged.
 
 **Postcondition:** Order + subscription created in MySQL; cart cleared
 
@@ -826,5 +829,5 @@ Wait, this still doesn't match. Let me look at line 163.<｜end▁of▁thinking�
 **Document Control:**
 - **Created:** April 11, 2026 (Consolidated from UNIFIED_SIGNUP_USE_CASES.md and BOOKMYJUICE_SPECIFICATION.md)
 - **Updated:** May 25, 2026 (Dashboard-First Landing: Updated UC-AUTH-001/002/003/004 flow steps and Screen Flow Map)
-- **Version:** 1.2
-- **Status:** ✅ Updated for Dashboard-First Flow
+- **Version:** 1.3
+- **Status:** ✅ Updated for Auth v2.1 Consistency (JWT 30d, FlutterSecureStorage, refresh endpoint, splash screen, create-password before address for all flows)

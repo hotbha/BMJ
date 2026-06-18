@@ -31,7 +31,7 @@ BookMyJuice requires a robust billing and subscription management system. We've 
 
 ### 0. Development Tooling - Chargebee MCP (CRITICAL)
 
-**MANDATORY:** All developers MUST use Chargebee MCP (Model Context Protocol) in VSCode
+**MANDATORY:** All developers & testers MUST use Chargebee MCP (Model Context Protocol) in VSCode
 
 **Why:**
 - Most functionalities are managed by Chargebee, not custom-built
@@ -43,7 +43,7 @@ BookMyJuice requires a robust billing and subscription management system. We've 
 **Setup:**
 1. Install Chargebee MCP extension in VSCode
 2. Configure with test site credentials
-3. Use MCP to query Chargebee documentation
+3. Use Chargebee MCP to query Chargebee documentation
 4. Test API calls via MCP before implementing
 
 **Example MCP Queries:**
@@ -56,8 +56,6 @@ BookMyJuice requires a robust billing and subscription management system. We've 
 "List all subscription webhook events"
 ```
 
-**Reference:** See `CONTRIBUTING.md` for detailed Chargebee MCP setup instructions
-
 ---
 
 ## Decision
@@ -65,27 +63,32 @@ BookMyJuice requires a robust billing and subscription management system. We've 
 ### 1. System Boundaries
 
 #### Chargebee (Billing Platform) - SOURCE OF TRUTH FOR:
-- ✅ Products/Items (juices with variants)
-- ✅ Plans (subscription plans)
-- ✅ Pricing (all price points, discounts)
-- ✅ Categories (Delight, Signature, Premium)
+- ✅ Charges (one-time order items with variants)
+- ✅ Plans (subscription plans with weekly and monthly options)
+- ✅ Pricing (all price points, discount coupons)
+- ✅ Categories (Chargebee families: Delight, Signature, Premium)
 - ✅ Subscriptions (lifecycle: active, paused, cancelled)
 - ✅ Invoices (billing records)
 - ✅ Orders (transaction records)
 - ✅ Payments (payment transactions)
 - ✅ Customers (billing details, shipping addresses)
+- ✅ Coupons, coupon-sets, add-ons
 
 #### bmjServer (Application Server) - SOURCE OF TRUTH FOR:
-- ✅ User Authentication (ONLY)
+- ✅ User Authentication and referal (ONLY)
 - ✅ Login credentials (email, password hash)
 - ✅ JWT tokens
 - ✅ User roles (USER, ADMIN, MODERATOR)
 - ✅ Session management
 - ✅ Authorization rules
+- ✅ Backup of Chargebee Data
+- ✅ Cache chargebee data objects to server frontend
+- ✅ Single source of all data for frontend (including authentication, plans, items, subscriptions, user-profile, orders, etc.)
+
 
 ### 2. One-to-One User-Customer Mapping
 
-**Principle:** Every authenticated user MUST have a corresponding Chargebee customer
+**Principle:** Every authenticated user MUST have a corresponding Chargebee customer and vice-versa
 
 ```
 ┌─────────────────┐         ┌──────────────────┐
@@ -135,28 +138,32 @@ Chargebee Event → Webhook → bmjServer → Update Local DB
 
 **B. ChargebeeSyncService (Batch/Startup)**
 ```
-Application Startup → ChargebeeSyncService → Fetch All → Update Local DB
+- Application Startup → ChargebeeSyncService → Fetch All → Update Local DB
+- On Demand Sync
+
 ```
 
 **Sync Scope:**
-- All items (products)
+- All Subscription Plan items (Plans from Chargebee)
+- All One-Time-Order items (Charges from Chargebee)
 - All item prices
-- All plans
+- All Items
 - All subscriptions for existing users
 - Recent invoices (last 90 days)
+- Recent Orders (last 90 days)
 
 **Frequency:**
 - On application startup
-- Scheduled daily sync (optional)
-- Manual trigger via admin endpoint
+- Scheduled daily sync (00:00 AM midnight)
+- One-demand sync (via exposed admin endpoint)
 
 #### Local Cache Tables (bmjServer MySQL)
 
 ```sql
 -- Synced from Chargebee
-items               -- Products/juices
+items               -- Products/juices (named as Charges in chargebee)
 item_prices         -- Size-based pricing
-plans               -- Subscription plans
+plans               -- Subscription plans (named as Plans in Chargebee)
 subscriptions       -- User subscriptions
 invoices            -- Billing invoices
 orders              -- Order records
@@ -164,7 +171,7 @@ payments            -- Payment transactions
 customers           -- Customer billing details (mirror)
 
 -- Managed locally
-users               -- Authentication credentials
+users               -- Authentication credentials, referal data
 roles               -- User roles
 user_roles          -- Role assignments
 ```
@@ -202,8 +209,9 @@ user_roles          -- Role assignments
 
 **Why Direct API Calls:**
 - These are state-changing operations
-- Chargebee is source of truth for billing
+- Chargebee is source of truth for billing, pricing, Customer's detailed data
 - Webhooks will sync changes back to local DB
+- Sync Service also sycn changed back to local DB
 
 ### 5. Data Flow Examples
 
@@ -290,11 +298,11 @@ user_roles          -- Role assignments
 
 - [ ] Add `chargebee_customer_id` column to users table
 - [ ] Update signup flow to create Chargebee customer
-- [ ] Implement all webhook handlers (listed above)
+- [ ] Implement all webhook handlers (listed above) & others, if required
 - [ ] Implement ChargebeeSyncService for startup sync
 - [ ] Update all read endpoints to use local cache
 - [ ] Update all write endpoints to call Chargebee API
-- [ ] Add admin endpoint to manually trigger sync
+- [ ] Add admin endpoint to manually trigger sync on-demand
 - [ ] Add admin tool to fix user-customer mapping issues
 
 ### Frontend (Flutter)
@@ -307,9 +315,11 @@ user_roles          -- Role assignments
 
 - [ ] Test webhook handlers with Chargebee test events
 - [ ] Test startup sync with test data
-- [ ] Test user-customer mapping during signup
+- [ ] Test user-customer mapping during unified-signup
 - [ ] Test subscription flow end-to-end
 - [ ] Test order history retrieval (local cache)
+- [ ] Test Plans retrieval (local cache)
+- [ ] Test one-time-order items, i.e. Charges retrieval (local cache)
 - [ ] Test webhook failure scenarios
 
 ---
@@ -334,5 +344,5 @@ This is a common pattern for integrating with third-party billing platforms whil
 ---
 
 **Approved By:** Development Team  
-**Approval Date:** March 27, 2026  
-**Review Date:** April 27, 2026 (or after beta launch)
+**Approval Date:** May 04, 2026  
+**Review Date:** May 04, 2026 (or after beta launch)

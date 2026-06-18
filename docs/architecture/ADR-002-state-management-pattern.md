@@ -83,6 +83,11 @@ We selected the **BLoC (Business Logic Component)** pattern with the `flutter_bl
   - Mitigation: Team training, clear documentation
 
 ## Implementation
+- getX for accessing repositories
+- Screens dont contain business logic or any calculations
+- Screens only emit events and update on state changes
+- The Business logic lies strictly in Blocs only
+- Use routes for screen to screen navigations
 
 ### BLoC Structure
 

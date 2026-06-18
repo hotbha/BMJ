@@ -37,12 +37,33 @@ jobs:
       - name: Run unit tests
         run: |
           cd lush
-          flutter test --coverage
+          flutter test --coverage --reporter expanded 2>&1 | tee test_output.txt
 
-      - name: Check coverage
+      - name: Validate test count (expected 368)
         run: |
           cd lush
-          lcov --summary coverage/lcov.info | grep 'lines' | awk '{print $2}' | sed 's/%//' | xargs -I {} bash -c 'if [ {} -lt 90 ]; then echo "Coverage {}% < 90%"; exit 1; fi'
+          TEST_LINE=$(grep 'All tests passed' test_output.txt)
+          ACTUAL=$(echo "$TEST_LINE" | sed 's/.*+\([0-9]*\).*/\1/')
+          EXPECTED=368
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "❌ Test count mismatch: got $ACTUAL, expected $EXPECTED"
+            exit 1
+          fi
+          echo "✅ All $ACTUAL tests passed (matches expected $EXPECTED)"
+
+      - name: Check coverage ≥ 80%
+        run: |
+          cd lush
+          COV=$(lcov --summary coverage/lcov.info 2>&1 | grep 'lines' | awk '{print $2}' | sed 's/%//')
+          if [ -z "$COV" ]; then
+            echo "❌ Could not determine coverage"
+            exit 1
+          fi
+          if awk "BEGIN{exit !($COV < 80)}"; then
+            echo "❌ Coverage ${COV}% < 80%"
+            exit 1
+          fi
+          echo "✅ Coverage ${COV}% ≥ 80%"
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4

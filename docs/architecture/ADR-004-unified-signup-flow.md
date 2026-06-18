@@ -9,7 +9,7 @@
 
 ## Context
 
-BookMyJuice requires a flexible user registration system that accommodates different user preferences while ensuring mandatory collection and verification of critical user information (email, phone, address) before account creation.
+BookMyJuice requires a flexible user registration system that accommodates different user preferences while ensuring mandatory collection and verification of critical user information (email, phone, address, password) before account creation.
 
 ### Current State (Pre-ADR-004)
 
@@ -89,13 +89,13 @@ We implement a **stateful multi-step signup flow** with three entry points that 
 │                     │                                        │
 │                     ▼                                        │
 │         ┌───────────────────────┐                           │
-│         │  Enter Address        │                           │
+│         │  Create Password      │                           │
 │         │  (All Flows Converge) │                           │
 │         └───────────┬───────────┘                           │
 │                     │                                        │
 │                     ▼                                        │
 │         ┌───────────────────────┐                           │
-│         │  Create Password      │                           │
+│         │  Enter Address        │                           │
 │         └───────────┬───────────┘                           │
 │                     │                                        │
 │                     ▼                                        │
@@ -424,8 +424,8 @@ lush/lib/views/screens/
 ├── EmailEntryAfterPhoneScreen.dart     # Email after phone
 ├── EmailVerificationAfterPhoneScreen.dart  # Email verification (phone-first)
 ├── GooglePhoneEntryScreen.dart         # Google + phone entry
-├── AddressEntryScreen.dart             # Address collection
-└── CreatePasswordScreen.dart           # Password creation
+├── CreatePasswordScreen.dart           # Password creation
+└── AddressEntryScreen.dart             # Address collection
 ```
 
 #### Navigation Flow
@@ -442,8 +442,8 @@ routes: {
   '/email-entry-after-phone': (_) => EmailEntryAfterPhoneScreen(),
   '/email-verification-after-phone': (_) => EmailVerificationAfterPhoneScreen(),
   '/google-phone-entry': (_) => GooglePhoneEntryScreen(),
-  '/address-entry': (_) => AddressEntryScreen(),
   '/create-password': (_) => CreatePasswordScreen(),
+  '/address-entry': (_) => AddressEntryScreen(),
 }
 ```
 
@@ -457,7 +457,7 @@ routes: {
 2. **Data Quality:** Mandatory verification ensures valid contact information
 3. **Security:** Email + phone verification prevents fake accounts
 4. **Flexibility:** Users can start with preferred method
-5. **Completeness:** Address collection before account creation
+5. **Completeness:** Password creation before address capture
 6. **Google Integration:** Faster signup for Google users
 7. **Strong Passwords:** Enforced password policy
 8. **Backward Compatible:** Existing users unaffected

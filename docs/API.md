@@ -8,6 +8,7 @@
 - [Authentication](#authentication)
 - [API Endpoints](#api-endpoints)
 - [Error Handling](#error-handling)
+- [Timeout & Retry Behavior](#timeout--retry-behavior)
 - [Rate Limiting](#rate-limiting)
 - [Webhooks](#webhooks)
 - [Bottle Tracking](#bottle-tracking)
@@ -31,6 +32,8 @@
 - The app divides by 100 for display purposes (e.g., `9900` paise → `₹99`).
 - The backend never calculates prices locally; Chargebee is the sole pricing authority.
 
+**Timestamp Format:** All timestamps are in ISO 8601 UTC (`yyyy-MM-dd'T'HH:mm:ss'Z'`). Mobile converts to local timezone for display.
+
 ---
 
 ## Authentication
@@ -48,7 +51,7 @@ Authorization: Bearer <access_token>
 
 | Token Type | Expiry | Refresh |
 |------------|--------|---------|
-| Access Token | 30 days (2592000000 ms) | No refresh — re-authenticate |
+| Access Token | 30 days (2592000000 ms) | POST /api/auth/refresh — silent refresh with stored credentials |
 
 ### Authentication Flow
 
@@ -59,16 +62,23 @@ Authorization: Bearer <access_token>
 2. Receive Token
    { accessToken, tokenType, id, username, email, roles }
    ↓
-3. Use Access Token for API calls
+3. Store JWT in FlutterSecureStorage
+   Key: bmj_jwt
+   ↓
+4. Use Access Token for API calls
    Authorization: Bearer <accessToken>
    ↓
-4. When Access Token expires (30 days)
-   Re-authenticate via /api/v1/auth/signin
+5. On app launch (AutoLogin):
+   a. Read JWT from FlutterSecureStorage
+   b. If valid → navigate to Dashboard
+   c. If expired → POST /api/auth/refresh with stored credentials
+   d. If refresh fails → show public Dashboard (guest mode) with toast
    ↓
-5. Receive new Access Token
+6. When Access Token expires (30 days)
+   Silent refresh via POST /api/auth/refresh
 ```
 
-> **Note:** No refresh token flow exists. The JWT is a single 30-day token. When it expires, the user must re-authenticate. The token version is tracked server-side for invalidation support (e.g., on password reset).
+> **Note:** Refresh endpoint POST /api/auth/refresh exists. On expiry, the app silently attempts refresh with stored credentials. If refresh fails, the user sees public Dashboard (guest mode) with a toast message. The token version is tracked server-side for invalidation support (e.g., on password reset). Token storage MUST use FlutterSecureStorage — not SharedPreferences.
 
 ---
 
@@ -108,9 +118,91 @@ Note: `username` field accepts either email address or 10-digit phone number.
 ```json
 // 400 Bad Request - Invalid credentials
 {
-  "message": "Error: Invalid username or password!"
+  "status": 400,
+  "message": "Error: Invalid username or password!",
+  "errorCode": "AUTH_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/signin"
+}
+
+// 400 Bad Request - Missing fields
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "username", "message": "Username is required" },
+    { "field": "password", "message": "Password is required" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/signin"
+}
+
+// 429 Too Many Requests - Rate limit exceeded
+{
+  "status": 429,
+  "message": "Rate limit exceeded. Please wait before retrying.",
+  "errorCode": "RATE_LIMIT_EXCEEDED",
+  "retryAfter": 60,
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/signin"
 }
 ```
+
+---
+
+#### POST /api/v1/auth/refresh
+
+Silently refresh an expired JWT token. Called by the app's AutoLogin flow when the stored JWT's `exp` claim is past-current time. Does NOT require a valid token — uses stored credentials.
+
+**Request:**
+```json
+{
+  "username": "9999999901",
+  "password": "SecurePass123!"
+}
+```
+
+Note: The `username` field is the **10-digit phone number** (stored as `username` in the DB during signup). The `password` is the user's stored password (saved in SharedPreferences/FlutterSecureStorage — only if the user chose "Remember Me" or equivalent on login).
+
+**Response (200 OK):**
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+  "tokenType": "Bearer",
+  "id": 500,
+  "username": "9999999901",
+  "email": "user@example.com",
+  "roles": ["ROLE_USER"]
+}
+```
+
+**Error Responses:**
+```json
+// 401 Unauthorized - Invalid credentials (password changed, user deleted)
+{
+  "status": 401,
+  "message": "Invalid credentials — token refresh failed",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/auth/refresh"
+}
+
+// 401 Unauthorized - Token revoked (password reset invalidated token)
+{
+  "status": 401,
+  "message": "Token has been revoked. Please sign in again.",
+  "errorCode": "AUTH_003",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/auth/refresh"
+}
+```
+
+**Client Behavior on Refresh Failure:**
+1. Clear stored JWT from FlutterSecureStorage
+2. Clear stored credentials (password) if any
+3. Navigate to Dashboard in **public mode** (no login screen forced)
+4. Show toast: "Session expired. Please sign in again."
 
 ---
 
@@ -123,7 +215,7 @@ Register a new user account.
 {
   "name": "John Doe",
   "email": "user@example.com",
-  "phone": "+919876543210",
+  "phone": "9876543210",
   "password": "SecurePass123!",
   "address": {
     "street": "123 Main St",
@@ -143,9 +235,41 @@ Register a new user account.
 }
 ```
 
----
+**Error Responses:**
+```json
+// 400 Bad Request - Email already exists
+{
+  "status": 400,
+  "message": "Email is already registered",
+  "errorCode": "USER_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/signup"
+}
 
-> **Note:** No `/api/v1/auth/refresh` endpoint exists. JWT tokens are single 30-day tokens. When expired, re-authenticate via `/api/v1/auth/signin`.
+// 400 Bad Request - Validation errors
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "phone", "message": "Phone must be a valid 10-digit Indian number" },
+    { "field": "password", "message": "Password must be at least 8 characters with uppercase, lowercase, number, and special character" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/signup"
+}
+
+// 500 Internal Server Error - Chargebee failure
+{
+  "status": 500,
+  "message": "Failed to create customer in billing system",
+  "errorCode": "SYS_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/signup"
+}
+```
+
+---
 
 #### POST /api/v1/auth/google
 
@@ -175,6 +299,36 @@ Sign in with Google.
 }
 ```
 
+**Error Responses:**
+```json
+// 400 Bad Request - Invalid Google token
+{
+  "status": 400,
+  "message": "Invalid Google ID token",
+  "errorCode": "AUTH_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/google"
+}
+
+// 400 Bad Request - Google email not verified
+{
+  "status": 400,
+  "message": "Google account email is not verified",
+  "errorCode": "AUTH_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/google"
+}
+
+// 503 Service Unavailable - Google token verification failed (network)
+{
+  "status": 503,
+  "message": "Unable to verify Google token. Please try again.",
+  "errorCode": "SYS_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/google"
+}
+```
+
 ---
 
 #### POST /api/v1/auth/otp/request
@@ -184,7 +338,7 @@ Request OTP for phone authentication.
 **Request:**
 ```json
 {
-  "phone": "+919876543210"
+  "phone": "9876543210"
 }
 ```
 
@@ -197,6 +351,31 @@ Request OTP for phone authentication.
 }
 ```
 
+**Error Responses:**
+```json
+// 400 Bad Request - Invalid phone
+{
+  "status": 400,
+  "message": "Invalid phone number format",
+  "errors": [
+    { "field": "phone", "message": "Phone must be a valid 10-digit Indian number starting with 6, 7, 8, or 9" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/otp/request"
+}
+
+// 429 Too Many Requests - OTP limit exceeded
+{
+  "status": 429,
+  "message": "Too many OTP requests. Please try again after 5 minutes.",
+  "errorCode": "RATE_LIMIT_EXCEEDED",
+  "retryAfter": 300,
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/otp/request"
+}
+```
+
 ---
 
 #### POST /api/v1/auth/otp/verify
@@ -206,7 +385,7 @@ Verify OTP and authenticate.
 **Request:**
 ```json
 {
-  "phone": "+919876543210",
+  "phone": "9876543210",
   "otp": "123456",
   "otpReference": "otp_ref_123"
 }
@@ -221,6 +400,36 @@ Verify OTP and authenticate.
   "username": "9999999901",
   "email": "user@example.com",
   "roles": ["ROLE_USER"]
+}
+```
+
+**Error Responses:**
+```json
+// 400 Bad Request - Wrong OTP
+{
+  "status": 400,
+  "message": "Invalid OTP",
+  "errorCode": "AUTH_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/otp/verify"
+}
+
+// 400 Bad Request - Expired OTP
+{
+  "status": 400,
+  "message": "OTP has expired. Please request a new one.",
+  "errorCode": "AUTH_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/otp/verify"
+}
+
+// 404 Not Found - No OTP request found for this phone
+{
+  "status": 404,
+  "message": "No OTP request found for this phone number",
+  "errorCode": "USER_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/auth/otp/verify"
 }
 ```
 
@@ -243,7 +452,7 @@ Authorization: Bearer <access_token>
   "id": "usr_123",
   "email": "user@example.com",
   "name": "John Doe",
-  "phone": "+919876543210",
+  "phone": "9876543210",
   "addresses": [
     {
       "id": "addr_1",
@@ -264,6 +473,27 @@ Authorization: Bearer <access_token>
 }
 ```
 
+**Error Responses:**
+```json
+// 401 Unauthorized - Missing/invalid token
+{
+  "status": 401,
+  "message": "Authentication required",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/user/profile"
+}
+
+// 404 Not Found - User not found
+{
+  "status": 404,
+  "message": "User not found",
+  "errorCode": "USER_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/user/profile"
+}
+```
+
 ---
 
 #### PUT /api/v1/user/profile
@@ -274,7 +504,7 @@ Update user profile.
 ```json
 {
   "name": "John Updated",
-  "phone": "+919876543211"
+  "phone": "9876543211"
 }
 ```
 
@@ -283,6 +513,30 @@ Update user profile.
 {
   "message": "Profile updated successfully",
   "user": { ... }
+}
+```
+
+**Error Responses:**
+```json
+// 400 Bad Request - Invalid phone
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "phone", "message": "Phone must be a valid 10-digit Indian number" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/user/profile"
+}
+
+// 403 Forbidden - Insufficient permissions
+{
+  "status": 403,
+  "message": "Access denied",
+  "errorCode": "AUTH_003",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/user/profile"
 }
 ```
 
@@ -320,6 +574,25 @@ Get all saved addresses for the authenticated user.
       "deliveryInstructions": "Leave at door"
     }
   ]
+}
+```
+
+**Error Responses:**
+```json
+// 200 OK with empty data (no addresses saved)
+{
+  "status": "success",
+  "count": 0,
+  "data": []
+}
+
+// 401 Unauthorized
+{
+  "status": 401,
+  "message": "Authentication required",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/address"
 }
 ```
 
@@ -361,6 +634,22 @@ Add a new delivery address.
 }
 ```
 
+**Error Responses:**
+```json
+// 400 Bad Request - Missing required fields
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "pincode", "message": "Pincode is required and must be 6 digits" },
+    { "field": "city", "message": "City is required" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/address"
+}
+```
+
 ---
 
 #### PUT /api/v1/address/{id}
@@ -376,6 +665,18 @@ Update an existing address.
 }
 ```
 
+**Error Responses:**
+```json
+// 404 Not Found - Address does not exist or belongs to another user
+{
+  "status": 404,
+  "message": "Address not found",
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/address/999"
+}
+```
+
 ---
 
 #### DELETE /api/v1/address/{id}
@@ -387,6 +688,18 @@ Delete an address.
 {
   "status": "success",
   "message": "Address deleted successfully"
+}
+```
+
+**Error Responses:**
+```json
+// 404 Not Found
+{
+  "status": 404,
+  "message": "Address not found",
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/address/999"
 }
 ```
 
@@ -437,7 +750,24 @@ Authorization: Bearer <access_token>
 }
 ```
 
-**Notes:** Discovered in `subscription_service.dart` during D7 preparation. Token is read internally by the service via `SecureStorageService`; the caller does not pass it explicitly. Added `2026-05-27`.
+**Error Responses:**
+```json
+// 401 Unauthorized
+{
+  "status": 401,
+  "message": "Authentication required",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/subscriptions/my"
+}
+
+// 200 OK - No subscriptions
+{
+  "subscriptions": []
+}
+```
+
+**Notes:** Token is read internally by the service via `SecureStorageService`; the caller does not pass it explicitly.
 
 ---
 
@@ -450,38 +780,42 @@ Get available subscription plans.
 {
   "plans": [
     {
-      "id": "plan_30_30",
-      "name": "30:30 Plan",
-      "description": "30 juices over 30 days",
-      "price": 2999,
+      "id": "plan_delight_200_weekly",
+      "name": "Delight 200ml Weekly",
+      "description": "6 bottles of our Delight range every week",
+      "price": 59900,
       "currency": "INR",
-      "billingPeriod": "monthly",
-      "juiceCount": 30,
-      "duration": 30,
+      "billingPeriod": "weekly",
+      "juiceCount": 6,
+      "duration": 7,
       "features": [
-        "Daily delivery",
+        "6 bottles per week",
+        "Choose from Delight juices",
         "Flexible scheduling",
-        "Flexible delivery"
+        "Free delivery"
       ]
     },
     {
-      "id": "plan_15_30",
-      "name": "15:30 Plan",
-      "description": "15 juices over 30 days",
-      "price": 1799,
+      "id": "plan_delight_200_monthly",
+      "name": "Delight 200ml Monthly",
+      "description": "24 bottles of our Delight range every month",
+      "price": 199900,
       "currency": "INR",
       "billingPeriod": "monthly",
-      "juiceCount": 15,
+      "juiceCount": 24,
       "duration": 30,
       "features": [
-        "Alternate day delivery",
+        "24 bottles per month",
+        "Choose from Delight juices",
         "Flexible scheduling",
-        "Flexible delivery"
+        "Free delivery"
       ]
     }
   ]
 }
 ```
+
+> **Note:** The plans shown above are examples. Actual plan IDs and names follow the convention `plan_{category}_{size}_{frequency}` (e.g., `plan_delight_200_weekly`, `plan_signature_300_monthly`). There are 18 plans total: 3 categories (Delight, Signature, Premium) × 3 sizes (200ml, 300ml, 500ml) × 2 frequencies (weekly, monthly).
 
 ---
 
@@ -500,6 +834,27 @@ Get Chargebee hosted page URL for subscription.
 }
 ```
 
+**Error Responses:**
+```json
+// 400 Bad Request - Missing planId
+{
+  "status": 400,
+  "message": "Plan ID is required",
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/subscriptions/checkout-url"
+}
+
+// 404 Not Found - Invalid planId
+{
+  "status": 404,
+  "message": "Subscription plan not found",
+  "errorCode": "SUB_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/subscriptions/checkout-url"
+}
+```
+
 ---
 
 #### GET /api/v1/subscriptions/active
@@ -511,19 +866,36 @@ Get active subscription details.
 {
   "subscription": {
     "id": "sub_123",
-    "planId": "plan_30_30",
-    "planName": "30:30 Plan",
+    "planId": "plan_delight_200_weekly",
+    "planName": "Delight 200ml Weekly",
     "status": "active",
     "startDate": "2026-03-01T00:00:00Z",
     "currentPeriodStart": "2026-03-27T00:00:00Z",
     "currentPeriodEnd": "2026-04-26T23:59:59Z",
     "nextBillingDate": "2026-04-27T00:00:00Z",
-    "amount": 2999,
+    "amount": 59900,
     "currency": "INR",
     "autoRenew": true,
     "pausedAt": null,
     "cancelledAt": null
   }
+}
+```
+
+**Error Responses:**
+```json
+// 200 OK - No active subscription
+{
+  "subscription": null
+}
+
+// 401 Unauthorized
+{
+  "status": 401,
+  "message": "Authentication required",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/subscriptions/active"
 }
 ```
 
@@ -552,6 +924,36 @@ Pause active subscription.
 }
 ```
 
+**Error Responses:**
+```json
+// 400 Bad Request - After 9 PM IST cutoff
+{
+  "status": 400,
+  "message": "Subscription pause is not available after 9 PM IST. Please try again tomorrow.",
+  "errorCode": "SUB_002",
+  "timestamp": "2026-03-27T20:30:00Z",
+  "path": "/api/v1/subscriptions/sub_123/pause"
+}
+
+// 400 Bad Request - Already paused
+{
+  "status": 400,
+  "message": "Subscription is already paused",
+  "errorCode": "SUB_003",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/subscriptions/sub_123/pause"
+}
+
+// 404 Not Found - Subscription not found
+{
+  "status": 404,
+  "message": "Subscription not found",
+  "errorCode": "SUB_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/subscriptions/sub_999/pause"
+}
+```
+
 ---
 
 #### POST /api/v1/subscriptions/{id}/resume
@@ -563,6 +965,27 @@ Resume paused subscription.
 {
   "message": "Subscription resumed successfully",
   "nextDeliveryDate": "2026-04-16T00:00:00Z"
+}
+```
+
+**Error Responses:**
+```json
+// 400 Bad Request - After 9 PM IST cutoff
+{
+  "status": 400,
+  "message": "Subscription resume is not available after 9 PM IST. Please try again tomorrow.",
+  "errorCode": "SUB_002",
+  "timestamp": "2026-03-27T20:30:00Z",
+  "path": "/api/v1/subscriptions/sub_123/resume"
+}
+
+// 400 Bad Request - Not paused
+{
+  "status": 400,
+  "message": "Subscription is not currently paused",
+  "errorCode": "SUB_003",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/subscriptions/sub_123/resume"
 }
 ```
 
@@ -588,6 +1011,27 @@ Cancel subscription.
 }
 ```
 
+**Error Responses:**
+```json
+// 400 Bad Request - After 9 PM IST cutoff
+{
+  "status": 400,
+  "message": "Subscription cancellation is not available after 9 PM IST. Please try again tomorrow.",
+  "errorCode": "SUB_002",
+  "timestamp": "2026-03-27T20:30:00Z",
+  "path": "/api/v1/subscriptions/sub_123/cancel"
+}
+
+// 400 Bad Request - Already cancelled
+{
+  "status": 400,
+  "message": "Subscription is already cancelled",
+  "errorCode": "SUB_003",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/subscriptions/sub_123/cancel"
+}
+```
+
 ---
 
 ### Order Management
@@ -598,8 +1042,10 @@ Get order history with pagination.
 
 **Query Parameters:**
 - `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 10)
+- `limit` (optional): Items per page (default: 20)
 - `status` (optional): Filter by status
+- `sortBy` (optional): Sort field (`date`, `amount`) — default: `date`
+- `sortOrder` (optional): `asc` or `desc` — default: `desc`
 
 **Response (200 OK):**
 ```json
@@ -609,13 +1055,13 @@ Get order history with pagination.
       "id": "ord_123",
       "orderNumber": "BMJ-2026-001234",
       "status": "delivered",
-      "type": "subscription",
+      "type": "one-time",
       "items": [
         {
           "productId": "prod_orange",
           "name": "Fresh Orange Juice",
           "quantity": 1,
-          "size": "250ml",
+          "size": "200ml",
           "price": 120
         }
       ],
@@ -633,8 +1079,31 @@ Get order history with pagination.
     "currentPage": 1,
     "totalPages": 5,
     "totalItems": 50,
-    "itemsPerPage": 10
+    "itemsPerPage": 20
   }
+}
+```
+
+**Error Responses:**
+```json
+// 200 OK - No orders
+{
+  "orders": [],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 0,
+    "totalItems": 0,
+    "itemsPerPage": 20
+  }
+}
+
+// 401 Unauthorized
+{
+  "status": 401,
+  "message": "Authentication required",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/orders"
 }
 ```
 
@@ -688,6 +1157,18 @@ Get order details.
 }
 ```
 
+**Error Responses:**
+```json
+// 404 Not Found
+{
+  "status": 404,
+  "message": "Order not found",
+  "errorCode": "ORD_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/orders/ord_999"
+}
+```
+
 ---
 
 ### Cart Management
@@ -704,7 +1185,7 @@ Get current user's cart.
       "productId": "prod_orange",
       "name": "Fresh Orange Juice",
       "quantity": 2,
-      "size": "250ml",
+      "size": "200ml",
       "price": 120,
       "imageUrl": "https://..."
     },
@@ -728,7 +1209,32 @@ Get current user's cart.
 }
 ```
 
-> **Note:** `deliveryFee` is NOT included in cart response. Delivery fee is sourced from Chargebee pricing data during checkout.
+**Error Responses:**
+```json
+// 200 OK - Empty cart
+{
+  "items": [],
+  "summary": {
+    "itemCount": 0,
+    "subtotal": 0,
+    "tax": 0,
+    "discount": 0,
+    "total": 0,
+    "currency": "INR"
+  }
+}
+
+// 401 Unauthorized
+{
+  "status": 401,
+  "message": "Authentication required",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/cart"
+}
+```
+
+> **Note:** `deliveryFee` is NOT included in cart response. Delivery fee is managed entirely through Chargebee pricing.
 
 ---
 
@@ -741,7 +1247,7 @@ Add item to cart.
 {
   "productId": "prod_orange",
   "quantity": 2,
-  "priceId": "price_250ml"
+  "priceId": "price_200ml"
 }
 ```
 
@@ -750,6 +1256,30 @@ Add item to cart.
 {
   "message": "Item added to cart",
   "cart": { ... }
+}
+```
+
+**Error Responses:**
+```json
+// 409 Conflict - Mixed cart types (one-time + subscription)
+{
+  "status": 409,
+  "message": "Cart type conflict. Your cart contains one-time items. Please clear cart before adding subscription items.",
+  "errorCode": "CART_TYPE_CONFLICT",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/cart/items"
+}
+
+// 400 Bad Request - Missing productId
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "productId", "message": "Product ID is required" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/cart/items"
 }
 ```
 
@@ -771,6 +1301,30 @@ Update item quantity.
 {
   "message": "Cart updated",
   "cart": { ... }
+}
+```
+
+**Error Responses:**
+```json
+// 400 Bad Request - Quantity must be positive
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "quantity", "message": "Quantity must be at least 1" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/cart/items/prod_orange"
+}
+
+// 404 Not Found - Item not in cart
+{
+  "status": 404,
+  "message": "Item not found in cart",
+  "errorCode": "ORD_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/cart/items/prod_unknown"
 }
 ```
 
@@ -801,7 +1355,7 @@ Merge guest cart items into user's cart on login. Handles conflict resolution fo
     {
       "productId": "prod_orange",
       "quantity": 2,
-      "priceId": "price_250ml",
+      "priceId": "price_200ml",
       "itemType": "charge"
     }
   ]
@@ -817,7 +1371,16 @@ Merge guest cart items into user's cart on login. Handles conflict resolution fo
 ```
 
 **Error Responses:**
-- `409 Conflict` — Mixed cart types detected (one-time and subscription items cannot coexist)
+```json
+// 409 Conflict - Mixed cart types detected
+{
+  "status": 409,
+  "message": "Cart merge conflict: guest cart contains different item type than server cart. Please clear one cart first.",
+  "errorCode": "CART_TYPE_CONFLICT",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/cart/merge"
+}
+```
 
 ---
 
@@ -849,8 +1412,43 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Responses:**
-- `400 Bad Request` — Cart empty, mixed cart types, or user has no Chargebee customer ID
-- `401 Unauthorized` — Authentication required
+```json
+// 400 Bad Request - Cart empty
+{
+  "status": 400,
+  "message": "Cart is empty. Add items before checkout.",
+  "errorCode": "ORD_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v2/checkout"
+}
+
+// 400 Bad Request - Mixed cart types
+{
+  "status": 400,
+  "message": "Cart contains mixed item types. Please clear cart and try again.",
+  "errorCode": "CART_TYPE_CONFLICT",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v2/checkout"
+}
+
+// 400 Bad Request - No Chargebee customer ID
+{
+  "status": 400,
+  "message": "Billing account not set up. Please contact support.",
+  "errorCode": "PAY_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v2/checkout"
+}
+
+// 401 Unauthorized
+{
+  "status": 401,
+  "message": "Authentication required",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v2/checkout"
+}
+```
 
 ---
 
@@ -881,6 +1479,21 @@ Create a one-time checkout with specific items without using the cart system.
 }
 ```
 
+**Error Responses:**
+```json
+// 400 Bad Request - Invalid items
+{
+  "status": 400,
+  "message": "One or more items are invalid or unavailable",
+  "errors": [
+    { "field": "items[0].price_id", "message": "Invalid price ID: charge_xxx" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v2/checkout/with-items"
+}
+```
+
 ---
 
 ### Products
@@ -890,11 +1503,11 @@ Create a one-time checkout with specific items without using the cart system.
 Get all available products (sourced from Chargebee).
 
 **Query Parameters:**
-- `category` (optional): Filter by category
+- `category` (optional): Filter by category (`delight`, `signature`, `premium`)
 - `search` (optional): Search query
-- `sortBy` (optional): popularity, price_low_high, price_high_low
-- `page` (optional): Page number
-- `limit` (optional): Items per page
+- `sortBy` (optional): `popularity`, `price_low_high`, `price_high_low`
+- `page` (optional): Page number (default: 1)
+- `limit` (optional): Items per page (default: 20, max: 100)
 
 **Response (200 OK):**
 ```json
@@ -904,7 +1517,7 @@ Get all available products (sourced from Chargebee).
       "id": "prod_orange",
       "name": "Fresh Orange Juice",
       "description": "100% fresh oranges, cold-pressed",
-      "category": "citrus",
+      "category": "delight",
       "images": [
         "https://...",
         "https://..."
@@ -916,12 +1529,12 @@ Get all available products (sourced from Chargebee).
         "sugar": 20.8,
         "fiber": 0.5,
         "fat": 0.5,
-        "unit": "per 250ml"
+        "unit": "per 200ml"
       },
       "prices": [
         {
-          "id": "price_250ml",
-          "size": "250ml",
+          "id": "price_200ml",
+          "size": "200ml",
           "price": 120,
           "currency": "INR"
         },
@@ -942,7 +1555,38 @@ Get all available products (sourced from Chargebee).
       }
     }
   ],
-  "pagination": { ... }
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 3,
+    "totalItems": 50,
+    "itemsPerPage": 20
+  }
+}
+```
+
+**Error Responses:**
+```json
+// 200 OK - Empty results (no products match filter)
+{
+  "products": [],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 0,
+    "totalItems": 0,
+    "itemsPerPage": 20
+  }
+}
+
+// 400 Bad Request - Invalid category
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "category", "message": "Invalid category. Must be one of: delight, signature, premium" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/products"
 }
 ```
 
@@ -961,7 +1605,7 @@ Get product details.
   "name": "Fresh Orange Juice",
   "description": "100% fresh oranges, cold-pressed",
   "longDescription": "Our signature orange juice is made from hand-picked Nagpur oranges, cold-pressed to retain maximum nutrients...",
-  "category": "citrus",
+  "category": "delight",
   "tags": ["fresh", "vitamin-c", "popular"],
   "images": [ ... ],
   "nutritionalInfo": { ... },
@@ -977,6 +1621,18 @@ Get product details.
       "date": "2026-03-20T00:00:00Z"
     }
   ]
+}
+```
+
+**Error Responses:**
+```json
+// 404 Not Found
+{
+  "status": 404,
+  "message": "Product not found",
+  "errorCode": "ORD_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/products/prod_unknown"
 }
 ```
 
@@ -1000,6 +1656,18 @@ Check API health status.
 }
 ```
 
+**Response (503 Service Unavailable):**
+```json
+{
+  "status": "DOWN",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "version": "1.0.0",
+  "database": "UP",
+  "chargebee": "DOWN",
+  "redis": "UP"
+}
+```
+
 ---
 
 ### Serviceability
@@ -1016,6 +1684,24 @@ Check if delivery is available for a given pincode.
 {
   "serviceable": true,
   "message": "Delivery available in your area"
+}
+```
+
+**Error Responses:**
+```json
+// 200 OK - Not serviceable
+{
+  "serviceable": false,
+  "message": "Sorry, we do not deliver to this pincode yet"
+}
+
+// 400 Bad Request - Invalid pincode
+{
+  "status": 400,
+  "message": "Pincode must be a 6-digit number",
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/serviceability"
 }
 ```
 
@@ -1039,15 +1725,48 @@ Get available delivery time slots.
       "id": 1,
       "startTime": "07:00",
       "endTime": "09:00",
-      "label": "Morning"
+      "label": "Morning",
+      "available": true,
+      "remaining": 15
     },
     {
       "id": 2,
       "startTime": "09:00",
       "endTime": "12:00",
-      "label": "Mid-Morning"
+      "label": "Mid-Morning",
+      "available": true,
+      "remaining": 8
+    },
+    {
+      "id": 3,
+      "startTime": "12:00",
+      "endTime": "15:00",
+      "label": "Afternoon",
+      "available": false,
+      "remaining": 0
     }
   ]
+}
+```
+
+**Error Responses:**
+```json
+// 200 OK - No slots available for date
+{
+  "slots": []
+}
+
+// 400 Bad Request - Missing parameters
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "serviceAreaId", "message": "Service area ID is required" },
+    { "field": "date", "message": "Date is required in YYYY-MM-DD format" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/delivery/slots"
 }
 ```
 
@@ -1075,7 +1794,6 @@ POST /api/v1/webhooks/chargebee
 | `subscription.cancelled` | Subscription cancelled |
 | `invoice.created` | Invoice generated |
 | `invoice.paid` | Payment received |
-| `invoice.failed` | Payment failed |
 | `payment.succeeded` | Payment successful |
 | `payment.failed` | Payment failed |
 
@@ -1084,6 +1802,26 @@ POST /api/v1/webhooks/chargebee
 ```
 X-Chargebee-Signature: t=<timestamp>,v1=<hmac_signature>
 ```
+
+**Error Responses:**
+```json
+// 401 Unauthorized - Invalid signature
+{
+  "status": 401,
+  "message": "Invalid webhook signature",
+  "errorCode": "AUTH_003",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/v1/webhooks/chargebee"
+}
+
+// 200 OK - Duplicate event (idempotent)
+{
+  "status": "skipped",
+  "message": "Event already processed"
+}
+```
+
+> **Note:** Webhook processing is **idempotent**. Duplicate events are detected by `event.id` and silently skipped with a 200 OK response. All webhook processing is non-blocking and best-effort.
 
 ---
 
@@ -1119,9 +1857,31 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Responses:**
-- `401 Unauthorized` — User not authenticated
-- `400 Bad Request` — Chargebee customer ID not found
-- `500 Internal Server Error` — Failed to fetch ledger
+```json
+// 200 OK - No bottle data
+{
+  "status": "success",
+  "data": []
+}
+
+// 401 Unauthorized — User not authenticated
+{
+  "status": 401,
+  "message": "Authentication required",
+  "errorCode": "AUTH_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/bottles/ledger"
+}
+
+// 400 Bad Request — Chargebee customer ID not found
+{
+  "status": 400,
+  "message": "Billing account not found. Please contact support.",
+  "errorCode": "PAY_002",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/bottles/ledger"
+}
+```
 
 **cURL Example:**
 ```bash
@@ -1158,6 +1918,16 @@ Get the raw bottle transaction history for the authenticated user. Optionally fi
       "updatedAt": "2026-05-25T10:00:00Z"
     }
   ]
+}
+```
+
+**Error Responses:**
+```json
+// 200 OK - No transactions
+{
+  "status": "success",
+  "count": 0,
+  "data": []
 }
 ```
 
@@ -1206,6 +1976,21 @@ Record bottles returned by the customer.
 }
 ```
 
+**Error Responses:**
+```json
+// 400 Bad Request - Invalid quantity
+{
+  "status": 400,
+  "message": "Validation error",
+  "errors": [
+    { "field": "quantity", "message": "Quantity must be positive" }
+  ],
+  "errorCode": "VAL_001",
+  "timestamp": "2026-03-27T10:30:00Z",
+  "path": "/api/bottles/return"
+}
+```
+
 **cURL Example:**
 ```bash
 curl -X POST http://localhost:8080/api/bottles/return \
@@ -1235,7 +2020,7 @@ Report bottles as broken or lost.
   "status": "success",
   "message": "Bottle broken/lost reported successfully",
   "data": {
-    "id": 11,
+    "id": 10,
     "orderId": "cb_order_xxx",
     "customerId": "cb_cus_xxx",
     "bottleType": "glass_500ml",
@@ -1248,19 +2033,48 @@ Report bottles as broken or lost.
 }
 ```
 
-**cURL Example:**
-```bash
-curl -X POST http://localhost:8080/api/bottles/broken \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"orderId": "cb_order_xxx", "bottleType": "glass_500ml", "quantity": 2}'
-```
+---
+
+## Timeout & Retry Behavior
+
+### Default Timeouts
+
+| Layer | Default Timeout | Configurable? | Location |
+|-------|----------------|---------------|----------|
+| Flutter HTTP client | 30 seconds | Yes | `UserRepository` in `lush/lib` |
+| bmjServer API | 10 seconds (inbound) | Yes | `application.properties` (`server.servlet.session.timeout`) |
+| bmjServer → Chargebee | 15 seconds | Yes | `ChargebeeClient` configuration |
+| ADB Exec (Appium) | 20 seconds | Yes | `appium_test/conftest.py` |
+
+### Retry Strategy
+
+| Scenario | Retry Count | Backoff | Notes |
+|----------|-------------|---------|-------|
+| Network timeout (Flutter → bmjServer) | 2 retries | 1s, 3s exponential | Only for idempotent GET requests |
+| bmjServer → Chargebee timeout | 1 retry | 2s | For critical operations only (checkout, subscription actions) |
+| Webhook processing failure | 3 retries | 5s, 30s, 5min exponential | Chargebee retries webhooks automatically |
+| Appium element not found | Implicit: 10s | — | Set in `WebDriverWait` |
+| OTP verification | No retry | — | User must manually request new OTP |
+
+### Client-Side Error Handling
+
+| HTTP Status | Flutter Behavior |
+|-------------|------------------|
+| 400 | Show validation error message from `errors[]` array. Do NOT navigate. |
+| 401 | Attempt silent refresh via `/api/auth/refresh`. If fails → show public Dashboard with toast. |
+| 403 | Show "Access denied" dialog. Do NOT retry. |
+| 404 | Show "Not found" message. Offer navigation back. |
+| 409 | Show conflict resolution dialog (e.g., "Your cart has subscription items. Clear cart to add one-time items?"). |
+| 429 | Show "Too many requests. Please wait." with retry-after countdown. |
+| 500+ | Show "Something went wrong. Please try again." with retry button. |
 
 ---
 
 ## Error Handling
 
 ### Standard Error Response Format
+
+All error responses follow this standard format:
 
 ```json
 {
@@ -1285,35 +2099,37 @@ curl -X POST http://localhost:8080/api/bottles/broken \
 | 200 | OK | Request successful |
 | 201 | Created | Resource created |
 | 204 | No Content | Successful, no content |
-| 400 | Bad Request | Invalid request |
-| 401 | Unauthorized | Authentication required |
+| 400 | Bad Request | Invalid request (validation, missing fields, invalid credentials) |
+| 401 | Unauthorized | Authentication required (missing, expired, or invalid token) |
 | 403 | Forbidden | Insufficient permissions |
 | 404 | Not Found | Resource not found |
 | 409 | Conflict | Resource conflict (e.g., mixed cart types) |
-| 422 | Unprocessable Entity | Validation error |
+| 422 | Unprocessable Entity | Validation error (alternative to 400 for some endpoints) |
 | 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Server Error | Server error |
-| 502 | Bad Gateway | Upstream error |
-| 503 | Service Unavailable | Service down |
+| 500 | Internal Server Error | Server error (unhandled exception) |
+| 502 | Bad Gateway | Upstream error (e.g., Chargebee unreachable) |
+| 503 | Service Unavailable | Service down (e.g., database connection lost) |
 
 ### Error Codes
 
 | Error Code | Description | Resolution |
 |------------|-------------|------------|
 | `AUTH_001` | Invalid credentials | Check username/password |
-| `AUTH_002` | Token expired | Re-authenticate via /api/v1/auth/signin |
-| `AUTH_003` | Invalid token | Re-authenticate |
+| `AUTH_002` | Token expired | Re-authenticate via /api/v1/auth/signin or /api/auth/refresh |
+| `AUTH_003` | Invalid token / Insufficient permissions | Re-authenticate |
 | `USER_001` | User not found | Register first |
 | `USER_002` | Email already exists | Use different email |
 | `SUB_001` | Subscription not found | Check subscription ID |
-| `SUB_002` | Subscription already active | No action needed |
-| `SUB_003` | Subscription already paused | Already paused |
-| `ORD_001` | Order not found | Check order ID |
-| `ORD_002` | Insufficient stock | Try different product |
+| `SUB_002` | Subscription state error (e.g., after 9 PM cutoff) | Try again tomorrow |
+| `SUB_003` | Subscription already in target state (paused/cancelled) | No action needed |
+| `ORD_001` | Order/product not found | Check order/product ID |
+| `ORD_002` | Insufficient stock / Cart empty | Try different product or add items |
 | `PAY_001` | Payment failed | Retry payment |
-| `PAY_002` | Payment pending | Wait for confirmation |
-| `VAL_001` | Validation error | Fix request data |
-| `SYS_001` | System error | Contact support |
+| `PAY_002` | Payment pending / No Chargebee customer ID | Wait for confirmation or contact support |
+| `VAL_001` | Validation error | Fix request data per errors[] array |
+| `CART_TYPE_CONFLICT` | Mixed cart types (one-time + subscription) | Clear one cart type first |
+| `RATE_LIMIT_EXCEEDED` | Rate limit hit | Wait for retryAfter seconds |
+| `SYS_001` | System error (generic) | Contact support |
 
 ---
 
@@ -1323,7 +2139,8 @@ curl -X POST http://localhost:8080/api/bottles/broken \
 
 | Endpoint Category | Limit | Window |
 |-------------------|-------|--------|
-| Authentication | 10 requests | per minute |
+| Authentication (signin, signup) | 10 requests | per minute |
+| OTP (request, verify) | 5 requests | per 5 minutes per IP |
 | General API | 100 requests | per minute |
 | Order Placement | 5 requests | per minute |
 | Chargebee Endpoints | Based on plan | per minute |
@@ -1343,7 +2160,7 @@ Retry-After: 60
 {
   "timestamp": "2026-03-27T10:30:00Z",
   "status": 429,
-  "message": "Rate limit exceeded",
+  "message": "Rate limit exceeded. Please wait before retrying.",
   "errorCode": "RATE_LIMIT_EXCEEDED",
   "retryAfter": 60,
   "path": "/api/v1/endpoint"
@@ -1352,159 +2169,5 @@ Retry-After: 60
 
 ---
 
-## SDKs & Examples
-
-### Flutter Example
-
-```dart
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-class ApiService {
-  static const String baseUrl = 'http://localhost:8080/api/v1';
-  String? _accessToken;
-  
-  // Login
-  Future<Map<String, dynamic>> login(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/auth/signin'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': email,
-        'password': password,
-      }),
-    );
-    
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      _accessToken = data['accessToken'];
-      return data;
-    } else {
-      throw ApiException('Login failed: ${response.body}');
-    }
-  }
-  
-  // Get Profile
-  Future<Map<String, dynamic>> getProfile() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/user/profile'),
-      headers: {
-        'Authorization': 'Bearer $_accessToken',
-        'Accept': 'application/json',
-      },
-    );
-    
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw ApiException('Failed to get profile');
-    }
-  }
-  
-  // Get Products
-  Future<List<dynamic>> getProducts() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/products'),
-      headers: {'Accept': 'application/json'},
-    );
-    
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['products'];
-    } else {
-      throw ApiException('Failed to get products');
-    }
-  }
-}
-
-class ApiException implements Exception {
-  final String message;
-  ApiException(this.message);
-  
-  @override
-  String toString() => message;
-}
-```
-
-### cURL Examples
-
-```bash
-# Login (canonical endpoint)
-curl -X POST http://localhost:8080/api/v1/auth/signin \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "user@example.com",
-    "password": "SecurePass123!"
-  }'
-
-# Get Profile
-curl -X GET http://localhost:8080/api/v1/user/profile \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Accept: application/json"
-
-# Get Products
-curl -X GET http://localhost:8080/api/v1/products \
-  -H "Accept: application/json"
-
-# Initiate Checkout (V2 - cart-based)
-curl -X POST http://localhost:8080/api/v2/checkout \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json"
-
-# Add Address (canonical)
-curl -X POST http://localhost:8080/api/v1/address \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "label": "Home",
-    "fullName": "John Doe",
-    "phone": "9876543210",
-    "addressLine1": "123 Main St",
-    "city": "Bangalore",
-    "state": "Karnataka",
-    "pincode": "560001"
-  }'
-
-# Check Pincode Serviceability
-curl -X GET "http://localhost:8080/api/v1/serviceability?pincode=400001" \
-  -H "Accept: application/json"
-
-# Bottle Tracking - Get Ledger
-curl -X GET http://localhost:8080/api/bottles/ledger \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Accept: application/json"
-
-# Bottle Tracking - Get Transactions
-curl -X GET http://localhost:8080/api/bottles/transactions \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-
-# Bottle Tracking - Record Return
-curl -X POST http://localhost:8080/api/bottles/return \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"orderId": "cb_order_xxx", "bottleType": "glass_500ml", "quantity": 5}'
-
-# Bottle Tracking - Report Broken
-curl -X POST http://localhost:8080/api/bottles/broken \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"orderId": "cb_order_xxx", "bottleType": "glass_500ml", "quantity": 2}'
-```
-
----
-
-## Swagger/OpenAPI Documentation
-
-Interactive API documentation is available at:
-
-- **Development:** http://localhost:8080/swagger-ui.html
-- **Staging:** https://staging-api.bookmyjuice.co.in/swagger-ui.html
-- **Production:** https://api.bookmyjuice.co.in/swagger-ui.html
-
-**OpenAPI JSON Spec:**
-- http://localhost:8080/v3/api-docs
-
----
-
-*Last Updated: May 26, 2026*
+*Last Updated: June 8, 2026*
 *API Version: 1.0.0*

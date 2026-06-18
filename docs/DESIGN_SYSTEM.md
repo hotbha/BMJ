@@ -12,8 +12,12 @@
 - [Icons](#icons)
 - [Components](#components)
 - [Patterns](#patterns)
+- [Glassmorphism Design (v2.0)](#glassmorphism-design-v20)
 - [Accessibility](#accessibility)
 - [Resources](#resources)
+- [Appendix A: Color Token Usage & Statistics](#appendix-a-color-token-usage--statistics)
+- [Appendix B: Flutter Integration Map](#appendix-b-flutter-integration-map)
+- [Appendix C: Implementation Checklist](#appendix-c-implementation-checklist)
 
 ---
 
@@ -1028,76 +1032,6 @@ class MainNavigation extends StatelessWidget {
 
 ---
 
-## Accessibility
-
-### WCAG 2.1 AA Compliance
-
-**Color Contrast:**
-- Normal text: 4.5:1 minimum
-- Large text (18px+ or 14px+ bold): 3:1 minimum
-- UI components: 3:1 minimum
-
-**Touch Targets:**
-- Minimum size: 48x48dp
-- Spacing between targets: 8dp minimum
-
-**Screen Reader Support:**
-```dart
-// Add semantics to custom widgets
-Semantics(
-  label: 'Add to cart button',
-  hint: 'Double tap to add product to your cart',
-  button: true,
-  child: AppButton.primary(
-    text: 'Add to Cart',
-    onPressed: () {},
-  ),
-)
-
-// For images
-Image(
-  image: AssetImage('assets/product.png'),
-  semanticLabel: 'Fresh Orange Juice bottle',
-)
-```
-
-**Dynamic Text Size:**
-```dart
-// Use MediaQuery for responsive text
-final textScaler = MediaQuery.of(context).textScaler;
-
-Text(
-  'Welcome to BookMyJuice',
-  style: TextStyle(
-    fontSize: textScaler.scale(16),
-  ),
-)
-```
-
----
-
-## Resources
-
-### Design Files
-- Figma: [Link to design file]
-- Adobe XD: [Link to design file]
-
-### Code Repositories
-- Frontend: `x:\BMJ\lush`
-- Design System Package: `x:\BMJ\lush\lib\theme.dart`
-
-### Tools
-- Color Contrast Checker: [WebAIM](https://webaim.org/resources/contrastchecker/)
-- Material Design Color Tool: [Material.io](https://material.io/design/color/)
-- Flutter Widget Catalog: [Flutter.dev](https://flutter.dev/docs/development/ui/widgets)
-
-### Contact
-For design system questions or contributions:
-- Slack: #bookmyjuice-design
-- Email: design@bookmyjuice.co.in
-
----
-
 ## Glassmorphism Design (v2.0)
 
 > Implemented April 2026 — a premium glassmorphism design layer on top of the core design system, applied to the Dashboard, Menu, Orders, and Profile screens.
@@ -1234,5 +1168,296 @@ Both light and dark themes fully support glassmorphism. The `ThemeCubit` provide
 
 ---
 
-*Last Updated: May 29, 2026*
+## Accessibility
+
+### WCAG 2.1 AA Compliance
+
+**Color Contrast:**
+- Normal text: 4.5:1 minimum
+- Large text (18px+ or 14px+ bold): 3:1 minimum
+- UI components: 3:1 minimum
+
+**Touch Targets:**
+- Minimum size: 48x48dp
+- Spacing between targets: 8dp minimum
+
+**Screen Reader Support:**
+```dart
+// Add semantics to custom widgets
+Semantics(
+  label: 'Add to cart button',
+  hint: 'Double tap to add product to your cart',
+  button: true,
+  child: AppButton.primary(
+    text: 'Add to Cart',
+    onPressed: () {},
+  ),
+)
+
+// For images
+Image(
+  image: AssetImage('assets/product.png'),
+  semanticLabel: 'Fresh Orange Juice bottle',
+)
+```
+
+**Dynamic Text Size:**
+```dart
+// Use MediaQuery for responsive text
+final textScaler = MediaQuery.of(context).textScaler;
+
+Text(
+  'Welcome to BookMyJuice',
+  style: TextStyle(
+    fontSize: textScaler.scale(16),
+  ),
+)
+```
+
+---
+
+## Resources
+
+### Design Files
+- Figma: [Link to design file]
+- Adobe XD: [Link to design file]
+
+### Code Repositories
+- Frontend: `x:\BMJ\lush`
+- Design System Package: `x:\BMJ\lush\lib\theme.dart`
+
+### Tools
+- Color Contrast Checker: [WebAIM](https://webaim.org/resources/contrastchecker/)
+- Material Design Color Tool: [Material.io](https://material.io/design/color/)
+- Flutter Widget Catalog: [Flutter.dev](https://flutter.dev/docs/development/ui/widgets)
+
+### Contact
+For design system questions or contributions:
+- Slack: #bookmyjuice-design
+- Email: design@bookmyjuice.co.in
+
+---
+
+## Appendix A: Color Token Usage & Statistics
+
+### Canonical Color Class Name
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `lush/lib/theme/app_colors.dart` |
+| **Declaration** | `class AppColors { AppColors._(); … }` |
+| **Import** | `package:flutter/material.dart` |
+| **Project uses** | **30** `.dart` files reference `AppColors.*` tokens |
+
+### Legacy Shim: `LushTheme`
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `lush/lib/theme.dart` |
+| **Status** | **DEPRECATED** — see migration table below |
+| **Project uses** | **10** `.dart` files still reference `LushTheme.*` |
+
+### Legacy `LushTheme.*` → Canonical `AppColors.*` Migration Table
+
+| Legacy (`LushTheme.*`) | Canonical (`AppColors.*`) | Files affected |
+|-------------------------|---------------------------|----------------|
+| `LushTheme.orangeAccent` | `AppColors.primaryOrange` | `app_card.dart`, `cart_icon.dart`, `dashboard_components.dart`, `filter_options.dart`, `size_selection_modal.dart`, `subscription_info_card.dart`, `subscription_plan_card.dart`, `welcome_header.dart` |
+| `LushTheme.background` | `AppColors.lightBackground` | `theme_extensions.dart`, `dashboard_components.dart` |
+| `LushTheme.white` | `AppColors.white` | `app_card.dart`, `item_card_view.dart` |
+| `LushTheme.nearlyWhite` | `AppColors.offWhite` | `theme_extensions.dart` |
+| `LushTheme.darkerText` | `AppColors.lightTextPrimary` | `theme_extensions.dart` |
+| `LushTheme.lightText` | `AppColors.lightTextSecondary` | `theme_extensions.dart` |
+| `LushTheme.grey` | `AppColors.grey` | (in widgets; check references) |
+| `LushTheme.appbarColor` | `AppColors.primaryOrange` | (in widgets; check references) |
+| `LushTheme.nearlyBlue` | `AppColors.info` | `theme_extensions.dart` |
+| `LushTheme.nearlyDarkBlue` | `AppColors.secondaryTealDark` | (in widgets; check references) |
+| `LushTheme.fontName` (string) | `AppTextStyles.fontFamily` | `detailed_juice_card.dart`, `item_card_view.dart` |
+
+### Usage Statistics (AppColors tokens in screen files)
+
+| Token | Reference count |
+|-------|:---------------:|
+| `primaryOrange` | **113** |
+| `white` | **101** |
+| `lightTextPrimary` | **58** |
+| `lightTextSecondary` | **49** |
+| `error` | **34** |
+| `grey` | **30** |
+| `success` | **28** |
+| `info` | **24** |
+| `darkGrey` | **20** |
+| `lightDivider` | **17** |
+| `primaryOrangeDark` | **16** |
+| `nearlyBlack` | **9** |
+| `lightBackground` | **8** |
+| `lightGrey` | **7** |
+| `secondaryTeal` | **5** |
+| `white54` | **4** |
+| `white70` | **4** |
+| `gradientEnd` | **3** |
+| `gradientStart` | **2** |
+| `lightTextDisabled` | **2** |
+| `lightSurface` | **1** |
+
+---
+
+## Appendix B: Flutter Integration Map
+
+### Color Token → Flutter Mapping
+
+| Design Token | Hex | Flutter Constant | ThemeData Key |
+|-------------|-----|-----------------|---------------|
+| Primary Orange | `#FF8C42` | `AppColors.primaryOrange` | `colorScheme.primary` |
+| Primary Orange Dark | `#E67E3A` | `AppColors.primaryOrangeDark` | `colorScheme.primaryContainer` |
+| Primary Orange Light | `#FFA96A` | `AppColors.primaryOrangeLight` | — |
+| Secondary Teal | `#4ECDC4` | `AppColors.secondaryTeal` | `colorScheme.secondary` |
+| Secondary Teal Dark | `#45B7AF` | `AppColors.secondaryTealDark` | `colorScheme.secondaryContainer` |
+| Success | `#4CAF50` | `AppColors.success` | — |
+| Warning | `#FFC107` | `AppColors.warning` | — |
+| Error | `#F44336` | `AppColors.error` | `colorScheme.error` |
+| Info | `#2196F3` | `AppColors.info` | — |
+
+### Light Theme — ThemeData Roles
+
+| Role | Value | Code |
+|------|-------|------|
+| scaffoldBackground | `#FAFAFA` | `AppTheme.light.scaffoldBackgroundColor` |
+| surface | `#FFFFFF` | `colorScheme.surface` |
+| card | `#FFFFFF` | `cardTheme.color` |
+| divider | `#E0E0E0` | `dividerTheme.color` |
+| primary text | `#213333` | `on(primary/surface)` |
+| secondary text | `#424242` | `onSurfaceVariant` |
+
+### Dark Theme — ThemeData Roles
+
+| Role | Value | Code |
+|------|-------|------|
+| scaffoldBackground | `#121212` | `AppTheme.dark.scaffoldBackgroundColor` |
+| surface | `#1E1E1E` | `colorScheme.surface` |
+| card | `#1E1E1E` | `cardTheme.color` |
+| divider | `#2C2C2C` | `dividerTheme.color` |
+| primary text | `#FEFEFE` | `on(primary/surface)` |
+| secondary text | `#B0B0B0` | `onSurfaceVariant` |
+
+### Typography → TextTheme Mapping
+
+| Token | Size/Weight | Flutter `TextTheme` |
+|-------|-------------|-------------------|
+| Display Large | 57px/400 | `displayLarge` |
+| Display Medium | 45px/400 | `displayMedium` |
+| Headline Large | 32px/600 | `headlineLarge` |
+| Headline Medium | 28px/600 | `headlineMedium` |
+| Title Large | 22px/500 | `titleLarge` |
+| Title Medium | 16px/500, 0.15sp | `titleMedium` |
+| Body Large | 16px/400, 0.5sp | `bodyLarge` |
+| Body Medium | 14px/400, 0.25sp | `bodyMedium` |
+| Label Large | 14px/500, 0.1sp | `labelLarge` |
+| Label Small | 11px/500, 0.5sp | `labelSmall` |
+
+### Spacing → Flutter Mapping
+
+| Token | dp | Flutter |
+|-------|----|---------|
+| `space.xs` | 4 | `AppSpacing.xs` |
+| `space.sm` | 8 | `AppSpacing.sm` |
+| `space.md` | 16 | `AppSpacing.md` |
+| `space.lg` | 24 | `AppSpacing.lg` |
+| `space.xl` | 32 | `AppSpacing.xl` |
+| `space.xxl` | 48 | `AppSpacing.xxl` |
+| `space.xxxl` | 64 | `AppSpacing.xxxl` |
+
+### Component Theme Mapping
+
+| Component | Token | ThemeData Key |
+|-----------|-------|---------------|
+| Primary Button | bg: orange `#FF8C42`, fg: white, radius: 12 | `elevatedButtonTheme` |
+| Secondary Button | bg: transparent, border: orange, radius: 12 | `outlinedButtonTheme` |
+| Text Button | fg: grey | `textButtonTheme` |
+| Input Field | fill: white, border: grey, radius: 12, focus: orange | `inputDecorationTheme` |
+| Card | radius: 16, elevation: 2 | `cardTheme` |
+| App Bar | bg: surface, fg: primary | `appBarTheme` |
+| Bottom Nav | indicator: orange | `navigationBarTheme` |
+| Snackbar | bg: dark, fg: white, radius: 8 | `snackBarTheme` |
+
+### Glassmorphism Color Tokens
+
+| Token | Hex (Dark) | Hex (Light) | Flutter Constant |
+|-------|-----------|------------|-----------------|
+| Glass Background | `#0A0F0D` | `#F0F5F2` | `AppColors.glassBg` / `glassBgLight` |
+| Glass Elevated | `#0F1613` | `#EAF0EC` | `AppColors.glassElevated` / `glassElevatedLight` |
+| Glass Surface | 6% white | 40% white | `AppColors.glassSurface` / `glassSurfaceLight` |
+| Glass Surface Strong | 8% white | — | `AppColors.glassSurfaceStrong` |
+| Glass Border | 12% white | 20% black | `AppColors.glassBorder` / `glassBorderLight` |
+| Glass Border Subtle | 8% white | — | `AppColors.glassBorderSubtle` |
+| Glass Text Primary | `#E8F5E9` | text-primary | `AppColors.glassText` |
+| Glass Text Dim | `#9FB0A8` | text-secondary | `AppColors.glassTextDim` |
+| Glass Accent Green | `#22C55E` | — | `AppColors.glassAccent` |
+| Glass Accent Dark | `#16A34A` | — | `AppColors.glassAccentDark` |
+| Glass Orange | `#FB923C` | — | `AppColors.glassOrange` |
+| Glass Pink | `#F472B6` | — | `AppColors.glassPink` |
+| Glass Purple | `#A78BFA` | — | `AppColors.glassPurple` |
+| Glass Glow Shadow | 25% neon green | — | `AppColors.glassGlow` |
+
+### Border Radius Tokens
+
+| Token | dp | Flutter Constant | Usage |
+|-------|----|-----------------|-------|
+| sm | 8 | `AppRadius.sm` | Chips, snackbars |
+| md | 12 | `AppRadius.md` | Buttons, inputs, cards |
+| lg | 16 | `AppRadius.lg` | Bottom sheets, large cards |
+| xl | 24 | `AppRadius.xl` | Glass cards, hero cards, modals |
+| xxl | 32 | `AppRadius.xxl` | Bottom nav inner, large containers |
+| circular | 48 | `AppRadius.circular` | Circular/pill shapes |
+
+### Glassmorphism Widgets
+
+| Widget | File | Description |
+|--------|------|-------------|
+| `GlassCard` | `lib/widgets/glass_card.dart` | Reusable glassmorphism container with configurable blur/opacity/glow/gradient |
+| `GlassChip` | `lib/widgets/glass_card.dart` | Glassmorphism category chip with selected state |
+| `GlassSegmentToggle` | `lib/widgets/glass_card.dart` | Glassmorphism segment control (One-Time / Subscribe) |
+| `CartBadgeIcon` | `lib/widgets/cart_badge_icon.dart` | Shopping bag icon with neon green badge count via `BlocBuilder<CartBloc>` |
+
+### File Structure
+
+```
+lush/lib/theme/
+├── app_colors.dart        # Color constants (incl. glass tokens)
+├── app_text_styles.dart   # Text theme factory
+├── app_spacing.dart       # Spacing constants
+├── app_radius.dart        # Border radius constants (v2.0)
+├── app_icons.dart         # Icon constants
+├── app_theme.dart         # Light + dark ThemeData
+└── theme_cubit.dart       # Theme state management
+
+lush/lib/widgets/
+├── glass_card.dart        # GlassCard, GlassChip, GlassSegmentToggle (v2.0)
+└── cart_badge_icon.dart   # CartBadgeIcon (v2.0)
+```
+
+---
+
+## Appendix C: Implementation Checklist
+
+- [x] `app_colors.dart` — all color tokens from DESIGN_SYSTEM.md + glassmorphism tokens
+- [x] `app_text_styles.dart` — type scale from DESIGN_SYSTEM.md
+- [x] `app_spacing.dart` — spacing scale from DESIGN_SYSTEM.md
+- [x] `app_icons.dart` — icon constants from DESIGN_SYSTEM.md
+- [x] `app_radius.dart` — border radius tokens (sm, md, lg, xl, xxl, circular)
+- [x] `app_theme.dart` — light + dark Material3 ThemeData
+- [x] `theme_cubit.dart` — theme preference persistence
+- [x] `main.dart` — wrapped with ThemeCubit, BlocProvider, MaterialApp.themeMode
+- [x] `glass_card.dart` — GlassCard, GlassChip, GlassSegmentToggle widgets
+- [x] `cart_badge_icon.dart` — CartBadgeIcon with BlocBuilder<CartBloc>
+- [x] `dashboard.dart` — glassmorphism shell with IndexedStack + 4 tabs
+- [x] `home_tab.dart` — Home tab with glass cards, subscription, stats strip
+- [x] `menu_tab.dart` — Menu tab with One-Time + Subscribe segment toggle
+- [x] `orders_tab.dart` — Orders tab with glass history tiles
+- [x] `profile_tab.dart` — Profile tab with theme toggle, glass avatar
+- [ ] Delete `lush/lib/theme.dart` (legacy)
+- [ ] Tests added for theme, cubit, and glass widgets
+
+---
+
+*Last Updated: June 8, 2026*
 *Version: 2.0.0*

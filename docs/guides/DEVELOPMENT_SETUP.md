@@ -62,7 +62,7 @@ Verify: `curl http://localhost:8080/api/health`
 ## 5. Run Flutter
 
 ```
-cd bmjApp
+cd lush
 flutter pub get
 flutter run
 ```
@@ -74,13 +74,13 @@ Set API URL in lib/service/bmj_service.dart.
 ## 6. Tests
 
 Backend: `cd bmjServer && mvn test`
-Flutter: `cd bmjApp && flutter test`
+Flutter: `cd lush && flutter test`
 
 ---
 
 ## 7. Build
 
-APK: `cd bmjApp && flutter build apk --release`
+APK: `cd lush && flutter build apk --release`
 JAR: `cd bmjServer && mvn clean package -DskipTests`
 
 ---
@@ -98,7 +98,7 @@ PRs: branch from main, squash-merge
 ```
 BMJ/
 ├── bmjServer/   # Spring Boot
-├── bmjApp/      # Flutter
+├── lush/        # Flutter
 ├── docs/        # BRD, guides, strategies
 ├── .github/     # CI, conventions
 ├── CHANGELOG.md

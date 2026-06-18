@@ -1,9 +1,9 @@
 # BookMyJuice - Functional Specification
 
-**Document Version:** 1.0 (Consolidated)
-**Date:** April 11, 2026
-**Linked to:** BRD_Business_Requirements.md, API.md
-**Status:** ✅ Approved for Development
+**Document Version:** 1.2
+**Date:** June 8, 2026
+**Linked to:** BRD_Business_Requirements.md, API.md, AUTH_REQUIREMENTS.md
+**Status:** ✅ Updated for Auth v2.1 Consistency
 
 ---
 
@@ -114,9 +114,10 @@ Flutter App → bmjServer → MySQL (local cache) → Response
 
 ### Authentication
 - JWT Bearer token in `Authorization` header
-- Token expiry: 30 days (no refresh token workflow)
-- Token stored in SharedPreferences
-- **Auto-login:** Checks ONLY token validity via `GET /api/v1/auth/me`. Does NOT invoke Google Sign-In or phone OTP. If token expired/missing → show Dashboard in public mode with toast notification: "Session expired. Please sign in again."
+- Token expiry: **30 days (2592000000 ms)** — refresh via `POST /api/auth/refresh` with stored credentials
+- Token stored in **FlutterSecureStorage** (key: `bmj_jwt`)
+- **Splash Screen:** On app start, a splash screen is shown until the Dashboard loads completely and auto-login check completes.
+- **Auto-login:** On app start → show splash screen → read JWT from `FlutterSecureStorage` → if valid and not expired → `GET /api/v1/auth/me` → emit `AuthAuthenticated` → Dashboard. If expired → `POST /api/auth/refresh` with stored credentials → if refresh succeeds → emit `AuthAuthenticated` → Dashboard. If refresh fails (no stored credentials, backend down, SocketException) → emit `AutoLoginFailed` → Dashboard (public/guest mode) with toast: *"Session expired. Please sign in again."* Does NOT invoke Google Sign-In or phone OTP automatically.
 - **Google Sign-In:** Triggered ONLY when user taps Google or Sign In button on Dashboard/Login screen. Never auto-invoked.
 - **Phone Sign-In:** Triggered ONLY when user taps Phone button on Dashboard/Login screen. Never auto-invoked.
 - **Default Landing:** ALL users (new and existing) land on Dashboard. New users see public mode with catalog preview. Existing users see Dashboard after successful auto-login attempt. If auto-login fails, Dashboard in public mode is shown with a toast notification.
@@ -124,10 +125,11 @@ Flutter App → bmjServer → MySQL (local cache) → Response
 ### Login Flow Decision Tree
 ```
 User opens app
-  → Always show Dashboard (public mode) immediately
-  → In parallel, auto-login checks JWT token in SharedPreferences
+  → Show splash screen → Always show Dashboard (public mode) immediately
+  → In parallel, auto-login checks JWT token in FlutterSecureStorage
     → Valid token + server confirms → Upgrade to Dashboard (full/authenticated mode)
-    → Expired/missing → Stay on Dashboard (public mode) with toast: "Session expired"
+    → Expired → POST /api/auth/refresh with stored credentials → if success → Dashboard (full)
+    → If refresh fails (SocketException, expired stored creds) → Dashboard (public) with toast: "Session expired. Please sign in again."
 
 Dashboard (Public Mode)
   → User sees promotions, plans, catalog preview, and "Sign In" button
@@ -144,10 +146,41 @@ Dashboard (Public Mode)
 
 ### 3.1 Unified Signup Flow
 
-Three entry points converging to same data collection:
-1. **Email-First:** Email → Verify → Phone → Verify OTP → Address → Password
-2. **Phone-First:** Phone → Verify OTP → Email → Verify → Address → Password  
-3. **Google:** Google Auth (email verified) → Phone → Verify OTP → Address → Password
+The signup flow supports 3 entry points with 12 screens total, all routed from the Dashboard (user taps Sign In → selects signup):
+
+**Screen Map (10 dedicated screens + 2 shared):**
+
+| Route | Screen | Entry Points | Purpose |
+|-------|--------|-------------|---------|
+| `/signup-method-selection` | `SignupMethodSelectionScreen` | All | Email / Phone / Google choice |
+| `/email-signup` | `EmailSignupScreen` | Email-First | Enter email + password |
+| `/email-verification` | `EmailVerificationScreen` | Email-First, Phone-First | Verify 6-digit email code |
+| `/phone-entry-after-email` | `PhoneEntryAfterEmailScreen` | Email-First | Enter phone number |
+| `/phone-signup` | `PhoneSignupScreen` | Phone-First | Enter phone + password |
+| `/phone-otp-verification` | `PhoneOtpVerificationScreen` | Phone-First, Google | Verify 6-digit phone OTP |
+| `/email-entry-after-phone` | `EmailEntryAfterPhoneScreen` | Phone-First | Enter email address |
+| `/email-verification-after-phone` | `EmailVerificationAfterPhoneScreen` | Phone-First | Verify 6-digit email code |
+| `/google-signup` | `GoogleSignupScreen` | Google | Pre-filled Google profile |
+| `/google-phone-entry` | `GooglePhoneEntryScreen` | Google | Enter phone number |
+| `/address-entry` | `AddressEntryScreen` | All | Delivery address capture |
+| `/create-password` | `CreatePasswordScreen` | All | Set password (prior to address, all entry types) |
+
+**Entry Point A: Email-First (8 steps)**
+```
+/signup-method-selection → /email-signup → /email-verification → /phone-entry-after-email → /phone-otp-verification → /create-password → /address-entry → Dashboard
+```
+
+**Entry Point B: Phone-First (8 steps)**
+```
+/signup-method-selection → /phone-signup → /phone-otp-verification → /email-entry-after-phone → /email-verification-after-phone → /create-password → /address-entry → Dashboard
+```
+
+**Entry Point C: Google (7 steps)**
+```
+/signup-method-selection → /google-signup → /google-phone-entry → /phone-otp-verification → /create-password → /address-entry → Dashboard
+```
+
+All routes converge to Dashboard with a success toast: "Registration Successful! Welcome to BookMyJuice! Start exploring fresh juices."
 
 ### 3.2 API Endpoints
 
@@ -679,10 +712,11 @@ lush/
 ```
 
 ### 12.3 Token Management
-- JWT token stored in SharedPreferences
+- JWT token stored in **FlutterSecureStorage** (key: `bmj_jwt`)
 - Retrieved for all authenticated API calls
-- Auto-login on app launch if valid token exists
+- Auto-login on app launch: splash screen → read JWT → if valid → Dashboard; if expired → `POST /api/auth/refresh` → if success → Dashboard; if fails → public Dashboard with toast
 - Token cleared on logout or expiration
+- Refresh endpoint: `POST /api/auth/refresh` — accepts stored credentials, returns new JWT with fresh 30-day expiry
 
 ### 12.4 Cart Persistence
 - Guest cart: `cart_id` stored in SharedPreferences
@@ -694,5 +728,5 @@ lush/
 **Document Control:**
 - **Created:** April 11, 2026 (Consolidated)
 - **Updated:** May 25, 2026 (Dashboard-First Landing: Updated auto-login rules, login flow decision tree, default landing)
-- **Version:** 1.1
-- **Status:** ✅ Updated for Dashboard-First Flow
+- **Version:** 1.2
+- **Status:** ✅ Updated for Auth v2.1 Consistency (JWT 30d, FlutterSecureStorage, refresh endpoint, splash screen, unified signup order)
