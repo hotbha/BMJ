@@ -33,7 +33,7 @@ This document provides detailed use case specifications for the BookMyJuice plat
 | Cart & Browsing | UC-01 to UC-02 | Product browsing and cart management |
 | Checkout | UC-03 to UC-04 | One-time and subscription checkout |
 | Subscription | UC-05 to UC-07 | Subscription pause, resume, cancel |
-| Order Management | UC-08 to UC-09 | Order history and invoice viewing |
+| Order Management | UC-08 to UC-10 | Profile management, order history, and invoice viewing |
 | Notifications | UC-10, UC-11 | Push notification handling (incl. FCM) |
 
 ---
@@ -659,7 +659,35 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 ## 7. Use Cases - Order Management
 
-### UC-08: View Order History
+### UC-08: View & Manage Profile (with Address Management)
+
+**Actor:** Authenticated User
+
+**Precondition:** User is logged in
+
+**Main Success Scenario:**
+
+1. User navigates to Profile tab in Dashboard
+2. System displays user avatar with initials, name, and email
+3. User taps on the name/email/avatar area → system navigates to User Profile screen
+4. System displays personal details: name, email, phone, referral code (if any)
+5. System loads all saved delivery addresses from `GET /api/v1/delivery/addresses`
+6. System displays each address with label tag (if set), address lines, city, pincode
+7. The current default address is highlighted with a "DEFAULT" badge and accent border
+8. User taps a non-default address → system calls `PATCH /api/v1/delivery/addresses/{id}/default`
+9. On success, system refreshes address list with the newly selected default highlighted
+10. User taps "Add" button → system navigates to Address Entry screen to add a new address
+11. After adding, system refreshes address list automatically
+
+**Postcondition:** User's default delivery address is updated; future checkouts will auto-select this address
+
+**Alternate Flows:**
+- No addresses saved yet → system shows empty state with "Add Address" prompt
+- Address loading fails → system silently shows empty state (user can still navigate to address entry)
+
+---
+
+### UC-09: View Order History
 
 **Actor:** Authenticated User
 
@@ -678,7 +706,7 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 ---
 
-### UC-09: View Invoice
+### UC-10: View Invoice
 
 **Actor:** Authenticated User
 
@@ -698,7 +726,7 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 ## 8. Use Cases - Notifications
 
-### UC-10: Push Notification Deep Link
+### UC-11: Push Notification Deep Link
 
 **Actor:** Authenticated User (app in background or closed)
 
@@ -715,7 +743,7 @@ This document provides detailed use case specifications for the BookMyJuice plat
 
 **Postcondition:** User sees failed order details and can retry payment or contact support
 
-### UC-11: FCM Foreground Notification Display
+### UC-12: FCM Foreground Notification Display
 
 **Goal:** Display FCM push notifications as local notifications when app is in foreground
 

@@ -1,39 +1,24 @@
-import sys, json
-from collections import Counter
+import json
 
-with open('chargebee_catalog.json') as f:
+with open(r'x:\BMJ\chargebee_catalog.json') as f:
     data = json.load(f)
 
-print('=== Item Families ===')
-for fam in data['itemFamilies']:
-    print(f'  {fam["id"]}: {fam["name"]} - {fam.get("description","")}')
-
-print()
-print('=== Items per Family ===')
-fam_counts = Counter(i['item_family_id'] for i in data['items'])
-for k, v in fam_counts.items():
-    print(f'  {k}: {v} items')
-print(f'  Total: {len(data["items"])} items')
-
-print()
-print('=== Items per Category (sample IDs) ===')
-for fam_id in ['delight', 'signature', 'premium']:
-    items = [i for i in data['items'] if i['item_family_id'] == fam_id]
-    print(f'  {fam_id}:')
-    for item in items[:3]:
-        print(f'    {item["id"]} - {item["name"]}')
-    if len(items) > 3:
-        print(f'    ... and {len(items)-3} more')
-
-prices = data.get('itemPrices', data.get('item_prices', []))
-print()
-print(f'=== Item Prices: {len(prices)} total ===')
-price_fam_counts = Counter(p.get('item_family_id', 'unknown') for p in prices)
-for k, v in price_fam_counts.items():
-    print(f'  {k}: {v} prices')
-
-print()
-print('=== Sample Prices ===')
-for p in prices[:3]:
-    print(json.dumps(p, indent=2))
-    print()
+if isinstance(data, list):
+    print(f"List with {len(data)} items")
+    for i, item in enumerate(data):
+        if isinstance(item, dict) and 'item' in item:
+            it = item['item']
+            fid = it.get('item_family_id', 'N/A')
+            name = it.get('name', 'N/A')
+            status = it.get('status', 'N/A')
+            iid = it.get('id', 'N/A')
+            metadata = it.get('meta_data', {})
+            print(f"  [{i}] id={iid} | name={name} | family_id={fid} | status={status} | metadata={metadata}")
+elif isinstance(data, dict):
+    print("Dict with keys:", list(data.keys()))
+    for k, v in data.items():
+        if isinstance(v, list):
+            print(f"  {k}: list with {len(v)} items")
+            for i, item in enumerate(v[:5]):
+                if isinstance(item, dict):
+                    print(f"    [{i}] {json.dumps(item, indent=2)[:200]}")

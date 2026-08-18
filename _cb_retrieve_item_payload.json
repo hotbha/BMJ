@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"retrieve_item","arguments":{"item_id":"delight-orange-200ml"}}}

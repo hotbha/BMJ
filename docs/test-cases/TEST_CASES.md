@@ -1,8 +1,8 @@
 # BookMyJuice Flutter Test Case Catalog
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-06-10  
-**Total Test Cases:** 368  
+**Document Version:** 1.1  
+**Last Updated:** 2026-06-23  
+**Total Test Cases:** 385
 **Status:** ✅ All Passing
 
 ---
@@ -463,6 +463,28 @@
 | 12 | Error handling during persistence | Negative |
 
 ---
+
+### 5.2 Widget / Screen Tests — Profile & Address Management
+
+| # | Test Name | Category |
+|---|-----------|----------|
+| 1 | UserProfileScreen — loads and displays personal details | Positive |
+| 2 | UserProfileScreen — loads and displays all saved addresses | Positive |
+| 3 | UserProfileScreen — highlights default address with badge | Positive |
+| 4 | UserProfileScreen — tap non-default address sets it as default | Positive |
+| 5 | UserProfileScreen — shows empty state when no addresses saved | Edge |
+| 6 | UserProfileScreen — network error shows empty state gracefully | Negative |
+| 7 | UserProfileScreen — "Add" button navigates to address entry | Positive |
+| 8 | ProfileTab — tap name/email navigates to UserProfileScreen | Positive |
+| 9 | ProfileTab — name/email area has chevron indicator | Positive |
+| 10 | OrderCheckoutScreen — auto-fetches default address on init | Positive |
+| 11 | OrderCheckoutScreen — displays default address details | Positive |
+| 12 | OrderCheckoutScreen — "Change" button opens address selection | Positive |
+| 13 | OrderCheckoutScreen — shows "Add delivery address" when none saved | Edge |
+| 14 | OrderCheckoutScreen — Place Order disabled when no address selected | Negative |
+| 15 | UserAddress — fromJson parsing all fields correctly | Positive |
+| 16 | UserAddress — formattedAddress builds correct string | Positive |
+| 17 | UserAddress — isDefault flag from API response | Positive |
 
 ## 7. Integration Flow Tests
 
