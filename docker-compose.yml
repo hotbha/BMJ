@@ -125,6 +125,12 @@ services:
         condition: service_healthy
     networks:
       - bmj-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 90s
     # Override Dockerfile CMD to include JDWP debug agent.
     # Using exec/list form to avoid shell quoting issues with JVM args.
     command:
