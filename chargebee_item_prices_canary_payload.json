@@ -1,0 +1,15 @@
+{
+  "itemPrices": [
+    {
+      "id": "bmj-item-bloody-red-200ml",
+      "name": "Bloody Red 200ml",
+      "description": "Bloody Red - 200ml",
+      "pricing_model": "flat_fee",
+      "item_id": "bmj-item-bloody-red",
+      "price": 15609,
+      "currency_code": "INR",
+      "is_taxable": true
+    }
+  ]
+}
+

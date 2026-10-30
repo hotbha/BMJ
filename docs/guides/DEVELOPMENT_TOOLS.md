@@ -18,6 +18,7 @@
 8. [API Development Tools](#8-api-development-tools)
 9. [Code Quality Tools](#9-code-quality-tools)
 10. [Development Environment Checklist](#10-development-environment-checklist)
+11. [Local Backend on the LAN (physical device testing)](#11-local-backend-on-the-lan-physical-device-testing)
 
 ---
 
@@ -842,6 +843,106 @@ Add to `bmjServer/pom.xml`:
 - [ ] API documentation accessible
 - [ ] README files updated
 - [ ] Contributing guidelines written
+
+---
+
+## 11. Local Backend on the LAN (physical device testing)
+
+An emulator reaches the host at `10.0.2.2`, but a **physical phone over Wi-Fi** can only reach the
+backend's real LAN address. `ops/run_local_server.ps1` + `ops/build_flutter_for_phone.ps1` exist so
+this needs no manual editing of `application-dev.properties`.
+
+### 11.1 One-time environment facts (verified on this machine, 2026-10-18)
+
+| Fact | Consequence |
+| :--- | :--- |
+| Port **8080** is held by an unrelated local service (`AgentService`) | host the backend on **8085** |
+| Dev MySQL is the Docker container `bmj-smoke-mysql`, published on **127.0.0.1:3307** | override `spring.datasource.url` (the committed URL says `:3306`) |
+| `spring-dotenv` does **not** populate the environment for `java -jar` | `WEBHOOK_USERNAME`, `WEBHOOK_PASSWORD`, `JWT_SECRET` must be exported before launch or startup fails in `webhookUserDetailsService` |
+| `.env` ships `ADMIN_PASSWORD=` (empty) | the launcher substitutes a local-only value |
+| Docker Desktop's Windows CLI broker can be down while the engine runs | start containers from `wsl -d Ubuntu-22.04 -e docker ...` |
+
+### 11.2 Start the backend
+
+```powershell
+# 1. Dev database (skip if `Test-NetConnection 127.0.0.1 -Port 3307` already succeeds)
+wsl -d Ubuntu-22.04 -e docker start bmj-smoke-mysql
+
+# 2. Backend on the LAN, OTPs printed to the console instead of sent by SMS
+.\ops\run_local_server.ps1 -Restart -Port 8085
+```
+
+The script loads `.env`, forces `--spring.datasource.url=jdbc:mysql://127.0.0.1:3307/bmj_db?...`,
+builds `com.bookmyjuice.bmjServer-*.jar` when `src/` is newer than it, launches `java -jar`, polls
+`/api/health`, and prints the LAN URL to hand to Flutter. `-Rebuild` forces the package step and
+`-EnableSms` keeps Fast2SMS live (a real, paid SMS per request).
+
+Stop it with `.\ops\stop_local_server.ps1 -Port 8085` (refuses to kill a non-Java process unless `-Force`).
+
+### 11.3 Run the app against it
+
+```powershell
+cd X:\BMJ\lush
+flutter run -d 192.168.1.5:5555 --dart-define=API_BASE_URL=http://192.168.1.10:8085
+```
+
+`ops\build_flutter_for_phone.ps1 -Port 8085` does the same with the IP auto-detected (it defaults to
+8080, so pass `-Port 8085` here). For a detached run, build and install instead:
+
+```powershell
+flutter build apk --debug --dart-define=API_BASE_URL=http://192.168.1.10:8085
+adb -s 192.168.1.5:5555 install -r build\app\outputs\flutter-apk\app-debug.apk
+adb -s 192.168.1.5:5555 shell am start -n com.bookmyjuice.app/.MainActivity
+```
+
+Wireless ADB uses `adb -s <phone-ip>:5555`; `adb devices` lists both the USB and Wi-Fi transports.
+
+### 11.4 Read the OTP without a phone
+
+With `FAST2SMS_API_KEY` blanked the server logs the code and returns
+`"Success: OTP sent! Check console for OTP (Dev mode)"`:
+
+```powershell
+Select-String -Path X:\BMJ\bmjServer\logs\local-run.log -Pattern '\[DEV\] OTP' | Select-Object -Last 1
+```
+
+### 11.5 Gotcha that costs an hour
+
+PowerShell parses `"$DbName?allowPublicKeyRetrieval=..."` as a **single variable** named
+`DbName?allowPublicKeyRetrieval`, so the URL silently degrades to
+`jdbc:mysql://127.0.0.1:3307/=true&useSSL=false` and MySQL answers
+`Access denied for user 'bmj'@'%' to database '=true&useSSL=false'`. Always brace it:
+`"...:3307/${DbName}?allowPublicKeyRetrieval=true&useSSL=false"`. The launcher carries this note.
+
+### 11.6 Read the email verification code (mandatory-email signup)
+
+Signup now sends an email OTP after the phone OTP. The code is **always** written
+to the server log, even when SMTP delivery fails (a failed send is logged as a
+warning and only invalidates the inbox delivery, not the code, which stays valid
+for 10 minutes):
+
+```powershell
+Select-String -Path X:\BMJ\bmjServer\logs\local-run.log -Pattern '\[DEV\] Email verification code' |
+  Select-Object -Last 1
+```
+
+Delivery settings come from `.env` (`MAIL_HOST=smtp.zoho.in`, `MAIL_PORT=587`,
+`MAIL_USERNAME`, `MAIL_PASSWORD`). If the password is blank or the sender
+mailbox is not verified with the provider, expect
+`WARN ... Could not deliver email verification code to <address>` next to the
+`[DEV]` line - the app still accepts the logged code, so device runs do not need
+a working SMTP relay. Resends are refused for **30 seconds** per address
+(`429` + "Please wait N seconds"), so always take the newest log line.
+
+A full phone-first signup is therefore four HTTP calls plus two log reads:
+
+```
+send-otp -> login-otp (signupToken) -> send-email-verification -> verify-email-code
+         -> phone-signup (email + emailVerificationToken; address optional)
+```
+
+---
+
 
 ---
 

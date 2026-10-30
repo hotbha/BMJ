@@ -1,0 +1,68 @@
+﻿batch1_generic_plans.json|1|x:\BMJ\scripts\chargebee\import_chg.ps1
+_cb_data_lookup_init.bat|1|x:\BMJ\docs\CHARGEBEE_MCP.md
+_cb_data_lookup_init_payload.json|2|x:\BMJ\_cb_data_lookup_init.bat ; x:\BMJ\docs\CHARGEBEE_MCP.md
+_cb_data_lookup_tools.bat|1|x:\BMJ\docs\CHARGEBEE_MCP.md
+_cb_data_lookup_tools_payload.json|2|x:\BMJ\_cb_data_lookup_tools.bat ; x:\BMJ\docs\CHARGEBEE_MCP.md
+_cb_generate_catalog.bat|0|NO-REFS-OUTSIDE-SELF
+_cb_generate_catalog_payload.json|1|x:\BMJ\_cb_generate_catalog.bat
+_cb_onboarding_tools.bat|0|NO-REFS-OUTSIDE-SELF
+_cb_retrieve_item.bat|0|NO-REFS-OUTSIDE-SELF
+_cb_retrieve_item_payload.json|1|x:\BMJ\_cb_retrieve_item.bat
+_cb_search_addons.bat|0|NO-REFS-OUTSIDE-SELF
+_cb_search_addons_payload.json|1|x:\BMJ\_cb_search_addons.bat
+_cb_search_generics_payload.json|0|NO-REFS-OUTSIDE-SELF
+_cb_search_plans.bat|0|NO-REFS-OUTSIDE-SELF
+_cb_search_plans_p2_payload.json|0|NO-REFS-OUTSIDE-SELF
+_cb_search_plans_payload.json|2|x:\BMJ\docs\CHARGEBEE_MCP.md ; x:\BMJ\_cb_search_plans.bat
+_chargebee_init.bat|1|x:\BMJ\docs\CHARGEBEE_MCP.md
+_chargebee_tools.bat|1|x:\BMJ\docs\CHARGEBEE_MCP.md
+_chargebee_tools_payload.json|3|x:\BMJ\docs\CHARGEBEE_MCP.md ; x:\BMJ\_chargebee_tools.bat ; x:\BMJ\_cb_onboarding_tools.bat
+_data_b64.txt|0|NO-REFS-OUTSIDE-SELF
+_analyze_catalog.py|0|NO-REFS-OUTSIDE-SELF
+_extract_fails.py|0|NO-REFS-OUTSIDE-SELF
+_mcp_init.json|0|NO-REFS-OUTSIDE-SELF
+b64.txt|0|NO-REFS-OUTSIDE-SELF
+batch1_generic_plans.json|1|x:\BMJ\scripts\chargebee\import_chg.ps1
+batch2_juice_plans.json|1|x:\BMJ\scripts\generators\gen_batch2.py
+build_out.md|0|NO-REFS-OUTSIDE-SELF
+c1.txt|0|NO-REFS-OUTSIDE-SELF
+chargebee_catalog.json|6|x:\BMJ\_analyze_catalog.py ; x:\BMJ\docs\data_models_map.md ; x:\BMJ\docs\CHARGEBEE_MCP.md ; x:\BMJ\docs\chargebee_final_state.md ; x:\BMJ\scripts\chargebee\chargebee_import_full.py ; x:\BMJ\scripts\chargebee\chargebee_setup_catalog.py
+chargebee_data_lookup_tools.json|2|x:\BMJ\docs\CHARGEBEE_MCP.md ; x:\BMJ\_cb_data_lookup_tools.bat
+chargebee_init.json|0|NO-REFS-OUTSIDE-SELF
+chargebee_init_payload.json|2|x:\BMJ\docs\CHARGEBEE_MCP.md ; x:\BMJ\_chargebee_init.bat
+chargebee_items_payload.json|0|NO-REFS-OUTSIDE-SELF
+chargebee_mcp_generated_catalog.json|1|x:\BMJ\_cb_generate_catalog.bat
+chargebee_tools_full.json|2|x:\BMJ\docs\CHARGEBEE_MCP.md ; x:\BMJ\scripts\chargebee\list_tools.py
+data1.json|0|NO-REFS-OUTSIDE-SELF
+dbdiagram.mwb.bak|0|NO-REFS-OUTSIDE-SELF
+E2E_BLACK_BOX_TEST_REPORT.md|1|x:\BMJ\docs\TESTING_GUIDE.md
+e2e_test_report.json|0|NO-REFS-OUTSIDE-SELF
+e2e_test_report_v2.json|0|NO-REFS-OUTSIDE-SELF
+e2e_test_report_v3.json|1|x:\BMJ\scripts\tools\run_e2e_tests.py
+f1_b64.txt|0|NO-REFS-OUTSIDE-SELF
+f1_data.json|0|NO-REFS-OUTSIDE-SELF
+fd.json|0|NO-REFS-OUTSIDE-SELF
+file1.json|0|NO-REFS-OUTSIDE-SELF
+gen_test.txt|0|NO-REFS-OUTSIDE-SELF
+import_result.json|1|x:\BMJ\scripts\chargebee\import_catalog.py
+nodetest.txt|0|NO-REFS-OUTSIDE-SELF
+out_test.txt|0|NO-REFS-OUTSIDE-SELF
+root_test.txt|0|NO-REFS-OUTSIDE-SELF
+script_b64.txt|0|NO-REFS-OUTSIDE-SELF
+signin.json|2|x:\BMJ\BMJ_LAUNCH_CHECKLIST.md ; x:\BMJ\PRODUCT_ALIGNMENT_REPORT.md
+tc1.json|0|NO-REFS-OUTSIDE-SELF
+tcdata.json|0|NO-REFS-OUTSIDE-SELF
+tcs.json|0|NO-REFS-OUTSIDE-SELF
+temp_search.txt|2|x:\BMJ\BMJ_LAUNCH_CHECKLIST.md ; x:\BMJ\PRODUCT_ALIGNMENT_REPORT.md
+temp_signin.json|2|x:\BMJ\BMJ_LAUNCH_CHECKLIST.md ; x:\BMJ\PRODUCT_ALIGNMENT_REPORT.md
+test_decode.txt|0|NO-REFS-OUTSIDE-SELF
+test_out.txt|0|NO-REFS-OUTSIDE-SELF
+test_simple.txt|0|NO-REFS-OUTSIDE-SELF
+test_write.txt|0|NO-REFS-OUTSIDE-SELF
+test123.txt|0|NO-REFS-OUTSIDE-SELF
+uat_signin.json|0|NO-REFS-OUTSIDE-SELF
+uat_signup.json|0|NO-REFS-OUTSIDE-SELF
+uat_token.txt|0|NO-REFS-OUTSIDE-SELF
+ui.xml|0|NO-REFS-OUTSIDE-SELF
+ui2.xml|0|NO-REFS-OUTSIDE-SELF
+ui3.xml|0|NO-REFS-OUTSIDE-SELF

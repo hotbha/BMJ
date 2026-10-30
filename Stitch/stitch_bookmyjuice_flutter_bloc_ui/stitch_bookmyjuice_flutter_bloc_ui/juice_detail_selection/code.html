@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Book My Juice - Product Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-bright": "#dfe4e0",
+                      "zest-glow": "rgba(249, 115, 22, 0.45)",
+                      "surface-tint": "#ffb690",
+                      "tertiary-fixed": "#7cf6ec",
+                      "on-tertiary-fixed": "#00201e",
+                      "on-surface": "#f6ded3",
+                      "inverse-on-surface": "#3c2d26",
+                      "outline": "#a78b7d",
+                      "on-tertiary-container": "#003936",
+                      "error": "#ffb4ab",
+                      "on-background": "#f6ded3",
+                      "on-surface-variant": "#e0c0b1",
+                      "surface": "#1c110b",
+                      "on-primary-fixed-variant": "#783200",
+                      "error-container": "#93000a",
+                      "on-secondary-container": "#004119",
+                      "tertiary-fixed-dim": "#5dd9d0",
+                      "surface-container": "#291d16",
+                      "tertiary-container": "#1caca3",
+                      "inverse-primary": "#9d4300",
+                      "tertiary": "#5dd9d0",
+                      "on-secondary-fixed-variant": "#005321",
+                      "on-primary-fixed": "#341100",
+                      "primary-fixed": "#ffdbca",
+                      "on-error-container": "#ffdad6",
+                      "secondary-container": "#00b954",
+                      "on-primary-container": "#582200",
+                      "secondary-fixed-dim": "#4ae176",
+                      "on-primary": "#552100",
+                      "on-secondary-fixed": "#002109",
+                      "surface-container-low": "#251913",
+                      "surface-variant": "#40322a",
+                      "surface-dim": "#1c110b",
+                      "on-secondary": "#003915",
+                      "neon-lime": "#4be277",
+                      "surface-deep": "#0f1412",
+                      "surface-bright": "#45362f",
+                      "background": "#1c110b",
+                      "surface-container-high": "#352720",
+                      "surface-container-lowest": "#160c06",
+                      "secondary-fixed": "#6bff8f",
+                      "primary": "#ffb690",
+                      "primary-container": "#f97316",
+                      "secondary": "#4ae176",
+                      "on-tertiary-fixed-variant": "#00504b",
+                      "surface-container-highest": "#40322a",
+                      "inverse-surface": "#f6ded3",
+                      "outline-variant": "#584237",
+                      "on-error": "#690005",
+                      "primary-fixed-dim": "#ffb690",
+                      "on-tertiary": "#003734"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "xl": "32px",
+                      "base": "4px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "max-width-container": "430px",
+                      "margin-desktop": "32px",
+                      "lg": "24px",
+                      "gutter": "12px",
+                      "md": "16px"
+              },
+              "fontFamily": {
+                      "display-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "stat-num": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "title-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "26px",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "stat-num": [
+                              "22px",
+                              {
+                                      "lineHeight": "26px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "14px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "title-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-surface');
+        }
+        
+        .glass-panel {
+            background: rgba(41, 29, 22, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .zest-glow-btn {
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.45);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col items-center">
+<!-- Main Container -->
+<main class="w-full max-w-max-width-container mx-auto relative pb-32">
+<!-- Top App Bar (Modified for Sub-page: Back Button instead of Bubble Chart) -->
+<header class="docked full-width top-0 sticky bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm z-50">
+<div class="max-w-[430px] mx-auto flex justify-between items-center px-md py-sm z-50">
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-display-md text-display-md text-primary-container tracking-tighter">Book My Juice</h1>
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+</div>
+</header>
+<!-- Product Hero Image -->
+<section class="relative w-full aspect-[4/5] bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="A vibrant, high-resolution product shot of a glowing orange citrus juice bottle sitting on a sleek dark surface. The lighting is dramatic and cinematic, highlighting the condensation on the glass and the vibrant orange hue of the liquid inside. The background is a deep, moody dark mode gradient, creating a premium glassmorphism aesthetic with high-energy vitality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnYhUMnJWEvIdGU_P8aXmraIZE4Srv2P8_VD1tp_hbp6NC0Cc-ny7XYyyNOVa9avvB_Ebjj2RZ3fLJVIgNXZahx0nKjzIj96RobBS4UijvOaV5nJdFittU9-Ig_6Jm79UfI4GgNhCfgWx44hpu38jAVZ-MgM-buPM0iiTBewDRtHZsrCDyZ-U46pN_qUpdRFZ6a-qLVuo010k8U3PRX1kSEp6Qmr9ClGVumYK247yciGveoFgQZciu"/>
+<!-- Floating Badges -->
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="glass-panel px-3 py-1 rounded-full font-label-sm text-label-sm text-primary uppercase tracking-wider">Cold Pressed</span>
+<span class="glass-panel px-3 py-1 rounded-full font-label-sm text-label-sm text-secondary uppercase tracking-wider">Organic</span>
+</div>
+</section>
+<!-- Product Info Section -->
+<section class="px-md py-lg -mt-8 relative z-10">
+<!-- Glass Title Card -->
+<div class="glass-panel rounded-xl p-md mb-lg">
+<h2 class="font-display-lg text-display-lg text-on-surface mb-xs">Citrus Surge</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-md">Immunity-boosting blend of orange, turmeric, and ginger.</p>
+<div class="flex justify-between items-center mt-4 pt-4 border-t border-white/10">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-title-lg text-title-lg text-on-surface">4.9</span>
+<span class="font-body-md text-body-md text-on-surface-variant">(128 reviews)</span>
+</div>
+</div>
+</div>
+<!-- Size Selector -->
+<div class="mb-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Select Size</h3>
+<div class="flex gap-gutter">
+<!-- 200ml (Inactive) -->
+<button class="flex-1 glass-panel rounded-lg py-sm px-4 flex flex-col items-center justify-center hover:bg-surface-variant transition-colors border border-transparent">
+<span class="font-label-lg text-label-lg text-on-surface">200ml</span>
+</button>
+<!-- 300ml (Active) -->
+<button class="flex-1 glass-panel rounded-lg py-sm px-4 flex flex-col items-center justify-center border-primary-container bg-zest-glow/20 transition-colors">
+<span class="font-label-lg text-label-lg text-primary-container">300ml</span>
+</button>
+<!-- 500ml (Inactive) -->
+<button class="flex-1 glass-panel rounded-lg py-sm px-4 flex flex-col items-center justify-center hover:bg-surface-variant transition-colors border border-transparent">
+<span class="font-label-lg text-label-lg text-on-surface">500ml</span>
+</button>
+</div>
+</div>
+<!-- Pricing Options -->
+<div class="mb-lg space-y-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-sm">Purchase Option</h3>
+<!-- One Time -->
+<label class="flex items-center p-md glass-panel rounded-lg cursor-pointer hover:bg-surface-variant transition-colors border border-transparent">
+<input class="form-radio text-primary-container bg-transparent border-outline focus:ring-primary-container h-5 w-5" name="purchase_type" type="radio"/>
+<div class="ml-4 flex-1">
+<span class="block font-title-lg text-title-lg text-on-surface">One-Time Purchase</span>
+</div>
+<span class="font-stat-num text-stat-num text-on-surface">$8.00</span>
+</label>
+<!-- Subscribe (Active) -->
+<label class="flex items-center p-md glass-panel rounded-lg cursor-pointer bg-zest-glow/10 border border-primary-container">
+<input checked="" class="form-radio text-primary-container bg-transparent border-primary-container focus:ring-primary-container h-5 w-5" name="purchase_type" type="radio"/>
+<div class="ml-4 flex-1">
+<span class="block font-title-lg text-title-lg text-primary-container">Subscribe &amp; Save 15%</span>
+<span class="block font-body-md text-body-md text-on-surface-variant">Delivered weekly</span>
+</div>
+<span class="font-stat-num text-stat-num text-primary-container">$6.80</span>
+</label>
+</div>
+<!-- Nutritional Facts & Ingredients (Bento Grid) -->
+<div class="grid grid-cols-2 gap-gutter mb-lg">
+<!-- Calories -->
+<div class="glass-panel rounded-xl p-md flex flex-col justify-center items-center">
+<span class="material-symbols-outlined text-tertiary text-3xl mb-2">bolt</span>
+<span class="font-stat-num text-stat-num text-on-surface">120</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Calories</span>
+</div>
+<!-- Vitamins -->
+<div class="glass-panel rounded-xl p-md flex flex-col justify-center items-center">
+<span class="material-symbols-outlined text-secondary text-3xl mb-2">vital_signs</span>
+<span class="font-stat-num text-stat-num text-on-surface">100%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Vitamin C</span>
+</div>
+<!-- Ingredients List -->
+<div class="col-span-2 glass-panel rounded-xl p-md">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">nutrition</span>
+                        Key Ingredients
+                    </h3>
+<ul class="space-y-2 font-body-md text-body-md text-on-surface-variant">
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Valencia Oranges</li>
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Peruvian Turmeric Root</li>
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Cold-Pressed Ginger</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Fixed Bottom Action Area (replaces standard BottomNavBar for transactional flow) -->
+<div class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-surface/90 backdrop-blur-2xl border-t border-white/10 max-w-max-width-container mx-auto">
+<button class="w-full bg-primary-container text-white font-headline-md text-headline-md py-4 rounded-xl zest-glow-btn flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_shopping_cart</span>
+                Add to Cart - $6.80
+            </button>
+</div>
+</main>
+</body></html>

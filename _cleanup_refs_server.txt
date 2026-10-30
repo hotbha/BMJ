@@ -1,0 +1,10 @@
+﻿app.jar|3|x:\BMJ\bmjServer\Dockerfile ; x:\BMJ\bmjServer\src\main\resources\application-dev.properties ; x:\BMJ\bmjServer\src\main\resources\application-prod.properties
+fix_bom.py|0|NO-REFS-OUTSIDE-SELF
+startup.log|0|NO-REFS-OUTSIDE-SELF
+create-admin-user.sql|0|NO-REFS-OUTSIDE-SELF
+Java.gitignore|0|NO-REFS-OUTSIDE-SELF
+spring-boot-jwt-authentication-spring-security-architecture.png|0|NO-REFS-OUTSIDE-SELF
+spring-boot-jwt-authentication-spring-security-flow.png|0|NO-REFS-OUTSIDE-SELF
+spring-boot-refresh-token-jwt-example-flow.png|0|NO-REFS-OUTSIDE-SELF
+setup_chargebee_catalog.py|0|NO-REFS-OUTSIDE-SELF
+maven-wrapper.jar|5|x:\BMJ\.gitignore ; x:\BMJ\bmjServer\mvnw ; x:\BMJ\bmjServer\mvnw.cmd ; x:\BMJ\bmjServer\.gitignore ; x:\BMJ\bmjServer\.mvn\wrapper\MavenWrapperDownloader.java

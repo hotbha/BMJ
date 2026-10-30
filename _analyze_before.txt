@@ -1,0 +1,453 @@
+﻿Analyzing 2 items...                                            
+
+   info - Uses 'await' on an instance of 'GoogleSignInAuthentication', which is not a subtype of 'Future' - lib\UserRepository\user_repository.dart:832:20 - await_only_futures
+   info - Uses 'await' on an instance of 'GoogleSignInAuthentication', which is not a subtype of 'Future' - lib\UserRepository\user_repository.dart:1032:20 - await_only_futures
+   info - Use 'const' with the constructor to improve performance - lib\bloc\AuthBloc\auth_bloc.dart:48:16 - prefer_const_constructors
+   info - Unnecessary use of double quotes - lib\bloc\AuthBloc\auth_bloc.dart:49:29 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\bloc\AuthBloc\auth_bloc.dart:49:64 - prefer_single_quotes
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:49:96 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:49:97 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - lib\bloc\AuthBloc\auth_bloc.dart:53:14 - prefer_const_constructors
+   info - Unnecessary use of double quotes - lib\bloc\AuthBloc\auth_bloc.dart:54:27 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\bloc\AuthBloc\auth_bloc.dart:54:62 - prefer_single_quotes
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:54:94 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:54:95 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - lib\bloc\AuthBloc\auth_bloc.dart:67:16 - prefer_const_constructors
+   info - Unnecessary use of double quotes - lib\bloc\AuthBloc\auth_bloc.dart:68:29 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\bloc\AuthBloc\auth_bloc.dart:68:60 - prefer_single_quotes
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:68:92 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:68:93 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:112:73 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:112:74 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:133:12 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:256:12 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:399:99 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:587:10 - require_trailing_commas
+   info - Missing a required trailing comma - lib\bloc\AuthBloc\auth_bloc.dart:617:10 - require_trailing_commas
+   info - Unnecessary duplication of receiver - lib\bloc\AuthBloc\auth_bloc.dart:690:5 - cascade_invocations
+   info - Unnecessary duplication of receiver - lib\bloc\AuthBloc\auth_bloc.dart:691:5 - cascade_invocations
+   info - Missing a required trailing comma - lib\bloc\CartBloc\cart_bloc.dart:61:10 - require_trailing_commas
+   info - Don't invoke 'print' in production code - lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart:202:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart:207:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart:223:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart:274:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart:287:5 - avoid_print
+   info - Unnecessary duplication of receiver - lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart:402:5 - cascade_invocations
+   info - Classes should define instance members - lib\config\api_config.dart:10:7 - avoid_classes_with_only_static_members
+   info - Classes should define instance members - lib\config\api_config.dart:33:7 - avoid_classes_with_only_static_members
+   info - The prefix 'ProductsBloc' isn't a lower_case_with_underscores identifier - lib\main.dart:31:50 - library_prefixes
+   info - Unnecessary duplication of receiver - lib\main.dart:232:17 - cascade_invocations
+   info - Classes should define instance members - lib\services\firebase_options.dart:7:7 - avoid_classes_with_only_static_members
+   info - Unnecessary duplication of receiver - lib\services\item_service.dart:44:7 - cascade_invocations
+   info - 'encryptedSharedPreferences' is deprecated and shouldn't be used. EncryptedSharedPreferences is deprecated and will be removed in v11. The Jetpack Security library is deprecated by Google. Your data will be automatically migrated to custom ciphers on first access. Remove this parameter - it will be ignored - lib\services\secure_storage_service.dart:25:7 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\services\subscription_service.dart:182:7 - avoid_print
+   info - Classes should define instance members - lib\utils\analytics_service.dart:4:7 - avoid_classes_with_only_static_members
+   info - Classes should define instance members - lib\utils\font_utils.dart:5:7 - avoid_classes_with_only_static_members
+   info - Classes should define instance members - lib\utils\haptic_feedback.dart:4:7 - avoid_classes_with_only_static_members
+   info - Classes should define instance members - lib\utils\text_utils.dart:4:7 - avoid_classes_with_only_static_members
+   info - Static method should be a constructor - lib\views\models\dynamic_item.dart:88:22 - prefer_constructors_over_static_methods
+   info - Don't invoke 'print' in production code - lib\views\models\item_card_view.dart:29:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\views\models\item_card_view.dart:30:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\views\models\item_card_view.dart:56:15 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\views\models\item_card_view.dart:85:27 - use_build_context_synchronously
+   info - Unnecessary duplication of receiver - lib\views\models\item_card_view.dart:88:25 - cascade_invocations
+   info - Don't invoke 'print' in production code - lib\views\models\item_card_view.dart:95:15 - avoid_print
+   info - Don't invoke 'print' in production code - lib\views\models\item_card_view.dart:112:7 - avoid_print
+   info - Missing a required trailing comma - lib\views\models\item_list_view.dart:15:16 - require_trailing_commas
+   info - Don't invoke 'print' in production code - lib\views\models\item_list_view.dart:75:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\views\models\item_list_view.dart:86:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\views\models\item_list_view.dart:91:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\views\models\item_list_view.dart:145:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\views\models\item_list_view.dart:150:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\views\models\item_list_view.dart:153:7 - avoid_print
+   info - The value of the argument is redundant because it matches the default value - lib\views\models\user.dart:51:23 - avoid_redundant_argument_values
+   info - Unnecessary use of parentheses - lib\views\models\user_address.dart:41:18 - unnecessary_parenthesis
+   info - Unnecessary duplication of receiver - lib\views\screens\cart_screen.dart:196:29 - cascade_invocations
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\cart_screen.dart:591:40 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\cart_screen.dart:594:48 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\cart_screen.dart:605:48 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\cart_screen.dart:615:48 - use_build_context_synchronously
+warning - The value of the local variable 'juiceName' isn't used - lib\views\screens\day_wise_schedule_screen.dart:329:15 - unused_local_variable
+   info - Invalid use of a private type in a public API - lib\views\screens\delete_account_screen.dart:13:3 - library_private_types_in_public_api
+   info - Invalid use of a private type in a public API - lib\views\screens\enter_mobile_number.dart:14:3 - library_private_types_in_public_api
+   info - The variable name 'MobileNoController' isn't a lowerCamelCase identifier - lib\views\screens\enter_mobile_number.dart:18:25 - non_constant_identifier_names
+   info - Don't use 'BuildContext's across async gaps - lib\views\screens\invoice_view_screen.dart:66:21 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\views\screens\invoice_view_screen.dart:79:21 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\views\screens\invoice_view_screen.dart:93:21 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\views\screens\invoice_view_screen.dart:96:30 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\views\screens\invoice_view_screen.dart:106:21 - use_build_context_synchronously
+   info - Invalid use of a private type in a public API - lib\views\screens\link_google_account_screen.dart:27:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\login_page.dart:446:20 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\login_page.dart:449:45 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\login_page.dart:453:11 - use_build_context_synchronously
+   info - Unnecessary duplication of receiver - lib\views\screens\menu.dart:143:7 - cascade_invocations
+warning - The value of the field '_cachedOneTimeCategories' isn't used - lib\views\screens\menu_tab.dart:38:16 - unused_field
+   info - Missing a required trailing comma - lib\views\screens\menu_tab.dart:247:139 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\menu_tab.dart:252:78 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\menu_tab.dart:270:81 - prefer_const_constructors
+   info - Missing a required trailing comma - lib\views\screens\menu_tab.dart:296:78 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\menu_tab.dart:352:106 - require_trailing_commas
+warning - The type argument(s) of the function 'showModalBottomSheet' can't be inferred - lib\views\screens\menu_tab.dart:383:5 - inference_failure_on_function_invocation
+warning - The type argument(s) of the function 'showDialog' can't be inferred - lib\views\screens\menu_tab.dart:646:5 - inference_failure_on_function_invocation
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\menu_tab.dart:657:34 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\menu_tab.dart:660:29 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\menu_tab.dart:663:32 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\menu_tab.dart:669:34 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\views\screens\menu_tab.dart:671:30 - use_build_context_synchronously
+   info - Missing a required trailing comma - lib\views\screens\orders\order_checkout_screen.dart:144:132 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\orders\order_checkout_screen.dart:184:104 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\orders\order_checkout_screen.dart:225:34 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\phone_entry_screen.dart:94:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\phone_entry_screen.dart:97:26 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:240:23 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:252:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:253:30 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\views\screens\plan_selection_screen.dart:255:35 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:256:27 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:258:27 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:260:36 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:263:27 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:265:36 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:311:14 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:599:24 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:620:32 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:665:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\plan_selection_screen.dart:668:22 - prefer_const_constructors
+   info - The prefix 'HapticFeedbackUtil' isn't a lower_case_with_underscores identifier - lib\views\screens\product_catalog_screen.dart:11:53 - library_prefixes
+   info - Unnecessary use of parentheses - lib\views\screens\product_catalog_screen.dart:356:16 - unnecessary_parenthesis
+   info - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre - lib\views\screens\product_catalog_screen.dart:401:64 - deprecated_member_use
+   info - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre - lib\views\screens\product_catalog_screen.dart:402:27 - deprecated_member_use
+warning - The left operand can't be null, so the right operand is never executed - lib\views\screens\profile\address_screen.dart:36:49 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\views\screens\profile\address_screen.dart:37:54 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\views\screens\profile\address_screen.dart:38:46 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\views\screens\profile\address_screen.dart:39:41 - dead_null_aware_expression
+warning - The left operand can't be null, so the right operand is never executed - lib\views\screens\profile\address_screen.dart:40:43 - dead_null_aware_expression
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - lib\views\screens\profile\address_screen.dart:63:13 - inference_failure_on_instance_creation
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\profile_tab.dart:296:13 - prefer_const_constructors
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\views\screens\referral\referral_screen.dart:61:25 - deprecated_member_use
+   info - 'share' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\views\screens\referral\referral_screen.dart:61:31 - deprecated_member_use
+warning - The declaration '_formatDate' isn't referenced - lib\views\screens\subscription\active_subscription_screen.dart:52:10 - unused_element
+   info - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre - lib\views\screens\subscription\pause_subscription_screen.dart:72:23 - deprecated_member_use
+   info - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre - lib\views\screens\subscription\pause_subscription_screen.dart:74:23 - deprecated_member_use
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:69:74 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:186:43 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:186:44 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:194:43 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:194:44 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:196:19 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:267:15 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:271:15 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:291:25 - require_trailing_commas
+   info - The value of the argument is redundant because it matches the default value - lib\views\screens\subscription\subscription_plan_screen.dart:342:21 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:384:22 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_plan_screen.dart:439:17 - require_trailing_commas
+warning - The type argument(s) of the function 'showModalBottomSheet' can't be inferred - lib\views\screens\subscription\subscription_plans_screen.dart:22:5 - inference_failure_on_function_invocation
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_schedule_screen.dart:152:31 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_schedule_screen.dart:157:54 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_schedule_screen.dart:267:59 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_schedule_screen.dart:285:61 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_schedule_screen.dart:330:59 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_summary_screen.dart:117:60 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_summary_screen.dart:123:41 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_summary_screen.dart:194:75 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_summary_screen.dart:241:61 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_summary_screen.dart:270:51 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_summary_screen.dart:281:52 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\subscription\subscription_summary_screen.dart:298:62 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\subscription_tab.dart:54:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\subscription_tab.dart:58:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\user_profile_screen.dart:123:37 - prefer_const_constructors
+   info - Missing a required trailing comma - lib\views\screens\user_profile_screen.dart:186:31 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\user_profile_screen.dart:273:11 - prefer_const_constructors
+   info - Missing a required trailing comma - lib\views\screens\user_profile_screen.dart:274:54 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\user_profile_screen.dart:288:24 - prefer_const_constructors
+   info - Missing a required trailing comma - lib\views\screens\user_profile_screen.dart:342:61 - require_trailing_commas
+   info - Missing a required trailing comma - lib\views\screens\user_profile_screen.dart:361:61 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - lib\views\screens\user_profile_screen.dart:388:30 - prefer_const_constructors
+   info - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre - lib\views\widgets\size_selection_modal.dart:172:31 - deprecated_member_use
+   info - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre - lib\views\widgets\size_selection_modal.dart:174:31 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps - lib\views\widgets\size_selection_modal.dart:316:45 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\views\widgets\size_selection_modal.dart:316:66 - use_build_context_synchronously
+   info - Unnecessary duplication of receiver - lib\views\widgets\size_selection_modal.dart:320:43 - cascade_invocations
+   info - Constructors in '@immutable' classes should be declared as 'const' - lib\views\widgets\welcome_header.dart:9:3 - prefer_const_constructors_in_immutables
+warning - The type argument(s) of 'List' can't be inferred - test\bloc\referral_bloc_test.dart:82:19 - inference_failure_on_collection_literal
+   info - Closure should be a tearoff - test\order_flow_test.dart:80:14 - unnecessary_lambdas
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\order_flow_test.dart:94:55 - inference_failure_on_instance_creation
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:35:11 - avoid_redundant_argument_values
+   info - Closure should be a tearoff - test\subscription_bloc_test.dart:171:15 - unnecessary_lambdas
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:423:39 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:485:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:508:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:524:41 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:524:42 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:531:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:542:10 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:550:41 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:550:42 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:556:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:572:45 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:572:46 - require_trailing_commas
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:582:19 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:583:8 - require_trailing_commas
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:591:21 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:592:10 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:600:45 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:600:46 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:606:8 - require_trailing_commas
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:625:55 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:631:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\subscription_bloc_test.dart:650:8 - require_trailing_commas
+   info - Use 'const' with the constructor to improve performance - test\subscription_bloc_test.dart:797:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\subscription_bloc_test.dart:815:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\subscription_bloc_test.dart:831:25 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\subscription_bloc_test.dart:840:25 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\subscription_bloc_test.dart:849:25 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\subscription_bloc_test.dart:860:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\subscription_bloc_test.dart:873:30 - prefer_const_constructors
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:874:56 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:875:36 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:878:38 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\subscription_bloc_test.dart:878:71 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\subscription_screens_test.dart:26:11 - avoid_redundant_argument_values
+   info - Closure should be a tearoff - test\theme\app_theme_test.dart:14:12 - unnecessary_lambdas
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\auth_bloc_test.dart:31:57 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - test\unit\bloc\auth_bloc_test.dart:294:18 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\bloc\auth_bloc_test.dart:316:18 - require_trailing_commas
+   info - Unnecessary duplication of receiver - test\unit\bloc\auth_bloc_test.dart:337:73 - cascade_invocations
+   info - Unnecessary duplication of receiver - test\unit\bloc\cart_bloc_test.dart:157:9 - cascade_invocations
+   info - Unnecessary duplication of receiver - test\unit\bloc\cart_bloc_test.dart:183:9 - cascade_invocations
+   info - Unnecessary duplication of receiver - test\unit\bloc\cart_bloc_test.dart:239:9 - cascade_invocations
+   info - Unnecessary duplication of receiver - test\unit\bloc\cart_bloc_test.dart:279:9 - cascade_invocations
+   info - Unnecessary duplication of receiver - test\unit\bloc\cart_bloc_test.dart:341:9 - cascade_invocations
+   info - Unnecessary duplication of receiver - test\unit\bloc\cart_bloc_test.dart:362:9 - cascade_invocations
+   info - Unnecessary duplication of receiver - test\unit\bloc\cart_bloc_test.dart:391:9 - cascade_invocations
+   info - Missing a required trailing comma - test\unit\bloc\notification_bloc_test.dart:22:10 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\bloc\notification_bloc_test.dart:25:12 - unnecessary_lambdas
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:36:13 - inference_failure_on_instance_creation
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:63:13 - inference_failure_on_instance_creation
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:84:13 - inference_failure_on_instance_creation
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:87:13 - inference_failure_on_instance_creation
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:108:13 - inference_failure_on_instance_creation
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:113:13 - inference_failure_on_instance_creation
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:117:13 - inference_failure_on_instance_creation
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:136:13 - inference_failure_on_instance_creation
+warning - The type argument(s) of the constructor 'Future.delayed' can't be inferred - test\unit\bloc\notification_bloc_test.dart:139:13 - inference_failure_on_instance_creation
+   info - The local variable '_sampleChargeItem' starts with an underscore - test\unit\bloc\product_catalog_bloc_test.dart:43:24 - no_leading_underscores_for_local_identifiers
+   info - The local variable '_createItem' starts with an underscore - test\unit\bloc\product_catalog_bloc_test.dart:81:8 - no_leading_underscores_for_local_identifiers
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:110:39 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:110:58 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:110:82 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:111:81 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:165:78 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:188:74 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:213:74 - avoid_redundant_argument_values
+   info - Use 'const' with the constructor to improve performance - test\unit\bloc\product_catalog_bloc_test.dart:294:19 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - test\unit\bloc\product_catalog_bloc_test.dart:295:16 - prefer_const_literals_to_create_immutables
+   info - Missing a required trailing comma - test\unit\bloc\product_catalog_bloc_test.dart:304:10 - require_trailing_commas
+warning - The type argument(s) of 'List' can't be inferred - test\unit\bloc\product_catalog_bloc_test.dart:306:21 - inference_failure_on_collection_literal
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:318:45 - avoid_redundant_argument_values
+   info - Use 'const' with the constructor to improve performance - test\unit\bloc\product_catalog_bloc_test.dart:320:19 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - test\unit\bloc\product_catalog_bloc_test.dart:321:16 - prefer_const_literals_to_create_immutables
+   info - The value of the argument is redundant because it matches the default value - test\unit\bloc\product_catalog_bloc_test.dart:329:21 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - test\unit\bloc\product_catalog_bloc_test.dart:330:10 - require_trailing_commas
+warning - The type argument(s) of 'List' can't be inferred - test\unit\bloc\product_catalog_bloc_test.dart:332:21 - inference_failure_on_collection_literal
+warning - The generic type 'List<dynamic>' should have explicit type arguments but doesn't - test\unit\bloc\product_catalog_bloc_test.dart:446:34 - strict_raw_type
+   info - The value of the argument is redundant because it matches the default value - test\unit\models\notification_model_test.dart:16:17 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\models\notification_model_test.dart:61:59 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\models\notification_model_test.dart:115:35 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\models\notification_model_test.dart:131:17 - avoid_redundant_argument_values
+   info - Use 'const' with the constructor to improve performance - test\unit\models\order_model_test.dart:68:22 - prefer_const_constructors
+   info - The value of the argument is redundant because it matches the default value - test\unit\models\order_model_test.dart:80:19 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\unit\models\order_model_test.dart:112:57 - avoid_redundant_argument_values
+   info - Use 'const' with the constructor to improve performance - test\unit\models\order_model_test.dart:143:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\unit\models\order_model_test.dart:144:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\unit\models\order_model_test.dart:178:22 - prefer_const_constructors
+   info - The value of the argument is redundant because it matches the default value - test\unit\models\order_model_test.dart:194:19 - avoid_redundant_argument_values
+warning - The type argument(s) of 'List' can't be inferred - test\unit\models\products_model_test.dart:39:19 - inference_failure_on_collection_literal
+   info - Closure should be a tearoff - test\unit\repositories\products_repository_test.dart:32:12 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:58:60 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:66:69 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\repositories\products_repository_test.dart:68:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:70:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:70:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\repositories\products_repository_test.dart:76:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:78:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:78:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:104:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:104:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:109:57 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:113:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:113:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:118:69 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:122:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:122:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:146:64 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:157:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:157:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:182:46 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:193:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:193:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:217:48 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\repositories\products_repository_test.dart:226:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:228:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\products_repository_test.dart:228:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\repositories\referral_repository_test.dart:32:12 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:61:46 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:71:69 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\repositories\referral_repository_test.dart:73:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:75:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:75:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\repositories\referral_repository_test.dart:81:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:83:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:83:9 - require_trailing_commas
+warning - The '!' will have no effect because the receiver can't be null - test\unit\repositories\referral_repository_test.dart:93:46 - unnecessary_non_null_assertion
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:104:69 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:115:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\repositories\referral_repository_test.dart:115:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:33:12 - unnecessary_lambdas
+warning - The type argument(s) of 'List' can't be inferred - test\unit\services\cart_service_test.dart:44:54 - inference_failure_on_collection_literal
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:56:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:58:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:58:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:63:69 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:65:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:67:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:67:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:73:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:75:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:75:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:101:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:111:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:111:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:116:68 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:120:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:120:9 - require_trailing_commas
+warning - The type argument(s) of 'List' can't be inferred - test\unit\services\cart_service_test.dart:131:54 - inference_failure_on_collection_literal
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:145:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:145:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:153:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:153:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:176:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:178:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:178:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:183:63 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:185:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:187:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:187:9 - require_trailing_commas
+warning - The '!' will have no effect because the receiver can't be null - test\unit\services\cart_service_test.dart:197:46 - unnecessary_non_null_assertion
+warning - The type argument(s) of 'List' can't be inferred - test\unit\services\cart_service_test.dart:201:59 - inference_failure_on_collection_literal
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:217:8 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:219:14 - unnecessary_lambdas
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:225:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:227:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:227:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:232:69 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\cart_service_test.dart:234:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:236:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:236:9 - require_trailing_commas
+warning - The '!' will have no effect because the receiver can't be null - test\unit\services\cart_service_test.dart:241:46 - unnecessary_non_null_assertion
+warning - The generic type 'List<dynamic>' should have explicit type arguments but doesn't - test\unit\services\cart_service_test.dart:242:35 - strict_raw_type
+   info - Missing a required trailing comma - test\unit\services\cart_service_test.dart:250:8 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\order_service_test.dart:31:12 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:46:12 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\order_service_test.dart:69:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:71:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:71:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\order_service_test.dart:77:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:79:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:79:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\order_service_test.dart:85:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:87:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:87:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:113:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:113:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:121:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:121:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\order_service_test.dart:151:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:153:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:153:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:177:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\order_service_test.dart:177:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\subscription_service_test.dart:32:12 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:46:12 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\subscription_service_test.dart:67:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:69:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:69:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:81:12 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\subscription_service_test.dart:101:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:103:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:103:9 - require_trailing_commas
+   info - Closure should be a tearoff - test\unit\services\subscription_service_test.dart:109:14 - unnecessary_lambdas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:111:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:111:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:136:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:136:9 - require_trailing_commas
+warning - The '!' will have no effect because the receiver can't be null - test\unit\services\subscription_service_test.dart:146:46 - unnecessary_non_null_assertion
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:163:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:163:9 - require_trailing_commas
+warning - The '!' will have no effect because the receiver can't be null - test\unit\services\subscription_service_test.dart:173:46 - unnecessary_non_null_assertion
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:190:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:199:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:203:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:203:9 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:226:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:235:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:239:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:239:9 - require_trailing_commas
+warning - The '!' will have no effect because the receiver can't be null - test\unit\services\subscription_service_test.dart:249:46 - unnecessary_non_null_assertion
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:271:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:275:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\unit\services\subscription_service_test.dart:275:9 - require_trailing_commas
+   info - Use a raw string to avoid using escapes - test\widget\screens\auth_no_password_test.dart:50:19 - use_raw_strings
+   info - Missing a required trailing comma - test\widget\screens\auth_no_password_test.dart:50:62 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\auth_no_password_test.dart:54:46 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\auth_no_password_test.dart:59:77 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\auth_no_password_test.dart:76:73 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\auth_no_password_test.dart:96:75 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\auth_no_password_test.dart:113:68 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\login_page_test.dart:106:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\login_page_test.dart:117:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\phone_entry_screen_test.dart:79:67 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\phone_entry_screen_test.dart:79:68 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\phone_entry_screen_test.dart:79:69 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:65:34 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:65:35 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:72:70 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:83:77 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:89:16 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:95:18 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:95:19 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:98:74 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:107:69 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:127:34 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:127:35 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:130:75 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:170:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:193:8 - require_trailing_commas
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:222:22 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:223:27 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:224:28 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:225:19 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:226:20 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:227:18 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:229:12 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:238:8 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:242:68 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:244:66 - require_trailing_commas
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:247:67 - require_trailing_commas
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:260:22 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:261:27 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:262:28 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:263:19 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:264:20 - avoid_redundant_argument_values
+   info - The value of the argument is redundant because it matches the default value - test\widget\screens\signup_email_step_test.dart:265:18 - avoid_redundant_argument_values
+   info - Missing a required trailing comma - test\widget\screens\signup_email_step_test.dart:267:12 - require_trailing_commas
+
+flutter.bat : 442 issues found. (ran in 174.9s)
+At line:1 char:17
++ ... :\BMJ\lush; & X:\flutter\bin\flutter.bat analyze lib test 2>&1 | Out- ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (442 issues found. (ran in 174.9s):String) 
+    [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

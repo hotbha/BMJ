@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Address Selection - Book My Juice</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-bright": "#dfe4e0",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "surface-tint": "#ffb690",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-surface": "#f6ded3",
+                        "inverse-on-surface": "#3c2d26",
+                        "outline": "#a78b7d",
+                        "on-tertiary-container": "#003936",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "on-surface-variant": "#e0c0b1",
+                        "surface": "#1c110b",
+                        "on-primary-fixed-variant": "#783200",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "tertiary-container": "#1caca3",
+                        "inverse-primary": "#9d4300",
+                        "tertiary": "#5dd9d0",
+                        "on-secondary-fixed-variant": "#005321",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed": "#ffdbca",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-primary-container": "#582200",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-primary": "#552100",
+                        "on-secondary-fixed": "#002109",
+                        "surface-container-low": "#251913",
+                        "surface-variant": "#40322a",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "neon-lime": "#4be277",
+                        "surface-deep": "#0f1412",
+                        "surface-bright": "#45362f",
+                        "background": "#1c110b",
+                        "surface-container-high": "#352720",
+                        "surface-container-lowest": "#160c06",
+                        "secondary-fixed": "#6bff8f",
+                        "primary": "#ffb690",
+                        "primary-container": "#f97316",
+                        "secondary": "#4ae176",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "surface-container-highest": "#40322a",
+                        "inverse-surface": "#f6ded3",
+                        "outline-variant": "#584237",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-tertiary": "#003734"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "max-width-container": "430px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(41, 29, 22, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-panel-active {
+            background: rgba(249, 115, 22, 0.15);
+            backdrop-filter: blur(16px);
+            border: 1px solid theme('colors.primary-container');
+            box-shadow: 0 0 24px rgba(249, 115, 22, 0.15);
+        }
+        .glow-button {
+            box-shadow: 0 0 20px theme('colors.zest-glow');
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md selection:bg-primary-container selection:text-white">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-white/10 shadow-sm z-50">
+<div class="max-w-[430px] mx-auto flex justify-between items-center px-md py-sm">
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200 flex items-center justify-center p-2 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-display-md text-display-md text-primary-container tracking-tighter">Delivery</h1>
+<div class="w-10"></div> <!-- Placeholder for balance -->
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-[430px] mx-auto px-margin-mobile pt-lg pb-32">
+<div class="mb-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-xs">Select Address</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Where should we deliver your juice?</p>
+</div>
+<!-- Address List -->
+<div class="space-y-sm mb-xl">
+<!-- Active Address Card -->
+<label class="block relative cursor-pointer group">
+<input checked="" class="peer sr-only" name="address" type="radio"/>
+<div class="glass-panel-active rounded-xl p-md transition-all duration-300">
+<div class="flex items-start gap-md">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="font-title-lg text-title-lg text-primary-container">Home</span>
+<span class="material-symbols-outlined text-primary-container opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-2">
+                                123 Citrus Lane, Apt 4B<br/>
+                                Zest City, ZC 90210
+                            </p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Delivery instructions: Leave at front door</p>
+</div>
+</div>
+</div>
+</label>
+<!-- Inactive Address Card -->
+<label class="block relative cursor-pointer group">
+<input class="peer sr-only" name="address" type="radio"/>
+<div class="glass-panel rounded-xl p-md transition-all duration-300 peer-checked:glass-panel-active">
+<div class="flex items-start gap-md">
+<div class="flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">work</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-1">
+<span class="font-title-lg text-title-lg text-on-surface group-hover:text-primary-container transition-colors">Office</span>
+<span class="material-symbols-outlined text-primary-container opacity-0 peer-checked:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">
+                                456 Corporate Blvd, Suite 200<br/>
+                                Zest City, ZC 90211
+                            </p>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Delivery instructions: Leave with reception</p>
+</div>
+</div>
+</div>
+</label>
+</div>
+<!-- Add New Address Button -->
+<button class="w-full glass-panel rounded-xl p-md flex items-center justify-center gap-sm text-primary-container hover:bg-surface-variant transition-colors active:scale-95 duration-150 border border-primary-container/30">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_location</span>
+<span class="font-title-lg text-title-lg">Add New Address</span>
+</button>
+<!-- Map Preview Area -->
+<div class="mt-lg rounded-xl overflow-hidden glass-panel h-48 relative border border-white/10 group">
+<div class="bg-cover bg-center w-full h-full opacity-60 mix-blend-screen group-hover:opacity-80 transition-opacity" data-alt="A highly detailed, futuristic top-down digital map view of a glowing, high-tech city. The map interface features neon orange route lines and glowing nodes against a deep, dark charcoal and black background. The aesthetic is sleek, high-contrast, and deeply integrated with a modern glassmorphism UI style. The lighting is artificial and energetic, conveying a sense of rapid, precision delivery." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC31kt7umt_IIZuxEwGvShFIeTYY2HoIk6kxp7vWhcZWZh0Gfq7atBRvR2q0nGlxDmndHvbGZZGEOfcY9gpahhgM12OEeTU5OyAZOnOE5AuWgnizonI85YyWpAHS3X9mRMW4WLwhZNWNJNj_0Ym_0RjdtCwrTqq7vlR1XheMAM3Cjrh63oyKEn_DdDJ39lxQhg-yPvIw750uBn-9sjAvhUJGysLtHDUWJ0p3L4KMLDKkBpXow-it4L-')"></div>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="bg-surface/80 backdrop-blur-md rounded-full p-2 border border-white/10 shadow-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container animate-pulse" style="font-variation-settings: 'FILL' 1;">my_location</span>
+<span class="font-label-sm text-label-sm text-on-surface px-2">Current Location</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Fixed Bottom Action Area -->
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl border-t border-white/5 px-margin-mobile py-lg max-w-[430px] mx-auto">
+<button class="w-full bg-primary-container text-white font-title-lg text-title-lg rounded-full py-4 glow-button hover:bg-orange-600 transition-colors active:scale-95 duration-150 flex items-center justify-center gap-2">
+            Confirm Selection
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</div>
+</body></html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BookMyJuice - Sign In</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#00201e",
+                    "secondary-fixed": "#6bff8f",
+                    "surface-container-lowest": "#160c06",
+                    "surface-container-low": "#251913",
+                    "inverse-surface": "#f6ded3",
+                    "on-secondary-container": "#004119",
+                    "tertiary-fixed": "#7cf6ec",
+                    "on-surface-bright": "#dfe4e0",
+                    "outline-variant": "#584237",
+                    "zest-glow": "rgba(249, 115, 22, 0.45)",
+                    "primary-fixed": "#ffdbca",
+                    "on-primary": "#552100",
+                    "tertiary": "#5dd9d0",
+                    "surface-container": "#291d16",
+                    "on-primary-container": "#582200",
+                    "on-secondary-fixed": "#002109",
+                    "surface-tint": "#ffb690",
+                    "surface-variant": "#40322a",
+                    "secondary-fixed-dim": "#4ae176",
+                    "background": "#1c110b",
+                    "primary": "#ffb690",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#00b954",
+                    "on-tertiary": "#003734",
+                    "outline": "#a78b7d",
+                    "tertiary-container": "#1caca3",
+                    "tertiary-fixed-dim": "#5dd9d0",
+                    "error": "#ffb4ab",
+                    "on-background": "#f6ded3",
+                    "error-container": "#93000a",
+                    "surface-bright": "#45362f",
+                    "on-surface-variant": "#e0c0b1",
+                    "inverse-primary": "#9d4300",
+                    "on-primary-fixed-variant": "#783200",
+                    "secondary": "#4ae176",
+                    "on-tertiary-container": "#003936",
+                    "inverse-on-surface": "#3c2d26",
+                    "neon-lime": "#4be277",
+                    "on-tertiary-fixed-variant": "#00504b",
+                    "primary-fixed-dim": "#ffb690",
+                    "surface": "#1c110b",
+                    "on-error": "#690005",
+                    "surface-dim": "#1c110b",
+                    "on-secondary": "#003915",
+                    "primary-container": "#f97316",
+                    "surface-container-highest": "#40322a",
+                    "on-surface": "#f6ded3",
+                    "on-primary-fixed": "#341100",
+                    "surface-container-high": "#352720",
+                    "surface-deep": "#0f1412",
+                    "on-secondary-fixed-variant": "#005321"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "max-width-container": "430px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "margin-desktop": "32px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "gutter": "12px"
+            },
+            "fontFamily": {
+                    "stat-num": ["Plus Jakarta Sans"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "title-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Inter"],
+                    "display-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "stat-num": ["22px", {"lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700"}],
+                    "headline-lg": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                    "title-lg": ["18px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-md": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center relative overflow-hidden font-body-md antialiased selection:bg-primary-container/30 selection:text-primary">
+<!-- Ambient Lighting FX -->
+<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-container/10 rounded-full blur-[120px] -z-10 mix-blend-screen transform translate-x-1/3 -translate-y-1/4 animate-[pulse_6s_ease-in-out_infinite]"></div>
+<div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-tertiary-container/10 rounded-full blur-[100px] -z-10 mix-blend-screen transform -translate-x-1/3 translate-y-1/4"></div>
+<!-- Main Content Container (Mobile First) -->
+<main class="w-full max-w-max-width-container flex-1 flex flex-col justify-center px-margin-mobile relative z-10">
+<!-- Header & Identity -->
+<header class="flex flex-col items-center text-center mb-[40px]">
+<!-- Glowing Logo Aura Container -->
+<div class="relative mb-lg group">
+<div class="absolute inset-0 bg-primary-container blur-[24px] opacity-40 rounded-full group-hover:opacity-60 transition-opacity duration-700"></div>
+<div class="relative w-20 h-20 bg-surface-container-highest/80 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center transform rotate-3 shadow-xl">
+<span class="material-symbols-outlined text-primary-container text-display-lg" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+</div>
+<h1 class="font-display-md text-display-md text-on-surface mb-xs tracking-tight">Welcome Back</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px]">Enter your mobile number to restore your vitality.</p>
+</header>
+<!-- Glassmorphism Form Card -->
+<div class="relative bg-surface-container/40 backdrop-blur-2xl border border-white/5 rounded-xl p-md shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden">
+<!-- Structural Grain Overlay (simulated via subtle repeating linear gradient) -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000); background-position: 0 0, 2px 2px; background-size: 4px 4px;"></div>
+<form class="flex flex-col gap-lg relative z-10">
+<!-- Input Group -->
+<div class="flex flex-col gap-sm">
+<label class="font-label-lg text-label-lg text-on-surface-variant">Phone Number</label>
+<div class="flex items-stretch gap-sm h-[56px]">
+<!-- Country Code Select -->
+<div class="relative flex-shrink-0 w-[84px]">
+<select class="w-full h-full appearance-none bg-surface-deep/80 backdrop-blur-md border border-outline-variant/50 rounded-lg pl-sm pr-md font-body-lg text-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none cursor-pointer transition-colors shadow-inner">
+<option value="+91">+91</option>
+<option value="+1">+1</option>
+<option value="+44">+44</option>
+</select>
+<span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[20px]">arrow_drop_down</span>
+</div>
+<!-- Number Input -->
+<div class="flex-grow relative">
+<input autocomplete="tel-national" class="w-full h-full bg-surface-deep/80 backdrop-blur-md border border-outline-variant/50 rounded-lg px-md font-stat-num text-stat-num text-on-surface placeholder:text-on-surface-variant/30 focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-all shadow-inner tracking-wider" placeholder="98765 43210" type="tel">
+</div>
+</div>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full h-[56px] bg-primary-container text-on-primary-container rounded-lg font-title-lg text-title-lg flex items-center justify-center shadow-[0_4px_24px_rgba(249,115,22,0.45)] hover:shadow-[0_8px_32px_rgba(249,115,22,0.6)] hover:bg-primary-container/90 active:scale-[0.98] transition-all duration-200 relative overflow-hidden group" type="button">
+<span class="relative z-10 flex items-center gap-sm">
+                        Send OTP
+                        <span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform duration-300">arrow_forward</span>
+</span>
+<!-- Shine Effect -->
+<div class="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-[shine_1.5s_ease-in-out]"></div>
+</button>
+</form>
+</div>
+<!-- Footer Policy Links -->
+<footer class="mt-[32px] text-center px-lg">
+<p class="font-label-sm text-label-sm text-on-surface-variant/50 leading-relaxed">
+                By continuing, you agree to BookMyJuice's<br>
+<a class="text-primary-container/80 hover:text-primary-container underline decoration-primary-container/30 underline-offset-4 transition-colors" href="#">Terms of Service</a> &amp; 
+                <a class="text-primary-container/80 hover:text-primary-container underline decoration-primary-container/30 underline-offset-4 transition-colors" href="#">Privacy Policy</a>
+</p>
+</footer>
+</main>
+<style>
+        @keyframes shine {
+            100% {
+                left: 200%;
+            }
+        }
+    </style>
+</body></html>

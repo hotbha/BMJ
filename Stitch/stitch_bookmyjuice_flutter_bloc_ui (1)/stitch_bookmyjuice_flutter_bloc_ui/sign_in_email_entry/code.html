@@ -1,0 +1,166 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BookMyJuice - Sign In</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#00201e",
+                    "secondary-fixed": "#6bff8f",
+                    "surface-container-lowest": "#160c06",
+                    "surface-container-low": "#251913",
+                    "inverse-surface": "#f6ded3",
+                    "on-secondary-container": "#004119",
+                    "tertiary-fixed": "#7cf6ec",
+                    "on-surface-bright": "#dfe4e0",
+                    "outline-variant": "#584237",
+                    "zest-glow": "rgba(249, 115, 22, 0.45)",
+                    "primary-fixed": "#ffdbca",
+                    "on-primary": "#552100",
+                    "tertiary": "#5dd9d0",
+                    "surface-container": "#291d16",
+                    "on-primary-container": "#582200",
+                    "on-secondary-fixed": "#002109",
+                    "surface-tint": "#ffb690",
+                    "surface-variant": "#40322a",
+                    "secondary-fixed-dim": "#4ae176",
+                    "background": "#1c110b",
+                    "primary": "#ffb690",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#00b954",
+                    "on-tertiary": "#003734",
+                    "outline": "#a78b7d",
+                    "tertiary-container": "#1caca3",
+                    "tertiary-fixed-dim": "#5dd9d0",
+                    "error": "#ffb4ab",
+                    "on-background": "#f6ded3",
+                    "error-container": "#93000a",
+                    "surface-bright": "#45362f",
+                    "on-surface-variant": "#e0c0b1",
+                    "inverse-primary": "#9d4300",
+                    "on-primary-fixed-variant": "#783200",
+                    "secondary": "#4ae176",
+                    "on-tertiary-container": "#003936",
+                    "inverse-on-surface": "#3c2d26",
+                    "neon-lime": "#4be277",
+                    "on-tertiary-fixed-variant": "#00504b",
+                    "primary-fixed-dim": "#ffb690",
+                    "surface": "#1c110b",
+                    "on-error": "#690005",
+                    "surface-dim": "#1c110b",
+                    "on-secondary": "#003915",
+                    "primary-container": "#f97316",
+                    "surface-container-highest": "#40322a",
+                    "on-surface": "#f6ded3",
+                    "on-primary-fixed": "#341100",
+                    "surface-container-high": "#352720",
+                    "surface-deep": "#0f1412",
+                    "on-secondary-fixed-variant": "#005321"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "max-width-container": "430px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "margin-desktop": "32px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "gutter": "12px"
+            },
+            "fontFamily": {
+                    "stat-num": ["Plus Jakarta Sans"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "title-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Inter"],
+                    "display-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "stat-num": ["22px", {"lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700"}],
+                    "headline-lg": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700"}],
+                    "title-lg": ["18px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-md": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col justify-center items-center relative overflow-hidden">
+<!-- Atmospheric Background Effect -->
+<div class="absolute inset-0 pointer-events-none z-0">
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-container/20 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary-container/10 rounded-full blur-[100px]"></div>
+</div>
+<!-- Main Container -->
+<main class="w-full max-w-max-width-container px-margin-mobile z-10">
+<!-- Glassmorphism Card -->
+<div class="bg-surface-container/60 backdrop-blur-[24px] border border-white/10 rounded-xl p-lg shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+<!-- Logo Area -->
+<div class="flex justify-center mb-xl relative">
+<!-- Decorative Glow Behind Logo -->
+<div class="absolute w-16 h-16 bg-primary-container rounded-full blur-2xl opacity-50 z-0"></div>
+<span class="material-symbols-outlined text-[64px] text-primary-container z-10" data-icon="local_drink" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+</div>
+<!-- Headline -->
+<div class="text-center mb-lg">
+<h1 class="font-display-md text-display-md text-on-surface mb-xs">Sign In</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Enter your email to get a magic link</p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-md" method="POST" onsubmit="event.preventDefault(); document.getElementById('loading-state').classList.remove('hidden'); document.getElementById('button-text').classList.add('hidden'); setTimeout(() =&gt; { window.location.href='#' }, 1500);">
+<!-- Email Input Group -->
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant group-focus-within:text-primary-container transition-colors" data-icon="mail">mail</span>
+</div>
+<input class="block w-full pl-[48px] pr-sm py-sm h-12 bg-[#1c211e] border border-white/10 rounded-lg text-on-surface font-body-lg text-body-lg focus:ring-1 focus:ring-primary-container focus:border-primary-container placeholder-on-surface-variant/50 transition-all outline-none" id="email" name="email" placeholder="you@example.com" required="" type="email">
+</div>
+<!-- Submit Button -->
+<button class="w-full h-12 bg-primary-container text-on-primary-container rounded-lg font-label-lg text-label-lg shadow-[0_4px_16px_rgba(249,115,22,0.45)] hover:bg-primary-container/90 active:scale-95 transition-all duration-200 flex items-center justify-center gap-sm relative overflow-hidden" type="submit">
+<span class="flex items-center gap-sm" id="button-text">
+                        Send OTP to Email
+                        <span class="material-symbols-outlined text-on-primary-container" data-icon="arrow_forward">arrow_forward</span>
+</span>
+<span class="hidden absolute inset-0 flex items-center justify-center" id="loading-state">
+<svg class="animate-spin h-5 w-5 text-on-primary-container" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+</span>
+</button>
+</form>
+<!-- Legal/Secondary links -->
+<div class="mt-lg text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    By continuing, you agree to our <a class="text-primary hover:underline underline-offset-2" href="#">Terms</a> and <a class="text-primary hover:underline underline-offset-2" href="#">Privacy</a>.
+                </p>
+</div>
+</div>
+</main>
+</body></html>

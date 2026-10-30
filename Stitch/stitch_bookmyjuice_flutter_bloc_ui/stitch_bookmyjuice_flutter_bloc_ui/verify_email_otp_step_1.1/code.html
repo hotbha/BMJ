@@ -1,0 +1,272 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Verify Your Email - BookMyJuice</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config injected from Style Guidance -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-container": "#00b954",
+                        "primary-fixed-dim": "#ffb690",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-tertiary-container": "#003936",
+                        "error": "#ffb4ab",
+                        "outline": "#a78b7d",
+                        "primary-fixed": "#ffdbca",
+                        "on-secondary": "#003915",
+                        "on-primary-fixed": "#341100",
+                        "secondary": "#4ae176",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#f6ded3",
+                        "on-primary-container": "#582200",
+                        "surface-bright": "#45362f",
+                        "surface-tint": "#ffb690",
+                        "surface-container-low": "#251913",
+                        "outline-variant": "#584237",
+                        "secondary-fixed-dim": "#4ae176",
+                        "primary-container": "#f97316",
+                        "surface-container-high": "#352720",
+                        "inverse-on-surface": "#3c2d26",
+                        "surface-dim": "#1c110b",
+                        "surface": "#1c110b",
+                        "surface-container": "#291d16",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "on-surface-variant": "#e0c0b1",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#40322a",
+                        "on-tertiary": "#003734",
+                        "inverse-primary": "#9d4300",
+                        "surface-container-lowest": "#160c06",
+                        "tertiary": "#5dd9d0",
+                        "on-primary-fixed-variant": "#783200",
+                        "on-secondary-fixed": "#002109",
+                        "tertiary-container": "#1caca3",
+                        "on-secondary-fixed-variant": "#005321",
+                        "secondary-fixed": "#6bff8f",
+                        "inverse-surface": "#f6ded3",
+                        "surface-deep": "#0f1412",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "neon-lime": "#4be277",
+                        "surface-variant": "#40322a",
+                        "on-surface": "#f6ded3",
+                        "on-secondary-container": "#004119",
+                        "on-primary": "#552100",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "primary": "#ffb690",
+                        "on-surface-bright": "#dfe4e0",
+                        "background": "#1c110b",
+                        "tertiary-fixed": "#7cf6ec"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "margin-desktop": "32px",
+                        "max-width-container": "430px",
+                        "margin-mobile": "16px",
+                        "gutter": "12px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "base": "4px"
+                    },
+                    fontFamily: {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Inter"],
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "body-lg": ["16px", { lineHeight: "24px", letterSpacing: "0.02em", fontWeight: "400" }],
+                        "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.05em", fontWeight: "700" }],
+                        "display-md": ["28px", { lineHeight: "34px", letterSpacing: "-0.02em", fontWeight: "800" }],
+                        "body-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "400" }],
+                        "headline-md": ["20px", { lineHeight: "26px", letterSpacing: "0em", fontWeight: "700" }],
+                        "title-lg": ["18px", { lineHeight: "24px", letterSpacing: "0.01em", fontWeight: "600" }],
+                        "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "700" }],
+                        "stat-num": ["22px", { lineHeight: "26px", letterSpacing: "-0.02em", fontWeight: "800" }],
+                        "headline-lg": ["22px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "700" }],
+                        "display-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "800" }]
+                    },
+                    boxShadow: {
+                        "zest-glow": "0 8px 32px 0 rgba(249, 115, 22, 0.45)"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* OTP Input specific hiding of number arrows */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        
+        /* Ambient Background Glow */
+        .ambient-glow {
+            position: absolute;
+            width: 60vh;
+            height: 60vh;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, rgba(28, 17, 11, 0) 70%);
+            top: -20vh;
+            right: -20vw;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(40px);
+        }
+        
+        .ambient-glow-2 {
+            position: absolute;
+            width: 50vh;
+            height: 50vh;
+            background: radial-gradient(circle, rgba(0, 185, 84, 0.05) 0%, rgba(28, 17, 11, 0) 70%);
+            bottom: -10vh;
+            left: -10vw;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(40px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen relative overflow-hidden flex flex-col font-body-lg text-body-lg">
+<!-- Atmospheric Background -->
+<div class="ambient-glow"></div>
+<div class="ambient-glow-2"></div>
+<!-- Main Fluid Container -->
+<main class="w-full max-w-max-width-container mx-auto px-margin-mobile flex-grow flex flex-col relative z-10 py-12 justify-center">
+<!-- Brand / Header Anchor -->
+<header class="w-full flex justify-center items-center mb-8"><button onclick="window.location.href='{{DATA:SCREEN:SCREEN_18}}'" class="absolute left-0 p-2 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center" aria-label="Go back"><span class="material-symbols-outlined">arrow_back</span></button>
+<h1 class="font-display-md text-display-md font-extrabold text-primary-container tracking-tighter">
+                BookMyJuice
+            </h1>
+</header>
+<!-- Glassmorphism Content Card -->
+<div class="bg-surface-container/60 backdrop-blur-2xl border border-white/10 rounded-xl p-6 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+<!-- Subtle inner gradient for premium feel -->
+<div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+<!-- Icon -->
+<div class="w-16 h-16 rounded-full bg-surface-deep border border-white/10 flex items-center justify-center mb-6 shadow-lg relative z-10">
+<span class="material-symbols-outlined text-primary-container text-[32px]" style="font-variation-settings: 'FILL' 1;">
+                    mark_email_unread
+                </span>
+</div>
+<!-- Typography hierarchy -->
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2 relative z-10">
+                Verify Your Email
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 relative z-10">
+                We've sent a 6-digit code to <br>
+<strong class="text-primary font-bold">alex.zest@gmail.com</strong>
+</p>
+<!-- OTP Input Form -->
+<form class="w-full relative z-10" id="otp-form">
+<div class="flex justify-between gap-2 mb-8 w-full max-w-[320px] mx-auto">
+<!-- 6 Separate Inputs -->
+<input autofocus="" class="w-12 h-14 rounded-lg bg-surface-deep border border-outline-variant text-center font-stat-num text-stat-num text-on-surface shadow-inner focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" maxlength="1" pattern="\d*" type="number">
+<input class="w-12 h-14 rounded-lg bg-surface-deep border border-outline-variant text-center font-stat-num text-stat-num text-on-surface shadow-inner focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" maxlength="1" pattern="\d*" type="number">
+<input class="w-12 h-14 rounded-lg bg-surface-deep border border-outline-variant text-center font-stat-num text-stat-num text-on-surface shadow-inner focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" maxlength="1" pattern="\d*" type="number">
+<input class="w-12 h-14 rounded-lg bg-surface-deep border border-outline-variant text-center font-stat-num text-stat-num text-on-surface shadow-inner focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" maxlength="1" pattern="\d*" type="number">
+<input class="w-12 h-14 rounded-lg bg-surface-deep border border-outline-variant text-center font-stat-num text-stat-num text-on-surface shadow-inner focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" maxlength="1" pattern="\d*" type="number">
+<input class="w-12 h-14 rounded-lg bg-surface-deep border border-outline-variant text-center font-stat-num text-stat-num text-on-surface shadow-inner focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" maxlength="1" pattern="\d*" type="number">
+</div>
+<!-- Resend & Timer -->
+<div class="flex items-center justify-center gap-2 mb-8 font-label-lg text-label-lg">
+<span class="text-on-surface-variant">Didn't receive it?</span>
+<button class="text-primary-container hover:text-primary transition-colors flex items-center gap-1 group" type="button">
+                        Resend Code
+                        <span class="text-on-surface-variant group-hover:text-primary transition-colors font-stat-num text-[14px]">
+                            (00:45)
+                        </span>
+</button>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full bg-primary-container text-on-primary-container font-label-lg text-label-lg py-4 rounded-full shadow-zest-glow hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2 relative overflow-hidden group" type="button" onclick="window.location.href='{{DATA:SCREEN:SCREEN_17}}'">
+<span class="relative z-10">Verify &amp; Continue</span>
+<span class="material-symbols-outlined relative z-10 transition-transform group-hover:translate-x-1" style="font-variation-settings: 'wght' 600;">
+                        arrow_forward
+                    </span>
+<!-- Button interaction glow -->
+<div class="absolute inset-0 bg-white/20 opacity-0 group-active:opacity-100 transition-opacity"></div>
+</button>
+</form>
+</div>
+</main>
+<!-- Lightweight JS for OTP Input Logic (Auto-advance) -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('#otp-form input[type="number"]');
+            
+            inputs.forEach((input, index) => {
+                // Handle input sequence
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length > 1) {
+                        e.target.value = e.target.value.slice(0, 1); // Keep only first char
+                    }
+                    if (e.target.value.length === 1) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        } else {
+                            input.blur(); // Dismiss keyboard on last input
+                        }
+                        // Add active glow state visually
+                        e.target.classList.add('border-primary-container', 'shadow-zest-glow');
+                        e.target.classList.remove('border-outline-variant');
+                    } else if (e.target.value.length === 0) {
+                        // Remove glow
+                        e.target.classList.remove('border-primary-container', 'shadow-zest-glow');
+                        e.target.classList.add('border-outline-variant');
+                    }
+                });
+
+                // Handle backspace navigation
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+                
+                // Focus styling
+                input.addEventListener('focus', (e) => {
+                    e.target.classList.add('border-primary-container');
+                });
+                input.addEventListener('blur', (e) => {
+                    if(e.target.value === '') {
+                        e.target.classList.remove('border-primary-container');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

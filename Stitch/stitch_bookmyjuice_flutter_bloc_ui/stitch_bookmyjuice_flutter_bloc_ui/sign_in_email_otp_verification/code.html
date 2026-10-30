@@ -1,0 +1,245 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BookMyJuice - Verify Email</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#00201e",
+                        "secondary-fixed": "#6bff8f",
+                        "surface-container-lowest": "#160c06",
+                        "surface-container-low": "#251913",
+                        "inverse-surface": "#f6ded3",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-surface-bright": "#dfe4e0",
+                        "outline-variant": "#584237",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "primary-fixed": "#ffdbca",
+                        "on-primary": "#552100",
+                        "tertiary": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "on-primary-container": "#582200",
+                        "on-secondary-fixed": "#002109",
+                        "surface-tint": "#ffb690",
+                        "surface-variant": "#40322a",
+                        "secondary-fixed-dim": "#4ae176",
+                        "background": "#1c110b",
+                        "primary": "#ffb690",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-tertiary": "#003734",
+                        "outline": "#a78b7d",
+                        "tertiary-container": "#1caca3",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "error-container": "#93000a",
+                        "surface-bright": "#45362f",
+                        "on-surface-variant": "#e0c0b1",
+                        "inverse-primary": "#9d4300",
+                        "on-primary-fixed-variant": "#783200",
+                        "secondary": "#4ae176",
+                        "on-tertiary-container": "#003936",
+                        "inverse-on-surface": "#3c2d26",
+                        "neon-lime": "#4be277",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "primary-fixed-dim": "#ffb690",
+                        "surface": "#1c110b",
+                        "on-error": "#690005",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "primary-container": "#f97316",
+                        "surface-container-highest": "#40322a",
+                        "on-surface": "#f6ded3",
+                        "on-primary-fixed": "#341100",
+                        "surface-container-high": "#352720",
+                        "surface-deep": "#0f1412",
+                        "on-secondary-fixed-variant": "#005321"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "max-width-container": "430px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "margin-mobile": "16px",
+                        "md": "16px",
+                        "margin-desktop": "32px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Inter"],
+                        "display-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(28, 17, 11, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .otp-input {
+            width: 48px;
+            height: 56px;
+            background: #1c211e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f6ded3;
+            text-align: center;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .otp-input:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.45);
+            background: rgba(28, 17, 11, 0.8);
+        }
+        
+        .btn-primary {
+            background-color: #f97316;
+            color: white;
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.45);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center relative overflow-hidden font-body-lg">
+<!-- Background Decoration -->
+<div class="absolute inset-0 pointer-events-none z-0">
+<div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary-container opacity-20 blur-[100px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-tertiary-container opacity-10 blur-[80px]"></div>
+</div>
+<!-- Main Container -->
+<main class="w-full max-w-max-width-container px-margin-mobile z-10 relative">
+<!-- Back Button (Transactional context) -->
+<button aria-label="Go back" class="absolute top-0 left-margin-mobile flex items-center justify-center w-12 h-12 rounded-full glass-panel hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<div class="mt-20 mb-8 text-center">
+<div class="w-16 h-16 mx-auto mb-6 rounded-2xl glass-panel flex items-center justify-center border-primary/30 shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+<span class="material-symbols-outlined text-primary text-3xl">mark_email_read</span>
+</div>
+<h1 class="font-display-md text-display-md mb-2">Verify Your Email</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mb-1">We've sent a 6-digit code to</p>
+<p class="font-label-lg text-label-lg text-primary">alex.zest@gmail.com</p>
+</div>
+<div class="glass-panel rounded-[24px] p-6 mb-8">
+<form class="flex flex-col gap-6" id="otp-form">
+<div class="flex justify-between gap-2" id="otp-container">
+<input aria-label="Digit 1" autofocus="" class="otp-input font-stat-num text-stat-num" maxlength="1" pattern="[0-9]" type="text">
+<input aria-label="Digit 2" class="otp-input font-stat-num text-stat-num" maxlength="1" pattern="[0-9]" type="text">
+<input aria-label="Digit 3" class="otp-input font-stat-num text-stat-num" maxlength="1" pattern="[0-9]" type="text">
+<input aria-label="Digit 4" class="otp-input font-stat-num text-stat-num" maxlength="1" pattern="[0-9]" type="text">
+<input aria-label="Digit 5" class="otp-input font-stat-num text-stat-num" maxlength="1" pattern="[0-9]" type="text">
+<input aria-label="Digit 6" class="otp-input font-stat-num text-stat-num" maxlength="1" pattern="[0-9]" type="text">
+</div>
+<div class="flex items-center justify-center mt-2">
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+                        Didn't receive the code? 
+                        <button class="text-primary hover:text-primary/80 font-label-lg text-label-lg transition-colors ml-1" id="resend-btn" type="button" disabled="">
+                            Resend Code <span class="text-on-surface-variant font-body-md font-normal ml-1" id="timer">(00:45)</span>
+</button>
+</p>
+</div>
+<button class="btn-primary w-full py-4 rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 mt-4" type="submit">
+<span>Verify &amp; Sign In</span>
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</form>
+</div>
+</main>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('.otp-input');
+            const form = document.getElementById('otp-form');
+            
+            // Auto-focus and move to next input
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    // Allow only numbers
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    
+                    if (e.target.value.length === 1) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && e.target.value === '') {
+                        if (index > 0) {
+                            inputs[index - 1].focus();
+                        }
+                    }
+                });
+            });
+
+            // Timer logic for Resend
+            let timeLeft = 45;
+            const timerElement = document.getElementById('timer');
+            const resendBtn = document.getElementById('resend-btn');
+
+            const countdown = setInterval(() => {
+                timeLeft--;
+                const seconds = timeLeft < 10 ? `0${timeLeft}` : timeLeft;
+                timerElement.textContent = `(00:${seconds})`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    timerElement.textContent = '';
+                    resendBtn.disabled = false;
+                    resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }, 1000);
+            
+            // Initial styling for disabled resend
+            resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+    </script>
+</body></html>

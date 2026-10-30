@@ -4,6 +4,11 @@
 **Last Updated:** 2026-05-25  
 **Currency:** INR (₹)
 
+> ⛔ **NOT A PRICE SOURCE — retained only for subscription context.**
+> Per [ADR-005](architecture/ADR-005-chargebee-sole-pricing-source.md), the **sole** pricing source is **Chargebee Product Catalog 2.0**, populated from `docs/business-requirements/pricing-table.xlsx` and verified against `CHARGEBEE_FINAL_PRICE_MATRIX.md`.
+> **The per-bottle tables below are wrong.** ADR-005 records that 8 of the 9 "Regular Price (per bottle)" cells disagree with the approved matrix; verified example: Delight 500ml is shown here as **₹229**, but the approved one-time price is **₹220** (`22000` paise).
+> Do **not** copy values from this file into code, config, tests, a payload or the catalog — read them from Chargebee.
+
 ---
 
 ## 📊 Pricing Table

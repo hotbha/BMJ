@@ -1,0 +1,15 @@
+﻿e1d11e6 makeover
+b4932b2 fix: catalog chips persist after filter, plan selection structured fields, subscribe button wired
+db9064e Auto UAT done but bugs remain
+85e7d26 fix(auth): existing Google users emit Authenticated not SignUpFailed
+2c450b8 fix: BUG-GoogleSignIn - validate email existence before redirecting to signup
+87db5cf e2e appium not working
+177b3f9 full e2e created
+d44e072 ready for e2e testing
+8ca7764 referral+order history+firebase ana;ytics added
+c8e943e black-box-tested-phase1
+56dba84 ed2 test suite prepared and run
+7d789b3 Phase-1 Gap fills
+5b0398b gcloud+firebase integrations done, screens changed
+681b0ec enterprise grade edit
+b347b79 authentication and chargebee integration doen using QWEN code

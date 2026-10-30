@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Subscription Schedule - Book My Juice</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-bright": "#dfe4e0",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "surface-tint": "#ffb690",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-surface": "#f6ded3",
+                        "inverse-on-surface": "#3c2d26",
+                        "outline": "#a78b7d",
+                        "on-tertiary-container": "#003936",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "on-surface-variant": "#e0c0b1",
+                        "surface": "#1c110b",
+                        "on-primary-fixed-variant": "#783200",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "tertiary-container": "#1caca3",
+                        "inverse-primary": "#9d4300",
+                        "tertiary": "#5dd9d0",
+                        "on-secondary-fixed-variant": "#005321",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed": "#ffdbca",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-primary-container": "#582200",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-primary": "#552100",
+                        "on-secondary-fixed": "#002109",
+                        "surface-container-low": "#251913",
+                        "surface-variant": "#40322a",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "neon-lime": "#4be277",
+                        "surface-deep": "#0f1412",
+                        "surface-bright": "#45362f",
+                        "background": "#1c110b",
+                        "surface-container-high": "#352720",
+                        "surface-container-lowest": "#160c06",
+                        "secondary-fixed": "#6bff8f",
+                        "primary": "#ffb690",
+                        "primary-container": "#f97316",
+                        "secondary": "#4ae176",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "surface-container-highest": "#40322a",
+                        "inverse-surface": "#f6ded3",
+                        "outline-variant": "#584237",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-tertiary": "#003734"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "max-width-container": "430px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(28, 17, 11, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-active {
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.45);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32 font-sans overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="max-w-[430px] mx-auto flex justify-between items-center px-md py-sm z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-white/10 shadow-sm">
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity flex items-center justify-center p-2 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<div class="font-display-md text-display-md text-primary-container tracking-tighter text-center flex-1 truncate px-4">
+            Book My Juice
+        </div>
+<button class="text-on-surface-variant dark:text-on-surface-variant hover:opacity-80 transition-opacity flex items-center justify-center p-2 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_cart</span>
+</button>
+</header>
+<main class="max-w-[430px] mx-auto px-margin-mobile pt-lg pb-xl space-y-lg relative">
+<!-- Header Section -->
+<div class="space-y-sm">
+<h1 class="font-display-lg text-display-lg text-on-surface">Weekly Plan</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Customize your daily vitalization protocol.</p>
+<div class="flex gap-sm pt-sm">
+<button class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl glass-panel text-on-surface hover:text-primary-container transition-colors border border-white/10 hover:border-primary-container/50 font-label-lg text-label-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0; font-size: 18px;">bolt</span>
+                    Quick Fill
+                </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl glass-panel text-on-surface hover:text-primary-container transition-colors border border-white/10 hover:border-primary-container/50 font-label-lg text-label-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0; font-size: 18px;">history</span>
+                    Repeat Last
+                </button>
+</div>
+</div>
+<!-- Day Selector Grid -->
+<div class="space-y-md">
+<!-- Monday (Filled) -->
+<div class="glass-panel rounded-xl p-md flex items-center gap-md relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary-container/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-high border border-white/5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Mon</span>
+<span class="font-stat-num text-stat-num text-on-surface">12</span>
+</div>
+<div class="flex-1 flex items-center gap-sm">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-white/10 shrink-0">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a vibrant orange citrus juice drink splashing in a clear glass bottle against a pure dark background. The lighting is dramatic and studio quality, emphasizing the high-energy, refreshing nature of the drink. Deep black backdrop with vivid orange #f97316 highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP8G4RRE-HfO4GkMJ-USFRUt07ChZFGVp5yjl71UvVuBc6EpDQ-U0Hy0rqRN_IGPMQRQ0JAiLnRs1WvCWxnOxh-ZPj0J92buQyGp8pACtrSRxYouhGID-UJWtf1dBoZUKwssemWo5WMvkI0Puin-9bLSkaIXUFLclTJYytGtsCP35P4CX-X0wOPSeOF0cCOF07XRPoRejADQoSAxcWWhNDILOud4PpW5-FWv_SvAZ9cffxQWc0z_-6"/>
+</div>
+<div class="flex flex-col justify-center">
+<span class="font-title-lg text-title-lg text-on-surface line-clamp-1">Citrus Surge</span>
+<span class="font-body-md text-body-md text-on-surface-variant">500ml • Energy</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary-container hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">edit</span>
+</button>
+</div>
+<!-- Tuesday (Empty) -->
+<div class="glass-panel rounded-xl p-md flex items-center gap-md relative overflow-hidden group border-dashed border-white/20">
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-high border border-white/5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Tue</span>
+<span class="font-stat-num text-stat-num text-on-surface">13</span>
+</div>
+<button class="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-white/5 border border-white/10 text-on-surface hover:text-primary-container hover:border-primary-container/50 transition-all font-label-lg text-label-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_circle</span>
+                    Pick Flavor
+                </button>
+</div>
+<!-- Wednesday (Filled) -->
+<div class="glass-panel rounded-xl p-md flex items-center gap-md relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary-container/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-high border border-white/5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Wed</span>
+<span class="font-stat-num text-stat-num text-on-surface">14</span>
+</div>
+<div class="flex-1 flex items-center gap-sm">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-white/10 shrink-0">
+<img class="w-full h-full object-cover" data-alt="A close up of a deep green, vitalizing vegetable and spirulina juice in a frosted glass bottle. The background is a sleek, dark charcoal studio setup with high contrast lighting catching the condensation on the glass. The mood is pure, intense wellness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgvexbcm0ZQ-vRFJrxL1Lc63cz1njUJSkErs4QMLq9LQGRDGfVWI84jdKO7z7xggf8Pj2sOIRPCFUK87VQFMriqR91KXDKaf4s-bHZASySDNrYSnqlIRFCh64VlsFhKhtFAMMzP2B-rmrwqTLICR-ud44OQgM2y7Vd0fBhdDl-NKci7zp_-jGbg7P5wQ_jlakBDBi2W6g0z3LMJtW__bxKp65p4r-HgDEbn1v1i30i9MGsmIZnwjM4"/>
+</div>
+<div class="flex flex-col justify-center">
+<span class="font-title-lg text-title-lg text-on-surface line-clamp-1">Deep Green</span>
+<span class="font-body-md text-body-md text-on-surface-variant">500ml • Detox</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary-container hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">edit</span>
+</button>
+</div>
+<!-- Thursday (Empty) -->
+<div class="glass-panel rounded-xl p-md flex items-center gap-md relative overflow-hidden group border-dashed border-white/20">
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-high border border-white/5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Thu</span>
+<span class="font-stat-num text-stat-num text-on-surface">15</span>
+</div>
+<button class="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-white/5 border border-white/10 text-on-surface hover:text-primary-container hover:border-primary-container/50 transition-all font-label-lg text-label-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_circle</span>
+                    Pick Flavor
+                </button>
+</div>
+<!-- Friday (Empty) -->
+<div class="glass-panel rounded-xl p-md flex items-center gap-md relative overflow-hidden group border-dashed border-white/20">
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-high border border-white/5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Fri</span>
+<span class="font-stat-num text-stat-num text-on-surface">16</span>
+</div>
+<button class="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-white/5 border border-white/10 text-on-surface hover:text-primary-container hover:border-primary-container/50 transition-all font-label-lg text-label-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_circle</span>
+                    Pick Flavor
+                </button>
+</div>
+<!-- Saturday (Empty) -->
+<div class="glass-panel rounded-xl p-md flex items-center gap-md relative overflow-hidden group border-dashed border-white/20">
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-high border border-white/5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Sat</span>
+<span class="font-stat-num text-stat-num text-on-surface">17</span>
+</div>
+<button class="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-white/5 border border-white/10 text-on-surface hover:text-primary-container hover:border-primary-container/50 transition-all font-label-lg text-label-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_circle</span>
+                    Pick Flavor
+                </button>
+</div>
+<!-- Sunday (Off) -->
+<div class="glass-panel rounded-xl p-md flex items-center gap-md relative overflow-hidden opacity-50 grayscale pointer-events-none">
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-lowest border border-white/5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Sun</span>
+<span class="font-stat-num text-stat-num text-on-surface">18</span>
+</div>
+<div class="flex-1 flex items-center justify-center py-3">
+<span class="font-label-lg text-label-lg text-on-surface-variant">Rest Day</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Summary Footer (Fixed above BottomNav if present, or bottom of screen) -->
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+<div class="max-w-[430px] mx-auto px-margin-mobile py-md pb-24 md:pb-md flex justify-between items-center">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface-variant">Selected Plan</span>
+<span class="font-headline-md text-headline-md text-on-surface">2 / 6 Days <span class="text-primary-container text-sm align-top ml-1">$18</span></span>
+</div>
+<button class="bg-primary-container text-on-primary-container font-label-lg text-label-lg px-6 py-3 rounded-full flex items-center gap-2 glow-active hover:scale-95 transition-transform duration-200">
+                Confirm Plan
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 20px;">check_circle</span>
+</button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<!-- Suppressed based on semantic rule: Task-focused sub-page with back action implies temporary departure. -->
+</body></html>

@@ -1,0 +1,166 @@
+﻿active_subscription_screen.dart|0|NO-REFS-OUTSIDE-SELF
+address.dart|5|x:\BMJ\lush\lib\models\order_detail.dart ; x:\BMJ\lush\lib\bloc\OrderBloc\order_bloc.dart ; x:\BMJ\lush\lib\views\screens\user_profile_screen.dart ; x:\BMJ\lush\test\unit\models\order_model_test.dart ; x:\BMJ\lush\README.md
+address_entry_screen.dart|1|x:\BMJ\lush\lib\main.dart
+address_screen.dart|0|NO-REFS-OUTSIDE-SELF
+address_selection_screen.dart|1|x:\BMJ\lush\lib\main.dart
+all_Screens.dart|1|x:\BMJ\lush\README.md
+analytics_service.dart|13|x:\BMJ\lush\test\bloc\referral_bloc_test.dart ; x:\BMJ\lush\test_results.json ; x:\BMJ\lush\test\subscription_bloc_test.dart ; x:\BMJ\lush\test\order_flow_test.dart ; x:\BMJ\lush\test\unit\bloc\auth_bloc_test.dart ; x:\BMJ\lush\test\unit\bloc\notification_bloc_test.dart ; ...
+api_config.dart|8|x:\BMJ\lush\lib\UserRepository\user_repository.dart ; x:\BMJ\lush\lib\repositories\referral_repository.dart ; x:\BMJ\lush\lib\repositories\products_repository.dart ; x:\BMJ\lush\lib\services\cart_service.dart ; x:\BMJ\lush\lib\services\bottle_service.dart ; x:\BMJ\lush\lib\services\subscription_service.dart ; ...
+app_card.dart|4|x:\BMJ\lush\README.md ; x:\BMJ\lush\lib\views\widgets\dashboard_components.dart ; x:\BMJ\lush\lib\views\widgets\subscription_info_card.dart ; x:\BMJ\lush\lib\views\screens\order_history_page.dart
+app_colors.dart|57|x:\BMJ\lush\lib\widgets\glass_card.dart ; x:\BMJ\lush\lib\widgets\app_text_field.dart ; x:\BMJ\lush\lib\widgets\cart_badge_icon.dart ; x:\BMJ\lush\lib\widgets\app_drawer.dart ; x:\BMJ\lush\lib\views\widgets\welcome_header.dart ; x:\BMJ\lush\lib\views\widgets\subscription_info_card.dart ; ...
+app_drawer.dart|0|NO-REFS-OUTSIDE-SELF
+app_icons.dart|0|NO-REFS-OUTSIDE-SELF
+app_logger.dart|7|x:\BMJ\lush\lib\CartRepository\cart_repository.dart ; x:\BMJ\lush\lib\services\subscription_service.dart ; x:\BMJ\lush\lib\services\cart_service.dart ; x:\BMJ\lush\lib\services\bottle_service.dart ; x:\BMJ\lush\lib\services\item_service.dart ; x:\BMJ\lush\lib\services\invoice_service.dart ; ...
+app_radius.dart|10|x:\BMJ\lush\lib\widgets\glass_card.dart ; x:\BMJ\lush\lib\widgets\cart_badge_icon.dart ; x:\BMJ\lush\lib\views\screens\home_tab.dart ; x:\BMJ\lush\lib\views\screens\menu_tab.dart ; x:\BMJ\lush\lib\views\screens\orders_tab.dart ; x:\BMJ\lush\lib\views\screens\profile_tab.dart ; ...
+app_spacing.dart|7|x:\BMJ\lush\lib\widgets\app_text_field.dart ; x:\BMJ\lush\lib\views\screens\create_password_screen.dart ; x:\BMJ\lush\lib\views\screens\email_signup_screen.dart ; x:\BMJ\lush\lib\views\screens\login_page.dart ; x:\BMJ\lush\lib\views\screens\google_signup_screen.dart ; x:\BMJ\lush\lib\views\screens\sign_up_screen.dart ; ...
+app_text_field.dart|5|x:\BMJ\lush\lib\views\screens\google_signup_screen.dart ; x:\BMJ\lush\test\widgets\signup_validation_test.dart ; x:\BMJ\lush\lib\views\screens\sign_up_screen.dart ; x:\BMJ\lush\lib\views\screens\email_signup_screen.dart ; x:\BMJ\lush\lib\views\screens\forgot_password_screen.dart
+app_text_styles.dart|12|x:\BMJ\lush\lib\views\widgets\subscription_plan_card.dart ; x:\BMJ\lush\lib\views\screens\email_signup_screen.dart ; x:\BMJ\lush\lib\theme\app_theme.dart ; x:\BMJ\lush\lib\views\screens\cart_screen.dart.bak ; x:\BMJ\lush\lib\views\screens\login_page.dart ; x:\BMJ\lush\lib\views\widgets\filter_options.dart ; ...
+app_theme.dart|10|x:\BMJ\lush\lib\widgets\app_text_field.dart ; x:\BMJ\lush\test_results.json ; x:\BMJ\lush\test\theme\app_theme_test.dart ; x:\BMJ\lush\lib\theme\theme_cubit.dart ; x:\BMJ\lush\lib\views\screens\google_signup_screen.dart ; x:\BMJ\lush\lib\views\screens\email_signup_screen.dart ; ...
+auth_bloc.dart|26|x:\BMJ\lush\test_results.json ; x:\BMJ\lush\test\mocks.mocks.dart ; x:\BMJ\lush\test\widgets\signup_screen_test.dart ; x:\BMJ\lush\test\widget\screens\login_page_test.dart ; x:\BMJ\lush\lib\widgets\app_drawer.dart ; x:\BMJ\lush\test\mocks.dart ; ...
+auth_events.dart|22|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\widgets\app_drawer.dart ; x:\BMJ\lush\lib\bloc\AuthBloc\auth_bloc.dart ; x:\BMJ\lush\lib\views\screens\address_entry_screen.dart ; x:\BMJ\lush\lib\views\screens\create_password_screen.dart ; x:\BMJ\lush\lib\views\screens\email_signup_screen.dart ; ...
+auth_state.dart|21|x:\BMJ\lush\lib\bloc\AuthBloc\auth_bloc.dart ; x:\BMJ\lush\test\mocks.mocks.dart ; x:\BMJ\lush\test\widgets\signup_screen_test.dart ; x:\BMJ\lush\test\widget\screens\login_page_test.dart ; x:\BMJ\lush\test\unit\bloc\auth_bloc_test.dart ; x:\BMJ\lush\lib\views\screens\google_phone_entry_screen.dart ; ...
+back_button_handler.dart|11|x:\BMJ\lush\lib\views\screens\address_entry_screen.dart ; x:\BMJ\lush\lib\views\screens\checkout_screen.dart ; x:\BMJ\lush\lib\views\screens\create_password_screen.dart ; x:\BMJ\lush\lib\views\screens\day_wise_schedule_screen.dart ; x:\BMJ\lush\lib\views\screens\email_verification_screen.dart ; x:\BMJ\lush\lib\views\screens\email_signup_screen.dart ; ...
+bottle_ledger.dart|4|x:\BMJ\lush\lib\bloc\UserBloc\user_state.dart ; x:\BMJ\lush\lib\services\bottle_service.dart ; x:\BMJ\lush\test\unit\bloc\user_bloc_test.dart ; x:\BMJ\lush\lib\views\widgets\my_bottles_widget.dart
+bottle_service.dart|3|x:\BMJ\lush\lib\get_it.dart ; x:\BMJ\lush\test\unit\bloc\user_bloc_test.dart ; x:\BMJ\lush\lib\bloc\UserBloc\user_bloc.dart
+cancel_subscription_screen.dart|0|NO-REFS-OUTSIDE-SELF
+cart.dart|1|x:\BMJ\lush\README.md
+cart_badge_icon.dart|1|x:\BMJ\lush\lib\views\screens\dashboard.dart
+cart_bloc.dart|16|x:\BMJ\lush\test\order_flow_test.dart ; x:\BMJ\lush\lib\widgets\cart_badge_icon.dart ; x:\BMJ\lush\lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart ; x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\widgets\cart_icon.dart ; x:\BMJ\lush\lib\views\models\item_card_view.dart ; ...
+cart_event.dart|15|x:\BMJ\lush\test\unit\bloc\product_catalog_bloc_test.dart ; x:\BMJ\lush\test\order_flow_test.dart ; x:\BMJ\lush\lib\views\models\item_card_view.dart ; x:\BMJ\lush\lib\views\screens\cart_screen.dart.bak ; x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart ; ...
+cart_icon.dart|2|x:\BMJ\lush\README.md ; x:\BMJ\lush\lib\views\screens\menu.dart
+cart_item.dart|14|x:\BMJ\lush\lib\CartRepository\cart_repository.dart ; x:\BMJ\lush\lib\bloc\ProductCatalogBloc\product_catalog_bloc.dart ; x:\BMJ\lush\lib\views\screens\cart_screen.dart.bak ; x:\BMJ\lush\lib\views\screens\cart_screen.dart ; x:\BMJ\lush\lib\bloc\CartBloc\cart_state.dart ; x:\BMJ\lush\lib\bloc\CartBloc\cart_event.dart ; ...
+cart_repository.dart|8|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\get_it.dart ; x:\BMJ\lush\lib\bloc\CartBloc\cart_bloc.dart ; x:\BMJ\lush\lib\bloc\AuthBloc\auth_bloc.dart ; x:\BMJ\lush\test\order_flow_test.dart ; x:\BMJ\lush\test\unit\bloc\cart_bloc_test.dart ; ...
+cart_screen.dart|1|x:\BMJ\lush\lib\views\all_screens.dart
+cart_service.dart|3|x:\BMJ\lush\lib\bloc\CartBloc\cart_bloc.dart ; x:\BMJ\lush\test\unit\services\cart_service_test.dart ; x:\BMJ\lush\lib\CartRepository\cart_repository.dart
+cart_state.dart|8|x:\BMJ\lush\lib\widgets\cart_badge_icon.dart ; x:\BMJ\lush\lib\bloc\CartBloc\cart_bloc.dart ; x:\BMJ\lush\test\order_flow_test.dart ; x:\BMJ\lush\test\unit\bloc\cart_bloc_test.dart ; x:\BMJ\lush\lib\views\screens\cart_screen.dart.bak ; x:\BMJ\lush\lib\views\screens\cart_screen.dart ; ...
+checkout_screen.dart|1|x:\BMJ\lush\lib\main.dart
+contact.dart|1|x:\BMJ\lush\README.md
+create_password_screen.dart|1|x:\BMJ\lush\lib\main.dart
+Dashboard.dart|1|x:\BMJ\lush\README.md
+dashboard_components.dart|1|x:\BMJ\lush\README.md
+day_wise_schedule_screen.dart|1|x:\BMJ\lush\lib\main.dart
+delete_account_screen.dart|1|x:\BMJ\lush\lib\main.dart
+delivery_slot_selection_screen.dart|1|x:\BMJ\lush\lib\main.dart
+detail.dart|6|x:\BMJ\lush\README.md ; x:\BMJ\lush\lib\views\all_screens.dart ; x:\BMJ\lush\lib\views\screens\order\order_detail_screen.dart ; x:\BMJ\lush\lib\bloc\OrderBloc\order_state.dart ; x:\BMJ\lush\test\unit\models\order_model_test.dart ; x:\BMJ\lush\lib\bloc\OrderBloc\order_bloc.dart
+detailed_juice_card.dart|0|NO-REFS-OUTSIDE-SELF
+dynamic_item.dart|3|x:\BMJ\lush\lib\services\item_service.dart ; x:\BMJ\lush\lib\views\screens\orders\order_catalog_screen.dart ; x:\BMJ\lush\lib\views\screens\orders\order_item_screen.dart
+dynamic_juice.dart|1|x:\BMJ\lush\lib\views\models\detailed_juice_card.dart
+email_entry_after_phone_screen.dart|1|x:\BMJ\lush\lib\main.dart
+email_signup_screen.dart|1|x:\BMJ\lush\lib\main.dart
+email_verification_after_phone_screen.dart|1|x:\BMJ\lush\lib\main.dart
+email_verification_screen.dart|1|x:\BMJ\lush\lib\main.dart
+enter_mobile_number.dart|1|x:\BMJ\lush\lib\views\all_screens.dart
+Facebook.dart|1|x:\BMJ\lush\README.md
+filter_options.dart|1|x:\BMJ\lush\lib\views\screens\menu.dart
+firebase_notification_service.dart|1|x:\BMJ\lush\lib\main.dart
+firebase_options.dart|1|x:\BMJ\lush\lib\main.dart
+firebase_phone_auth.dart|3|x:\BMJ\lush\lib\bloc\AuthBloc\auth_bloc.dart ; x:\BMJ\lush\lib\views\screens\phone_login_screen.dart ; x:\BMJ\lush\lib\views\screens\phone_signup_screen.dart
+font_utils.dart|0|NO-REFS-OUTSIDE-SELF
+forgot_password_page.dart|1|x:\BMJ\lush\lib\main.dart
+forgot_password_screen.dart|1|x:\BMJ\lush\lib\main.dart
+get_it.dart|31|x:\BMJ\lush\integration_test\app_smoke_test.dart ; x:\BMJ\lush\integration_test\e2e_suite_test.dart ; x:\BMJ\lush\integration_test\cart_test.dart ; x:\BMJ\lush\integration_test\subscription_flow_test.dart ; x:\BMJ\lush\integration_test\physical_device_template_test.dart ; x:\BMJ\lush\lib\bloc\UserBloc\user_bloc.dart ; ...
+glass_card.dart|8|x:\BMJ\lush\lib\views\screens\menu_tab.dart ; x:\BMJ\lush\lib\views\screens\user_profile_screen.dart ; x:\BMJ\lush\lib\views\screens\home_tab.dart ; x:\BMJ\lush\lib\views\screens\orders_tab.dart ; x:\BMJ\lush\lib\views\screens\profile_tab.dart ; x:\BMJ\lush\lib\views\screens\subscription\subscription_summary_screen.dart ; ...
+google_phone_entry_screen.dart|1|x:\BMJ\lush\lib\main.dart
+google_sign_in.dart|5|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\screens\signup_method_selection_screen.dart ; x:\BMJ\lush\lib\views\screens\login_page.dart ; x:\BMJ\lush\lib\views\screens\google_signup_screen.dart ; x:\BMJ\lush\lib\UserRepository\user_repository.dart
+google_signup_screen.dart|1|x:\BMJ\lush\lib\main.dart
+haptic_feedback.dart|5|x:\BMJ\lush\lib\views\screens\product_catalog_screen.dart ; x:\BMJ\lush\lib\views\screens\delivery_slot_selection_screen.dart ; x:\BMJ\lush\lib\views\screens\address_selection_screen.dart ; x:\BMJ\lush\lib\views\screens\cart_screen.dart.bak ; x:\BMJ\lush\lib\views\screens\cart_screen.dart
+hero_header.dart|0|NO-REFS-OUTSIDE-SELF
+home_tab.dart|1|x:\BMJ\lush\lib\views\screens\dashboard.dart
+invoice_service.dart|1|x:\BMJ\lush\lib\views\screens\invoice_view_screen.dart
+invoice_view_screen.dart|1|x:\BMJ\lush\lib\main.dart
+Item.dart|1|x:\BMJ\lush\README.md
+item_card_view.dart|1|x:\BMJ\lush\lib\views\models\item_list_view.dart
+item_data.dart|1|x:\BMJ\lush\lib\services\item_service.dart
+item_list_view.dart|1|x:\BMJ\lush\lib\views\screens\menu.dart
+item_service.dart|5|x:\BMJ\lush\lib\get_it.dart ; x:\BMJ\lush\lib\views\screens\menu.dart ; x:\BMJ\lush\lib\views\models\item_list_view.dart ; x:\BMJ\lush\lib\views\screens\orders\order_item_screen.dart ; x:\BMJ\lush\lib\views\screens\orders\order_catalog_screen.dart
+juice_list_view.dart|0|NO-REFS-OUTSIDE-SELF
+juices_view.dart|0|NO-REFS-OUTSIDE-SELF
+link_google_account_screen.dart|1|x:\BMJ\lush\lib\main.dart
+local_notification_service.dart|2|x:\BMJ\lush\lib\services\firebase_notification_service.dart ; x:\BMJ\lush\lib\views\screens\subscription_management_screen.dart
+login_page.dart|2|x:\BMJ\lush\test\widget\screens\login_page_test.dart ; x:\BMJ\lush\lib\views\all_screens.dart
+main.dart|15|x:\BMJ\lush\.metadata ; x:\BMJ\lush\.vscode\launch.json ; x:\BMJ\lush\integration_test\e2e_suite_test.dart ; x:\BMJ\lush\integration_test\cart_test.dart ; x:\BMJ\lush\integration_test\app_smoke_test.dart ; x:\BMJ\lush\integration_test\subscription_card_test.dart ; ...
+Menu.dart|1|x:\BMJ\lush\README.md
+menu_tab.dart|1|x:\BMJ\lush\lib\views\screens\dashboard.dart
+model.dart|7|x:\BMJ\lush\test\unit\models\notification_model_test.dart ; x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\test\unit\bloc\notification_bloc_test.dart ; x:\BMJ\lush\lib\bloc\NotificationBloc\notification_bloc.dart ; x:\BMJ\lush\README.md ; x:\BMJ\lush\lib\views\screens\detail.dart ; ...
+modify_schedule_screen.dart|0|NO-REFS-OUTSIDE-SELF
+my_account_page.dart|1|x:\BMJ\lush\lib\main.dart
+my_bottles_widget.dart|0|NO-REFS-OUTSIDE-SELF
+notification_bloc.dart|4|x:\BMJ\lush\test_results.json ; x:\BMJ\lush\test\unit\bloc\notification_bloc_test.dart ; x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\screens\notification_centre_screen.dart
+notification_centre_screen.dart|0|NO-REFS-OUTSIDE-SELF
+notification_model.dart|4|x:\BMJ\lush\test\unit\models\notification_model_test.dart ; x:\BMJ\lush\test\unit\bloc\notification_bloc_test.dart ; x:\BMJ\lush\lib\bloc\NotificationBloc\notification_bloc.dart ; x:\BMJ\lush\lib\views\screens\notification_centre_screen.dart
+notifications.dart|3|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\README.md ; x:\BMJ\lush\lib\services\local_notification_service.dart
+one_time_order_item.dart|1|x:\BMJ\lush\test\order_flow_test.dart
+Order.dart|0|NO-REFS-OUTSIDE-SELF
+order_bloc.dart|5|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\screens\home_tab.dart ; x:\BMJ\lush\lib\views\screens\order\order_detail_screen.dart ; x:\BMJ\lush\lib\views\screens\orders_tab.dart ; x:\BMJ\lush\test\bloc\order_history_test.dart
+order_catalog_screen.dart|0|NO-REFS-OUTSIDE-SELF
+order_checkout_screen.dart|0|NO-REFS-OUTSIDE-SELF
+order_detail.dart|4|x:\BMJ\lush\test\unit\models\order_model_test.dart ; x:\BMJ\lush\lib\bloc\OrderBloc\order_state.dart ; x:\BMJ\lush\lib\bloc\OrderBloc\order_bloc.dart ; x:\BMJ\lush\lib\views\screens\order\order_detail_screen.dart
+order_detail_screen.dart|2|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\test\widget\order_history_widget_test.dart
+order_event.dart|5|x:\BMJ\lush\lib\bloc\OrderBloc\order_bloc.dart ; x:\BMJ\lush\test\bloc\order_history_test.dart ; x:\BMJ\lush\lib\views\screens\home_tab.dart ; x:\BMJ\lush\lib\views\screens\orders_tab.dart ; x:\BMJ\lush\lib\views\screens\order\order_detail_screen.dart
+order_history_page.dart|1|x:\BMJ\lush\lib\views\all_screens.dart
+order_history_screen.dart|2|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\test\widget\order_history_widget_test.dart
+order_item_screen.dart|0|NO-REFS-OUTSIDE-SELF
+order_line_item.dart|4|x:\BMJ\lush\lib\models\order_summary.dart ; x:\BMJ\lush\lib\models\order_detail.dart ; x:\BMJ\lush\lib\bloc\OrderBloc\order_bloc.dart ; x:\BMJ\lush\test\unit\models\order_model_test.dart
+order_service.dart|7|x:\BMJ\lush\lib\bloc\OrderBloc\order_bloc.dart ; x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\test\bloc\order_history_test.dart ; x:\BMJ\lush\test\unit\services\order_service_test.dart ; x:\BMJ\lush\lib\views\screens\order\order_detail_screen.dart ; x:\BMJ\lush\lib\views\screens\orders_tab.dart ; ...
+order_state.dart|5|x:\BMJ\lush\lib\bloc\OrderBloc\order_bloc.dart ; x:\BMJ\lush\lib\views\screens\home_tab.dart ; x:\BMJ\lush\lib\views\screens\orders_tab.dart ; x:\BMJ\lush\lib\views\screens\order\order_detail_screen.dart ; x:\BMJ\lush\test\bloc\order_history_test.dart
+order_summary.dart|5|x:\BMJ\lush\test\unit\models\order_model_test.dart ; x:\BMJ\lush\lib\bloc\OrderBloc\order_state.dart ; x:\BMJ\lush\lib\views\screens\orders_tab.dart ; x:\BMJ\lush\lib\bloc\OrderBloc\order_bloc.dart ; x:\BMJ\lush\lib\views\screens\home_tab.dart
+orders_tab.dart|1|x:\BMJ\lush\lib\views\screens\dashboard.dart
+otp_login_page.dart|1|x:\BMJ\lush\lib\views\all_screens.dart
+pause_subscription_screen.dart|0|NO-REFS-OUTSIDE-SELF
+phone_entry_after_email_screen.dart|1|x:\BMJ\lush\lib\main.dart
+phone_login_screen.dart|1|x:\BMJ\lush\lib\main.dart
+phone_otp_verification_screen.dart|1|x:\BMJ\lush\lib\main.dart
+phone_signup_screen.dart|1|x:\BMJ\lush\lib\main.dart
+Plan.dart|1|x:\BMJ\lush\README.md
+plan_selection_screen.dart|2|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\screens\subscription_management_screen.dart
+plan_service.dart|0|NO-REFS-OUTSIDE-SELF
+product_catalog_bloc.dart|6|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\test\unit\bloc\product_catalog_bloc_test.dart ; x:\BMJ\lush\lib\views\screens\dashboard.dart ; x:\BMJ\lush\lib\views\screens\menu_tab.dart ; x:\BMJ\lush\lib\views\screens\product_catalog_screen.dart ; x:\BMJ\lush\lib\views\screens\home_tab.dart
+product_catalog_screen.dart|1|x:\BMJ\lush\lib\main.dart
+products_bloc.dart|4|x:\BMJ\lush\test\unit\models\products_model_test.dart ; x:\BMJ\lush\test\unit\bloc\product_catalog_bloc_test.dart ; x:\BMJ\lush\test\unit\bloc\products_bloc_test.dart ; x:\BMJ\lush\lib\main.dart
+products_repository.dart|3|x:\BMJ\lush\lib\bloc\ProductsBloc\products_bloc.dart ; x:\BMJ\lush\test\unit\bloc\products_bloc_test.dart ; x:\BMJ\lush\test\unit\repositories\products_repository_test.dart
+profile_tab.dart|1|x:\BMJ\lush\lib\views\screens\dashboard.dart
+referral_bloc.dart|4|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\screens\referral\referral_screen.dart ; x:\BMJ\lush\test\bloc\referral_bloc_test.dart ; x:\BMJ\lush\test\screens\referral_screen_test.dart
+referral_event.dart|3|x:\BMJ\lush\test\bloc\referral_bloc_test.dart ; x:\BMJ\lush\lib\bloc\ReferralBloc\referral_bloc.dart ; x:\BMJ\lush\lib\views\screens\referral\referral_screen.dart
+referral_info.dart|6|x:\BMJ\lush\lib\bloc\ReferralBloc\referral_state.dart ; x:\BMJ\lush\lib\repositories\referral_repository.dart ; x:\BMJ\lush\test\screens\referral_screen_test.dart ; x:\BMJ\lush\test\bloc\referral_bloc_test.dart ; x:\BMJ\lush\test\unit\repositories\referral_repository_test.dart ; x:\BMJ\lush\test\unit\models\referral_info_test.dart
+referral_repository.dart|5|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\get_it.dart ; x:\BMJ\lush\lib\bloc\ReferralBloc\referral_bloc.dart ; x:\BMJ\lush\test\bloc\referral_bloc_test.dart ; x:\BMJ\lush\test\unit\repositories\referral_repository_test.dart
+referral_screen.dart|2|x:\BMJ\lush\test\screens\referral_screen_test.dart ; x:\BMJ\lush\lib\views\all_screens.dart
+referral_state.dart|4|x:\BMJ\lush\test\bloc\referral_bloc_test.dart ; x:\BMJ\lush\test\screens\referral_screen_test.dart ; x:\BMJ\lush\lib\bloc\ReferralBloc\referral_bloc.dart ; x:\BMJ\lush\lib\views\screens\referral\referral_screen.dart
+reset_password_email_screen.dart|1|x:\BMJ\lush\lib\main.dart
+reset_password_mobile_screen.dart|1|x:\BMJ\lush\lib\main.dart
+resume_subscription_screen.dart|0|NO-REFS-OUTSIDE-SELF
+secure_storage_service.dart|15|x:\BMJ\lush\test\unit\services\subscription_service_test.dart ; x:\BMJ\lush\test\unit\services\order_service_test.dart ; x:\BMJ\lush\test\unit\services\cart_service_test.dart ; x:\BMJ\lush\test\unit\repositories\referral_repository_test.dart ; x:\BMJ\lush\test\unit\repositories\products_repository_test.dart ; x:\BMJ\lush\lib\CartRepository\cart_repository.dart ; ...
+serviceability_checker.dart|1|x:\BMJ\lush\lib\views\screens\profile\address_screen.dart
+shimmer_cart_item.dart|2|x:\BMJ\lush\lib\views\screens\cart_screen.dart ; x:\BMJ\lush\lib\views\screens\cart_screen.dart.bak
+shimmer_product_card.dart|1|x:\BMJ\lush\lib\views\screens\product_catalog_screen.dart
+shimmer_subscription_card.dart|0|NO-REFS-OUTSIDE-SELF
+sign_up_screen.dart|2|x:\BMJ\lush\lib\views\all_screens.dart ; x:\BMJ\lush\test\widgets\signup_screen_test.dart
+signup_method_selection_screen.dart|1|x:\BMJ\lush\lib\main.dart
+signup_request.dart|0|NO-REFS-OUTSIDE-SELF
+size_selection_modal.dart|2|x:\BMJ\lush\README.md ; x:\BMJ\lush\lib\views\models\item_card_view.dart
+stats_strip.dart|0|NO-REFS-OUTSIDE-SELF
+subscription_bloc.dart|16|x:\BMJ\lush\integration_test\subscription_flow_test.dart ; x:\BMJ\lush\test\subscription_screens_test.dart ; x:\BMJ\lush\test\subscription_bloc_test.dart ; x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\screens\home_tab.dart ; x:\BMJ\lush\lib\views\screens\dashboard.dart ; ...
+subscription_card.dart|0|NO-REFS-OUTSIDE-SELF
+subscription_family_screen.dart|3|x:\BMJ\lush\integration_test\subscription_flow_test.dart ; x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\test\subscription_screens_test.dart
+subscription_info_card.dart|1|x:\BMJ\lush\integration_test\subscription_card_test.dart
+subscription_management_screen.dart|1|x:\BMJ\lush\lib\main.dart
+subscription_plan_card.dart|0|NO-REFS-OUTSIDE-SELF
+subscription_plan_catalog.dart|6|x:\BMJ\lush\lib\bloc\SubscriptionBloc\subscription_bloc.dart ; x:\BMJ\lush\lib\views\screens\subscription\subscription_family_screen.dart ; x:\BMJ\lush\lib\views\screens\subscription\subscription_plan_screen.dart ; x:\BMJ\lush\lib\views\screens\subscription\subscription_plans_screen.dart ; x:\BMJ\lush\test\subscription_bloc_test.dart ; x:\BMJ\lush\test\subscription_screens_test.dart
+subscription_plan_screen.dart|2|x:\BMJ\lush\test\subscription_screens_test.dart ; x:\BMJ\lush\lib\main.dart
+subscription_plans_screen.dart|0|NO-REFS-OUTSIDE-SELF
+subscription_schedule_screen.dart|2|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\test\subscription_screens_test.dart
+subscription_selection.dart|7|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\test\subscription_screens_test.dart ; x:\BMJ\lush\test\subscription_bloc_test.dart ; x:\BMJ\lush\lib\bloc\SubscriptionBloc\subscription_bloc.dart ; x:\BMJ\lush\lib\views\screens\subscription\subscription_summary_screen.dart ; x:\BMJ\lush\lib\views\screens\subscription\subscription_schedule_screen.dart ; ...
+subscription_service.dart|10|x:\BMJ\lush\integration_test\subscription_card_test.dart ; x:\BMJ\lush\integration_test\subscription_flow_test.dart ; x:\BMJ\lush\lib\get_it.dart ; x:\BMJ\lush\lib\bloc\SubscriptionBloc\subscription_bloc.dart ; x:\BMJ\lush\test\subscription_screens_test.dart ; x:\BMJ\lush\test\subscription_bloc_test.dart ; ...
+subscription_service_v2.dart|0|NO-REFS-OUTSIDE-SELF
+subscription_summary_screen.dart|2|x:\BMJ\lush\test\subscription_screens_test.dart ; x:\BMJ\lush\lib\main.dart
+text_utils.dart|0|NO-REFS-OUTSIDE-SELF
+theme_cubit.dart|13|x:\BMJ\lush\test\widgets\signup_screen_test.dart ; x:\BMJ\lush\test\theme\theme_cubit_test.dart ; x:\BMJ\lush\test\widget\screens\login_page_test.dart ; x:\BMJ\lush\lib\widgets\glass_card.dart ; x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\screens\dashboard.dart ; ...
+theme_extensions.dart|1|x:\BMJ\lush\README.md
+User.dart|0|NO-REFS-OUTSIDE-SELF
+user_address.dart|1|x:\BMJ\lush\lib\views\screens\user_profile_screen.dart
+user_bloc.dart|3|x:\BMJ\lush\lib\main.dart ; x:\BMJ\lush\lib\views\widgets\my_bottles_widget.dart ; x:\BMJ\lush\test\unit\bloc\user_bloc_test.dart
+user_events.dart|3|x:\BMJ\lush\lib\bloc\UserBloc\user_bloc.dart ; x:\BMJ\lush\lib\views\widgets\my_bottles_widget.dart ; x:\BMJ\lush\test\unit\bloc\user_bloc_test.dart
+user_profile_screen.dart|1|x:\BMJ\lush\lib\main.dart
+user_repository.dart|30|x:\BMJ\lush\integration_test\subscription_flow_test.dart ; x:\BMJ\lush\test\subscription_bloc_test.dart ; x:\BMJ\lush\lib\widgets\app_drawer.dart ; x:\BMJ\lush\test\subscription_screens_test.dart ; x:\BMJ\lush\lib\get_it.dart ; x:\BMJ\lush\lib\services\item_service.dart ; ...
+user_state.dart|3|x:\BMJ\lush\test\unit\bloc\user_bloc_test.dart ; x:\BMJ\lush\lib\bloc\UserBloc\user_bloc.dart ; x:\BMJ\lush\lib\views\widgets\my_bottles_widget.dart
+Weekdays.dart|1|x:\BMJ\lush\README.md
+welcome_header.dart|1|x:\BMJ\lush\README.md

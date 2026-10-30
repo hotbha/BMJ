@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Address Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-bright": "#dfe4e0",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "surface-tint": "#ffb690",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-surface": "#f6ded3",
+                        "inverse-on-surface": "#3c2d26",
+                        "outline": "#a78b7d",
+                        "on-tertiary-container": "#003936",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "on-surface-variant": "#e0c0b1",
+                        "surface": "#1c110b",
+                        "on-primary-fixed-variant": "#783200",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "tertiary-container": "#1caca3",
+                        "inverse-primary": "#9d4300",
+                        "tertiary": "#5dd9d0",
+                        "on-secondary-fixed-variant": "#005321",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed": "#ffdbca",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-primary-container": "#582200",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-primary": "#552100",
+                        "on-secondary-fixed": "#002109",
+                        "surface-container-low": "#251913",
+                        "surface-variant": "#40322a",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "neon-lime": "#4be277",
+                        "surface-deep": "#0f1412",
+                        "surface-bright": "#45362f",
+                        "background": "#1c110b",
+                        "surface-container-high": "#352720",
+                        "surface-container-lowest": "#160c06",
+                        "secondary-fixed": "#6bff8f",
+                        "primary": "#ffb690",
+                        "primary-container": "#f97316",
+                        "secondary": "#4ae176",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "surface-container-highest": "#40322a",
+                        "inverse-surface": "#f6ded3",
+                        "outline-variant": "#584237",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-tertiary": "#003734"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "max-width-container": "430px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.surface-deep');
+            background-image: radial-gradient(circle at top right, theme('colors.surface-container-highest'), transparent 50%),
+                              radial-gradient(circle at bottom left, theme('colors.surface-container-high'), transparent 40%);
+            color: theme('colors.on-surface');
+            min-height: 100vh;
+        }
+        
+        .glass-input {
+            background-color: theme('colors.surface-container');
+            border: 1px solid theme('colors.outline-variant');
+            transition: all 0.3s ease;
+        }
+        
+        .glass-input:focus-within {
+            border-color: theme('colors.primary-container');
+            box-shadow: 0 0 15px theme('colors.zest-glow');
+        }
+
+        /* Hide Navbars since this is a transactional onboarding screen */
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased flex flex-col items-center">
+<div class="w-full max-w-max-width-container min-h-screen flex flex-col relative overflow-hidden">
+<!-- Header -->
+<header class="w-full px-md py-lg flex items-center justify-between z-10 sticky top-0 bg-surface-deep/80 backdrop-blur-md">
+<button aria-label="Go back" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface">Delivery Details</h1>
+<div class="w-12 h-12"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-md py-lg flex flex-col z-10 w-full pb-32">
+<div class="mb-lg">
+<h2 class="font-display-md text-display-md text-on-surface mb-xs">Where should we deliver?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Provide your address for speedy delivery.</p>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-md">
+<!-- Input Group -->
+<div class="glass-input rounded-xl p-xs relative group">
+<label class="absolute top-2 left-3 font-label-sm text-label-sm text-on-surface-variant group-focus-within:text-primary-container transition-colors" for="flatName">Flat / Building Name</label>
+<input class="w-full bg-transparent border-none text-on-surface font-body-lg text-body-lg pt-6 pb-2 px-3 focus:ring-0 placeholder-on-surface-variant/50" id="flatName" placeholder="e.g. Apt 4B, The Citrus Towers" required="" type="text"/>
+</div>
+<!-- Input Group -->
+<div class="glass-input rounded-xl p-xs relative group">
+<label class="absolute top-2 left-3 font-label-sm text-label-sm text-on-surface-variant group-focus-within:text-primary-container transition-colors" for="streetArea">Street / Area</label>
+<input class="w-full bg-transparent border-none text-on-surface font-body-lg text-body-lg pt-6 pb-2 px-3 focus:ring-0 placeholder-on-surface-variant/50" id="streetArea" placeholder="e.g. 123 Wellness Blvd" required="" type="text"/>
+</div>
+<!-- Grid for City and Pincode -->
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Input Group -->
+<div class="glass-input rounded-xl p-xs relative group">
+<label class="absolute top-2 left-3 font-label-sm text-label-sm text-on-surface-variant group-focus-within:text-primary-container transition-colors" for="city">City</label>
+<input class="w-full bg-transparent border-none text-on-surface font-body-lg text-body-lg pt-6 pb-2 px-3 focus:ring-0 placeholder-on-surface-variant/50" id="city" placeholder="e.g. Seattle" required="" type="text"/>
+</div>
+<!-- Input Group -->
+<div class="glass-input rounded-xl p-xs relative group">
+<label class="absolute top-2 left-3 font-label-sm text-label-sm text-on-surface-variant group-focus-within:text-primary-container transition-colors" for="pincode">Pincode</label>
+<input class="w-full bg-transparent border-none text-on-surface font-body-lg text-body-lg pt-6 pb-2 px-3 focus:ring-0 placeholder-on-surface-variant/50" id="pincode" placeholder="e.g. 98101" required="" type="text"/>
+</div>
+</div>
+<!-- Location Map Snippet -->
+<div class="mt-sm rounded-xl overflow-hidden h-32 relative border border-white/10 shadow-sm group cursor-pointer">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="A stylized, high-contrast dark mode map view focused on a generic urban street grid. The map features deep charcoal and black tones for landmasses and roads, with a vivid Orange 500 (#f97316) glow emanating from a central marker pin indicating a precise location. The aesthetic is modern, tech-forward, and aligns with a high-energy glassmorphism interface." data-location="New York" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA2ZL5klwZ2Xl5RJG8ALIzebvioIenaca2z1TdOThaueZPy8nuYVI3lZ07lfqs_A4RSu51kOHd63_bx2q-oMFj-z_IRP7_5pbyqk3KNQgGSS8WYHFNxR7q-YetlnxQ_aIXZHPZy0cRRGbgtEhkB2r_KYZX6ikwquhHFdJWquOw9LE38W3jEF7hEkA4jPpNPRzHcB_2eQtm6e2ZAn28-sJTbDxG_BY5oKkkAu3rMHipUP6kjtqpOXm0D')"></div>
+<div class="absolute inset-0 bg-surface-deep/40 flex items-center justify-center backdrop-blur-[2px] transition-all duration-300 group-hover:backdrop-blur-0">
+<div class="bg-surface/80 backdrop-blur-md rounded-full px-4 py-2 border border-white/10 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">my_location</span>
+<span class="font-label-sm text-label-sm text-on-surface">Tap to adjust on map</span>
+</div>
+</div>
+</div>
+</form>
+</main>
+<!-- Fixed Bottom Action -->
+<div class="fixed bottom-0 left-0 right-0 p-md bg-gradient-to-t from-surface-deep via-surface-deep/90 to-transparent z-20 pb-8">
+<div class="max-w-max-width-container mx-auto">
+<button class="w-full bg-primary-container text-white font-title-lg text-title-lg py-4 rounded-xl shadow-[0_0_20px_rgba(249,115,22,0.45)] hover:opacity-90 transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                    Save Address
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">check_circle</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,44 @@
+﻿1: # BMJ_UX_REHAUL_PLAN.md — controlled UX + UI overhaul on the Stitch design system
+7: **Deliverable:** step 1 of the brief ("Before coding: `BMJ_UX_REHAUL_PLAN.md`"). Step 2 (code) starts only after the two open decisions in §1 are signed off.
+12: ## 0. What this plan is allowed to touch
+28: ## 1. Decision register
+40: | **D8** | **`STITCH_ALIGNMENT_REPORT.md` is superseded where it disagrees** | Resolved | That report calls design #3 `create_password_step_3` an "`AddressEntryScreen` duplicate". The rendered text of #3 is *"Step 3: Password · Secure Your Account · Create a strong password… Complete Setup"*. `STITCH_IMPLEMENTATION_STATUS.md` is correct; #3 is the password step. | Using the stale report would merge password styling into the address screen |
+44: ## 2. Design-system contract (`vibrant_zest`, extracted verbatim from `DESIGN.md`)
+46: ### 2.1 Colour
+76: ### 2.2 Typography
+84: | `title-lg` | 18 / 24 / 600 | Plus Jakarta Sans | `titleSmall` (**currently undefined → add**) |
+87: | `stat-num` | 22 / 26 / 800 | Plus Jakarta Sans | New `BMJType.statNum` |
+91: `app_text_styles.dart` declares `fontFamily = 'Roboto'` (64 references across `lib/`). Changing that one constant plus the 11 slot sizes restyles every screen at once — the highest-leverage edit in the overhaul. `bodySmall`, `labelMedium` and `titleSmall` are currently undefined in that `TextTheme`; they must be filled in or Material falls back to Roboto mid-screen.
+93: ### 2.3 Space, shape, depth, motion
+109: ## 3. Component library — the five named components, built on what already exists
+130: **Implementation order inside P0-3 (4.5 d):** (1) `lib/theme/bmj_tokens.dart` with the §2 values plus the legacy alias table; (2) `app_text_styles.dart` slot re-pointing; (3) the five components as wrappers with **no call sites changed**; (4) the four supporting widgets; (5) one adopt-commit for `dashboard.dart` + `home_tab.dart` only — the visible proof the system works before any other screen is touched. Steps 1–4 must not change a pixel; step 5 is the first visual diff and is reviewed against `screen.png` for #21.
+134: ## 4. KEEP / MERGE / REMOVE — all 30 designs
+146: | 3 | `create_password_step_3` | **MERGE** → #2 | `CreatePasswordScreen` | 56 → 90 | 0.0 | Same screen; contributes "Step 3", the 4-rule checklist and "Complete Setup" wording. Folder title "Delivery Address" is stale (D8). |
+162: | 18 | `simplified_weekly_scheduler` | **MERGE** (canonical) | `SubscriptionScheduleScreen` `/subscription-schedule` | 56 → 85 | 1.5 | Already uses `BackdropFilter`, so the family is close. Adds master-day lock, per-day chips, 6/6 counter, price footer. Needs the P0-2 entry path before anyone can see it. |
+164: | 20 | `subscription_plan_comparison` | **KEEP** | `PlanSelectionScreen` `/plan-selection` | 51 → 88 | 2.0 | **P0-2.** Working code, zero callers. Gets 4 real entry points plus the period toggle, feature lists and a data-driven BEST VALUE badge. |
+168: | 24 | `verify_phone_otp_step_2.1` | **MERGE** → #17 | `PhoneOtpVerificationScreen` | 56 → 90 | 0.0 | Contributes the "Step 2 of 3" indicator; the rest is #17's composition. |
+183: | Foundation + nav (P0-1, P0-3) | no design row owns these | **5.0 d** |
+188: ## 5. P0 — four items, 10.0 d
+192: ### 5.1 P0-1 · The "Subscription" tab opens Orders — 0.5 d
+201: 5. Tab body gets the empty state (`BMJEmptyState`) with a "Browse plans" CTA → `/plan-selection` (this is also P0-2's first entry point).
+207: ### 5.2 P0-2 · The plan catalogue has no door — 2.0 d
+224: ### 5.3 P0-3 · Design-system foundation — 4.5 d
+238: ### 5.4 P0-4 · Product Detail flow — 3.0 d
+270: ## 6. P1 — 13 rows, 15.0 d (post-P0 polish on live screens)
+283: | 17 | Phone OTP verify | 57 → 90 | Glass skin, `(00:45)` timer, "Verify & Continue", Step 2 of 3 (from #24) | 1.0 |
+287: | 2 | Create password | 54 → 90 | Visibility toggle, strength meter, 4-rule checklist, Step 3 indicator (merges #3) | 0.75 |
+294: ## 7. P2 — retiring the 8 removed designs safely (0.75 d, mostly mechanical)
+322: ## 8. Target-score accounting (30 designs, explicit so it can be checked)
+347: ## 9. Sequencing and effort — 25.75 d in five waves
+351: | **W0 — Foundation + the two tab/storefront defects** | Tokens, 5 components, 4 supporting widgets, nav destination fix, 4 plan-catalogue entries | P0-1, P0-2, P0-3 (#20) | 7.0 | 7.0 | Tokens block every repaint; the catalogue entry is the only revenue gate; the tab fix is two hours of the seven days |
+352: | **W1 — Purchase funnel** | PDP build + wire, cart summary, address selection | P0-4 (#8), #13, #5 | 5.0 | 12.0 | Highest revenue exposure. #8 and P0-2 share the `/plan-selection` seam, so they must be close together |
+359: **Estimation basis.** 1.0 d = one focused day (≈6 productive hours) for a Flutter developer who knows this tree. Bands: 0.25–0.5 copy/label/single-widget · 0.75–1.5 composition on a wired screen · 2.0–3.0 new screen or new flow segment. Confidence ±25 % on the small rows, **±50 % on the 2–3 d rows** (#8 and P0-2 can double if the catalogue's plan/size model changes). Excludes design review, copywriting, legal copy, backend work and Chargebee configuration.
+363: ## 10. Verification gates
+383: ## 11. Risks
+387: | Token flip changes every screen at once and regresses contrast/spacing somewhere unseen | High | Medium | W0 step 1 lands tokens **without** adoption; adoption is a separate commit per screen; 6-screen screenshot sweep before each wave ends |
+399: ## 12. What we will not build, even though Stitch shows it
+417: ## 13. Four in-scope V1 flows have no Stitch design
+432: ## 14. Definition of done
+455: ## 15. Open decisions and the next action
+462: Both are one-line answers and neither blocks W0 step 1 (tokens) or step 2 (components), which are visual-language work and identical under either answer.
+464: **Next action (coding step 2):** begin W0 with `lib/theme/bmj_tokens.dart` + `app_text_styles.dart` re-pointing as a single commit that changes **no** call site, then the five `BMJGlass*` wrappers, then the dashboard/home adoption commit. P0-1 and P0-2 follow in the same wave because they are small, independent of the tokens, and each removes a customer-visible defect.

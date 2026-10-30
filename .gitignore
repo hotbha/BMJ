@@ -334,4 +334,14 @@ Redis-*.exe
 *.jar
 !bmjServer/target/dependency/*.jar
 
+# ============ Stitch UX reference (canonical V1 design source) ============
+# The blanket `*.png` rule above silently excludes all 31 Stitch `screen.png`
+# mockups, so `git add Stitch/` would commit the HTML/DESIGN.md but silently
+# drop every mockup — leaving the reference in STITCH_ALIGNMENT_REPORT.md
+# incomplete. A negation must follow the rule it overrides, so this block
+# stays last. Verified with:
+#   git check-ignore -v Stitch/**/screen.png   (must print nothing)
+!Stitch/**/*.png
+
+
 # ============ END OF GITIGNORE ============

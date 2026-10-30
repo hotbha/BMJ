@@ -1,0 +1,233 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BookMyJuice - Verify Your Number</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        
+        .otp-input:focus {
+            outline: none;
+            border-color: #f97316; /* primary-container */
+            box-shadow: 0 0 0 1px #f97316;
+        }
+        
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background: rgba(41, 29, 22, 0.6); /* surface-container with opacity */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#00201e",
+                        "secondary-fixed": "#6bff8f",
+                        "surface-container-lowest": "#160c06",
+                        "surface-container-low": "#251913",
+                        "inverse-surface": "#f6ded3",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-surface-bright": "#dfe4e0",
+                        "outline-variant": "#584237",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "primary-fixed": "#ffdbca",
+                        "on-primary": "#552100",
+                        "tertiary": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "on-primary-container": "#582200",
+                        "on-secondary-fixed": "#002109",
+                        "surface-tint": "#ffb690",
+                        "surface-variant": "#40322a",
+                        "secondary-fixed-dim": "#4ae176",
+                        "background": "#1c110b",
+                        "primary": "#ffb690",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-tertiary": "#003734",
+                        "outline": "#a78b7d",
+                        "tertiary-container": "#1caca3",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "error-container": "#93000a",
+                        "surface-bright": "#45362f",
+                        "on-surface-variant": "#e0c0b1",
+                        "inverse-primary": "#9d4300",
+                        "on-primary-fixed-variant": "#783200",
+                        "secondary": "#4ae176",
+                        "on-tertiary-container": "#003936",
+                        "inverse-on-surface": "#3c2d26",
+                        "neon-lime": "#4be277",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "primary-fixed-dim": "#ffb690",
+                        "surface": "#1c110b",
+                        "on-error": "#690005",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "primary-container": "#f97316",
+                        "surface-container-highest": "#40322a",
+                        "on-surface": "#f6ded3",
+                        "on-primary-fixed": "#341100",
+                        "surface-container-high": "#352720",
+                        "surface-deep": "#0f1412",
+                        "on-secondary-fixed-variant": "#005321"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "max-width-container": "430px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "margin-mobile": "16px",
+                        "md": "16px",
+                        "margin-desktop": "32px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "32px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Inter"],
+                        "display-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center antialiased overflow-x-hidden selection:bg-primary-container selection:text-white">
+<!-- Ambient Background Glow -->
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-container/20 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary-container/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Main Container -->
+<main class="relative z-10 w-full max-w-max-width-container mx-auto min-h-screen flex flex-col px-margin-mobile pt-16 pb-8">
+<!-- Back Button (Transactional context, no shell nav) -->
+<div class="flex items-center mb-8">
+<button class="w-12 h-12 flex items-center justify-center rounded-full glass-panel text-on-surface hover:text-primary-container transition-colors active:scale-95">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+</div>
+<!-- Header Section -->
+<div class="flex flex-col gap-sm mb-12">
+<div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-4 border border-white/10 shadow-[0_4px_24px_rgba(249,115,22,0.15)] relative overflow-hidden">
+<div class="absolute inset-0 bg-primary-container/10"></div>
+<span class="material-symbols-outlined text-[32px] text-primary-container">lock</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface">Verify Your<br>Number</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">
+                We've sent a 6-digit code to<br>
+<span class="font-label-lg text-label-lg text-on-surface">+91 98765 43210</span>
+</p>
+</div>
+<!-- OTP Input Form -->
+<form class="flex flex-col flex-1" onsubmit="event.preventDefault();">
+<!-- 6-Digit Grid -->
+<div class="grid grid-cols-6 gap-2 mb-8">
+<!-- Input 1 -->
+<input aria-label="Digit 1" class="otp-input w-full aspect-[3/4] bg-surface-container-highest border border-white/10 rounded-xl text-center font-headline-lg text-headline-lg text-on-surface transition-all focus:bg-surface" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text">
+<!-- Input 2 -->
+<input aria-label="Digit 2" class="otp-input w-full aspect-[3/4] bg-surface-container-highest border border-white/10 rounded-xl text-center font-headline-lg text-headline-lg text-on-surface transition-all focus:bg-surface" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text">
+<!-- Input 3 -->
+<input aria-label="Digit 3" class="otp-input w-full aspect-[3/4] bg-surface-container-highest border border-white/10 rounded-xl text-center font-headline-lg text-headline-lg text-on-surface transition-all focus:bg-surface" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text">
+<!-- Input 4 -->
+<input aria-label="Digit 4" class="otp-input w-full aspect-[3/4] bg-surface-container-highest border border-white/10 rounded-xl text-center font-headline-lg text-headline-lg text-on-surface transition-all focus:bg-surface" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text">
+<!-- Input 5 -->
+<input aria-label="Digit 5" class="otp-input w-full aspect-[3/4] bg-surface-container-highest border border-white/10 rounded-xl text-center font-headline-lg text-headline-lg text-on-surface transition-all focus:bg-surface" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text">
+<!-- Input 6 -->
+<input aria-label="Digit 6" class="otp-input w-full aspect-[3/4] bg-surface-container-highest border border-white/10 rounded-xl text-center font-headline-lg text-headline-lg text-on-surface transition-all focus:bg-surface" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text">
+</div>
+<!-- Resend Logic -->
+<div class="flex items-center justify-center gap-2 mb-auto">
+<span class="font-body-md text-body-md text-on-surface-variant">Didn't receive the code?</span>
+<button class="font-label-lg text-label-lg text-primary-container hover:opacity-80 transition-opacity">
+                    Resend (00:45)
+                </button>
+</div>
+<!-- Action Button -->
+<div class="mt-8">
+<button class="w-full h-14 bg-primary-container text-white rounded-xl font-label-lg text-label-lg shadow-[0_0_24px_rgba(249,115,22,0.45)] hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+<span>Verify &amp; Continue</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</form>
+</main>
+<script>
+        // Auto-focus next input logic for OTP
+        const inputs = document.querySelectorAll('.otp-input');
+        
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '') {
+                    if (index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                }
+            });
+        });
+        
+        // Focus first input on load
+        if(inputs.length > 0) {
+            setTimeout(() => inputs[0].focus(), 100);
+        }
+    </script>
+</body></html>

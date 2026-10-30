@@ -1,0 +1,29 @@
+﻿Makefile|0|NO-REFS-OUTSIDE-SELF
+package.json|0|NO-REFS-OUTSIDE-SELF
+package-lock.json|1|x:\BMJ\.gitignore
+requirements.yaml|1|x:\BMJ\docs\architecture\ADR-004-unified-signup-flow.md
+docker-compose.yml|2|x:\BMJ\docs\KNOWN_ISSUES.md ; x:\BMJ\docs\CICD_PIPELINE.md
+dbdiagram.mwb|0|NO-REFS-OUTSIDE-SELF
+CHANGELOG.md|2|x:\BMJ\chargebee-java-3.29.0.jar ; x:\BMJ\docs\guides\DEVELOPMENT_SETUP.md
+.mcp.json|0|NO-REFS-OUTSIDE-SELF
+test_fullstack.ps1|0|NO-REFS-OUTSIDE-SELF
+test_fullstack_v2.ps1|0|NO-REFS-OUTSIDE-SELF
+test_fullstack_final.ps1|0|NO-REFS-OUTSIDE-SELF
+test_fullstack_dynamic.ps1|1|x:\BMJ\docs\HUMAN_INTERVENTION_REQUIRED.md
+test_signin.ps1|0|NO-REFS-OUTSIDE-SELF
+test_debug.ps1|0|NO-REFS-OUTSIDE-SELF
+build_flutter_for_phone.ps1|2|x:\BMJ\docs\HUMAN_INTERVENTION_REQUIRED.md ; x:\BMJ\package.json
+find_active_ip.ps1|7|x:\BMJ\.vscode\launch.json ; x:\BMJ\ops\test_fullstack_dynamic.ps1 ; x:\BMJ\docs\HUMAN_INTERVENTION_REQUIRED.md ; x:\BMJ\ops\build_flutter_for_phone.ps1 ; x:\BMJ\docker-compose.yml ; x:\BMJ\package.json ; ...
+gen7.py|0|NO-REFS-OUTSIDE-SELF
+gen7_final.py|0|NO-REFS-OUTSIDE-SELF
+gentc.py|0|NO-REFS-OUTSIDE-SELF
+gentc2.py|0|NO-REFS-OUTSIDE-SELF
+genfiles.py|0|NO-REFS-OUTSIDE-SELF
+genfull.py|0|NO-REFS-OUTSIDE-SELF
+gentest.py|0|NO-REFS-OUTSIDE-SELF
+generate_tests.py|0|NO-REFS-OUTSIDE-SELF
+build_tcs1.js|0|NO-REFS-OUTSIDE-SELF
+build_all.js|0|NO-REFS-OUTSIDE-SELF
+build_all.py|0|NO-REFS-OUTSIDE-SELF
+gen_hash.py|0|NO-REFS-OUTSIDE-SELF
+GenHash.java|0|NO-REFS-OUTSIDE-SELF

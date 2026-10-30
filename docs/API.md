@@ -36,6 +36,20 @@
 
 ---
 
+## V1 Launch Freeze — Contract Changes (2026-10-16)
+
+Three decisions were approved and implemented after the launch-freeze audit. They are recorded here
+because each changes observable behaviour. Full evidence: [BMJ_V1_SCOPE.md](BMJ_V1_SCOPE.md) §5 and
+[BMJ_LAUNCH_CHECKLIST.md](../BMJ_LAUNCH_CHECKLIST.md).
+
+| Decision | Surface | Change |
+| :--- | :--- | :--- |
+| **D-2** | `POST /api/auth/login-otp` | When an existing user with no `chargebeeCustomerId` signs in by OTP, the server now creates the Chargebee customer (the same call the Google sign-in repair block uses) and persists the id. Best-effort: on a Chargebee failure the sign-in still succeeds and the id stays null. Removes a permanent `Chargebee customer ID not found` checkout dead-end. |
+| **D-5** | Flutter LoginPage | Email + password signup is no longer advertised: the Sign Up tab offers **Phone (OTP)** and **Google** only. `POST /api/auth/unified-signup` is unchanged and remains the signup-completion call for those two flows. |
+| **D-6** | `GET /api/orders/by-customer` (also `GET /api/orders`, `GET /api/orders/local/history`) | Order reads resolve the **Chargebee** customer id before querying `order_entity.customer_id`, so order history returns real orders instead of `[]`. See the note under *Order Management*. |
+
+---
+
 ## Authentication
 
 ### JWT Token Authentication
@@ -435,6 +449,128 @@ Verify OTP and authenticate.
 
 ---
 
+### Passwordless Signup (`/api/auth/*`, mandatory email)
+
+Email is **mandatory** at signup; the delivery address is optional. The app runs
+two proofs before the account exists:
+
+```
+POST /api/auth/send-otp            (phone)
+POST /api/auth/login-otp           -> signupToken (when the phone is unknown)
+POST /api/auth/send-email-verification
+POST /api/auth/verify-email-code   -> emailVerificationToken
+POST /api/auth/phone-signup        -> JWT (creates the account)
+```
+
+#### POST /api/auth/send-email-verification
+
+Sends a 6-digit code to the address. The address must not already belong to an
+account. A resend for the same address is refused for 30 seconds.
+
+**Request:**
+```json
+{ "email": "asha@example.com" }
+```
+
+**Response (200 OK):**
+```json
+{ "message": "Success: Verification code sent to asha@example.com" }
+```
+
+**Error Responses:**
+```json
+// 400 Bad Request - already registered
+{ "message": "Error: Email is already registered!" }
+
+// 429 Too Many Requests - resend inside the cooldown window
+{ "message": "Error: Please wait 27 seconds before requesting another code" }
+```
+
+In local development the code is also printed to the server log as
+`⚠️ [DEV] Email verification code for <address>: <code>` (see
+`docs/guides/DEVELOPMENT_TOOLS.md` §11.6), and a broken SMTP relay does not fail
+the request.
+
+#### POST /api/auth/verify-email-code
+
+Verifies the code. The code is single-use and is discarded after five wrong
+guesses. On success the response carries the signed proof consumed by
+`phone-signup` (15-minute TTL, `purpose=email-verify`).
+
+**Request:**
+```json
+{ "email": "asha@example.com", "verificationCode": "123456" }
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Success: Email verified!",
+  "email": "asha@example.com",
+  "emailVerificationToken": "eyJhbGciOiJIUzI1NiIs..."
+}
+```
+
+**Error Responses:**
+```json
+// 400 Bad Request - wrong or expired code
+{ "message": "Error: Invalid or expired verification code!" }
+```
+
+#### POST /api/auth/phone-signup
+
+Creates the account from the phone OTP proof and the email proof. `email` must
+equal the `emailVerificationToken` subject; the address block is optional (send
+empty strings or omit it when the customer tapped **Skip for now**).
+
+**Request:**
+```json
+{
+  "signupToken": "eyJhbGciOiJIUzI1NiIs...",
+  "firstName": "Asha",
+  "lastName": "Rao",
+  "email": "asha@example.com",
+  "emailVerificationToken": "eyJhbGciOiJIUzI1NiIs...",
+  "address": "",
+  "extendedAddr": "",
+  "extendedAddr2": "",
+  "city": "",
+  "state": "",
+  "zip": "",
+  "country": ""
+}
+```
+
+**Response (200 OK):** the standard JWT payload
+(`accessToken`, `tokenType`, `id`, `username`, `email`, `roles`).
+
+**Error Responses:**
+```json
+// 400 - phone proof expired
+{ "message": "Error: Phone verification expired. Please verify your number again." }
+
+// 400 - email proof expired / missing
+{ "message": "Error: Email verification expired. Please verify your email again." }
+
+// 400 - proofs belong to different addresses
+{ "message": "Error: The verified email does not match the email on this request. Please verify it again." }
+
+// 400 - phone or email already registered
+{ "message": "Error: Email is already registered!" }
+```
+
+Because the email is always real, a Chargebee customer is provisioned during
+signup (best-effort), which is what makes `GET /api/subscriptions/my` work for
+phone-first customers (DP-3).
+
+#### POST /api/auth/google-signup
+
+Same contract, except the email/name come from the verified Google ID token
+(`idToken`), so no email OTP is required. The address block is optional here too.
+
+---
+
+
 ### User Management
 
 #### GET /api/v1/user/profile
@@ -735,20 +871,36 @@ Authorization: Bearer <access_token>
 {
   "subscriptions": [
     {
-      "id": "sub_123",
-      "planId": "plan_30_30",
-      "planName": "30:30 Plan",
+      "id": "bmj3f1c…",
+      "planId": "bmj-delight-carrot-juice-200ml-weekly",
       "status": "active",
-      "startDate": "2026-03-01T00:00:00Z",
-      "currentPeriodStart": "2026-03-27T00:00:00Z",
-      "currentPeriodEnd": "2026-04-26T23:59:59Z",
-      "nextBillingDate": "2026-04-27T00:00:00Z",
-      "amount": 2999,
-      "currency": "INR"
+      "billingPeriod": 1,
+      "billingPeriodUnit": "week",
+      "currentTermStart": "2026-11-02T00:00:00.000+00:00",
+      "currentTermEnd": "2026-11-09T00:00:00.000+00:00",
+      "nextBillingAt": 1794096000,
+      "nextDeliveryAt": 1793701800,
+      "deliverySchedule": {
+        "monday": "mix-punch",
+        "wednesday": "carrot-juice",
+        "friday": "mix-punch"
+      },
+      "createdAt": 1793600000,
+      "updatedAt": 1793600000,
+      "items": [ … ]
     }
   ]
 }
 ```
+
+**Delivery date contract:** `nextDeliveryAt` is epoch seconds (midnight IST) of the
+next scheduled delivery day. It is derived **only** from `deliverySchedule` — the
+day-wise schedule the customer submitted at checkout, persisted in
+`delivery_schedule` under the subscription id reserved before the Chargebee
+hosted page was created. It is never derived from `nextBillingAt` (a weekly
+billing cycle does not prove the delivery cadence), and it is `null` when no
+schedule was captured or the subscription is `paused` / `cancelled`. Clients
+render an em dash for `null` instead of inventing a date.
 
 **Error Responses:**
 ```json
@@ -991,6 +1143,14 @@ Resume paused subscription.
 
 ---
 
+> **Contract note (V1 launch freeze):** the routes that are actually mounted are
+> `PUT /api/subscriptions/{subscriptionId}/cancel` (backward-compatible alias for the
+> mobile client) and `DELETE /api/subscriptions/{subscriptionId}` (canonical REST
+> verb). Both run the same Chargebee cancel operation, honour the same 9 PM IST
+> cutoff, and return `202 Accepted`. The `/api/v1/subscriptions` paths documented in
+> this section describe the forward-looking contract; the live router is mounted at
+> `/api/subscriptions`.
+
 #### POST /api/v1/subscriptions/{id}/cancel
 
 Cancel subscription.
@@ -1035,6 +1195,56 @@ Cancel subscription.
 ---
 
 ### Order Management
+
+#### GET /api/orders/by-customer
+
+Get the authenticated customer's orders as a raw JSON array. Production replacement
+for the non-production `GET /api/test/ordersByCustomerId` route; it delegates to the same
+`OrderService#fetchOrdersByCustomerId` query, so the body is unchanged.
+
+> ⛔ **Both non-production order routes were removed on 2026-10-16 (`B2`).** `OrdersController`
+> (`GET /api/test/orders`, `GET /api/test/ordersByCustomerId`) was deleted. `getAllOrders()`
+> carried no authorization check while `/api/test/**` is `permitAll`, so it served every
+> customer's order PII — ids, amounts, dates and the `shippingAddress` / `billingAddress` maps —
+> to anonymous callers. This route (plus `GET /api/orders` and `GET /api/orders/local/history`)
+> is now the only order-read surface.
+
+> ✅ **Fixed 2026-10-16 (`D-6`).** This route previously always returned `[]`: it passed the **local
+> numeric user id** (`userDetails.getId()`) into `OrderRepository#findByCustomerId`, while
+> `order_entity.customer_id` holds the **Chargebee** customer id (`cbdemo_xxxxx`). `OrderController`
+> now resolves the Chargebee id first (`resolveChargebeeCustomerId`, the
+> `SubscriptionController#getCustomerIdFromSecurityContext()` pattern) and passes that to the query,
+> so the `customerId` in the sample body below is now matched. The fix also covers `GET /api/orders`
+> and `GET /api/orders/local/history`, which share the resolver.
+>
+> **Behaviour when no Chargebee customer is resolvable** (e.g. an account created while
+> `Customer.create()` was failing, before the `D-2` backfill heals it): the response is an **empty
+> array with `200`** — the shape callers already handled — not a `401`.
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": "ord_123",
+    "customerId": "42",
+    "status": "delivered",
+    "orderNumber": "BMJ-2026-001234"
+  }
+]
+```
+
+**Error Responses:**
+```json
+// 401 Unauthorized
+{ "error": "User not authenticated" }
+```
+
+---
 
 #### GET /api/v1/orders
 
@@ -1635,6 +1845,101 @@ Get product details.
   "path": "/api/v1/products/prod_unknown"
 }
 ```
+
+---
+
+### Catalog
+
+#### GET /api/v1/catalog/charge-items
+
+Production catalog endpoint for V1. Returns the Chargebee `charge`-type items shown
+on the customer Products screen, filtered to the `Delight` / `Signature` /
+`Premium` categories and to the `200ml` / `300ml` / `500ml` sizes.
+
+Backed by the same `ItemService#getChargeItemsWithCategoriesAndSizes` query as the
+legacy non-production `GET /api/test/charge-items` route, so the payload shape is
+identical. Alias: `GET /api/catalog/charge-items`.
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response (200 OK):** JSON array of charge items.
+
+```json
+[
+  {
+    "itemId": "fresh-orange-juice",
+    "name": "Fresh Orange Juice",
+    "description": "100% fresh oranges, cold-pressed",
+    "itemFamilyId": "delight-family",
+    "status": "active",
+    "enabledForCheckout": true,
+    "category": "Delight",
+    "subcategory": "Citrus",
+    "imagePath": "assets/juice/orange.png",
+    "startColor": "#FF9800",
+    "endColor": "#FF5722",
+    "calories": 120,
+    "popularity": 95,
+    "servingSize": "300ml",
+    "shelfLife": "24 hours",
+    "preparationTime": "5 mins",
+    "temperature": "chilled",
+    "meals": ["breakfast"],
+    "benefits": ["Vitamin C"],
+    "allergies": [],
+    "tags": ["bestseller"],
+    "nutritionalInfo": { "protein": "1g", "carbs": "28g", "fiber": "0.5g", "sugar": "21g" },
+    "customization": { "sugarLevel": ["none", "low"], "iceLevel": ["normal"], "addOns": [] },
+    "prices": [
+      { "priceId": "orange200-INR", "name": "200ml", "size": "200ml", "price": 90, "currencyCode": "INR", "pricingModel": "flat_fee" },
+      { "priceId": "orange300-INR", "name": "300ml", "size": "300ml", "price": 120, "currencyCode": "INR", "pricingModel": "flat_fee" },
+      { "priceId": "orange500-INR", "name": "500ml", "size": "500ml", "price": 180, "currencyCode": "INR", "pricingModel": "flat_fee" }
+    ]
+  }
+]
+```
+
+**Error Responses:**
+```json
+// 400 Bad Request
+{ "error": "Failed to fetch charge items" }
+```
+
+---
+
+### Non-Production Endpoints (`/api/test/*`)
+
+> **Not part of the V1 customer-facing contract.**
+> Everything mounted under `/api/test/**` is a development / diagnostics surface.
+> No customer-facing V1 flow may depend on these routes - see
+> [BMJ_V1_SCOPE.md](BMJ_V1_SCOPE.md) for the production replacements and
+> [PRODUCT_ALIGNMENT_REPORT.md](../../PRODUCT_ALIGNMENT_REPORT.md) for the audit.
+
+| Method | Route | Purpose | Production replacement |
+| :--- | :--- | :--- | :--- |
+| GET | `/api/test/all` | Public content probe | - (diagnostics only) |
+| GET | `/api/test/health` | Diagnostics health probe | `GET /api/health` |
+| GET | `/api/test/user` | Current user, legacy namespace | `GET /api/v1/user/profile` |
+| GET | `/api/test/mod` | Moderator role probe | - (role check) |
+| GET | `/api/test/admin` | Admin role probe | - (role check) |
+| GET | `/api/test/charge-items` | Catalog items, legacy namespace | `GET /api/v1/catalog/charge-items` |
+| GET | `/api/test/chargebeeItems` | Raw Chargebee items, non-standard shape | `GET /api/v1/catalog/charge-items` |
+| GET | `/api/test/databaseItems` | Raw `item` table dump | - (diagnostics only) |
+| ~~GET~~ | ~~`/api/test/orders`~~ | ⛔ **REMOVED 2026-10-16 (`B2` PII leak)** — returned *all* customers' orders (incl. shipping/billing addresses) to an unauthenticated caller; `/api/test/**` is `permitAll` and the handler had no `@PreAuthorize`. `OrdersController` was deleted. | `GET /api/orders/admin/all-orders` (ADMIN) |
+| ~~GET~~ | ~~`/api/test/ordersByCustomerId`~~ | ⛔ **REMOVED 2026-10-16** — deleted with `OrdersController` in the same commit; no caller remained. | `GET /api/orders/by-customer` |
+| GET | `/api/test/oneTimeCheckoutPageUrl` | Hard-coded hosted-page probe | `POST /api/v2/checkout/with-items` |
+| POST | `/api/test/cartCheckout` | Cart checkout, legacy namespace; passes the local user id where a Chargebee customer id is expected | `POST /api/v2/checkout/with-items` |
+| POST | `/api/test/create-sample` | Metadata sample writer (ADMIN) | - (diagnostics only) |
+| GET | `/api/test/generate_pricing_page_session_url` | **410 Gone** - Chargebee Pricing Pages retired | Native billing screens |
+| POST | `/api/test/generate_plan_change_session_url` | **410 Gone** | Native subscription management |
+| GET | `/api/test/generate_new_premium_subscription_pricing_page` | **410 Gone** | Native subscription management |
+| GET | `/api/test/generate_new_signature_subscription_pricing_page` | **410 Gone** | Native subscription management |
+| GET | `/api/test/generate_new_delight_subscription_pricing_page` | **410 Gone** | Native subscription management |
+| GET | `/api/test/generate_existing_delight_subscription_session` | **410 Gone** | Native subscription management |
+| GET | `/api/test/portal` | **410 Gone** - Chargebee Portal (Self-Serve Page) retired | Native `SubscriptionManagementScreen` |
 
 ---
 

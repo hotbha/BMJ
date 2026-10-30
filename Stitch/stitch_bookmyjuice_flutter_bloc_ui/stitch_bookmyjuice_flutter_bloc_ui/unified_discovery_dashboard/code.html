@@ -1,0 +1,237 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Book My Juice - Home</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-bright": "#dfe4e0",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "surface-tint": "#ffb690",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-surface": "#f6ded3",
+                        "inverse-on-surface": "#3c2d26",
+                        "outline": "#a78b7d",
+                        "on-tertiary-container": "#003936",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "on-surface-variant": "#e0c0b1",
+                        "surface": "#1c110b",
+                        "on-primary-fixed-variant": "#783200",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "tertiary-container": "#1caca3",
+                        "inverse-primary": "#9d4300",
+                        "tertiary": "#5dd9d0",
+                        "on-secondary-fixed-variant": "#005321",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed": "#ffdbca",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-primary-container": "#582200",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-primary": "#552100",
+                        "on-secondary-fixed": "#002109",
+                        "surface-container-low": "#251913",
+                        "surface-variant": "#40322a",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "neon-lime": "#4be277",
+                        "surface-deep": "#0f1412",
+                        "surface-bright": "#45362f",
+                        "background": "#1c110b",
+                        "surface-container-high": "#352720",
+                        "surface-container-lowest": "#160c06",
+                        "secondary-fixed": "#6bff8f",
+                        "primary": "#ffb690",
+                        "primary-container": "#f97316",
+                        "secondary": "#4ae176",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "surface-container-highest": "#40322a",
+                        "inverse-surface": "#f6ded3",
+                        "outline-variant": "#584237",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-tertiary": "#003734"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "max-width-container": "430px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-white">
+<!-- Mobile Container Constraint -->
+<div class="max-w-max-width-container mx-auto min-h-screen relative pb-24 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+<!-- TopAppBar (from JSON) -->
+<header class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky max-w-[430px] mx-auto flex justify-between items-center px-md py-sm z-50"><div class="flex items-center justify-between px-margin-mobile h-16 max-w-[430px] mx-auto md:max-w-none md:px-margin-desktop w-full"><button aria-label="Menu" class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">menu</span></button><div class="absolute left-1/2 -translate-x-1/2 flex items-center h-full py-2"><h1 class="font-display-md text-display-md text-primary-container tracking-tighter"><div><br></div>Book My Juice</h1></div><div class="flex items-center gap-4"><button aria-label="Search" class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">search</span></button></div></div></header>
+<main>
+<!-- Welcome Header -->
+<section class="px-md pt-lg pb-sm">
+<p class="font-body-md text-body-md text-on-surface-variant">Good morning,</p>
+<h2 class="font-headline-lg text-headline-lg mt-1">Welcome back, Alex</h2>
+</section>
+<!-- Active Subscription Status Card (Glassmorphism) -->
+<section class="px-md py-sm">
+<div class="relative overflow-hidden rounded-xl bg-surface-container-high/60 backdrop-blur-md border border-white/10 p-md flex flex-col gap-sm">
+<!-- Ambient Glow -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary-container opacity-20 blur-2xl rounded-full pointer-events-none"></div>
+<div class="flex justify-between items-start z-10">
+<div>
+<span class="inline-block px-2 py-1 rounded bg-secondary-container/20 border border-secondary/30 font-label-sm text-label-sm text-secondary mb-2">Active Subscription</span>
+<h3 class="font-title-lg text-title-lg">Vitality Pack</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Next delivery: Tomorrow, 8 AM</p>
+</div>
+<div class="text-right">
+<span class="font-stat-num text-stat-num block">12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Bottles</span>
+</div>
+</div>
+<div class="mt-2 z-10">
+<!-- Secondary Action Button -->
+<button class="w-full py-2 rounded-lg bg-white/5 border border-primary-container text-primary-container font-label-lg text-label-lg hover:bg-primary-container/10 transition-colors">
+                            Manage Delivery
+                        </button>
+</div>
+</div>
+</section>
+<!-- Real Stories Strip -->
+<section class="py-sm">
+<h3 class="font-headline-md text-headline-md mb-md px-md">Real Stories</h3>
+<div class="flex gap-gutter overflow-x-auto px-md hide-scrollbar pb-2">
+<!-- Video Card -->
+<div class="flex-none w-64 h-36 rounded-xl overflow-hidden relative group border border-white/10 shadow-lg">
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuDAK9Xnbj5LqlfoXAkwKXGVN9kmkLYLsyeRaQpM2jzSBFOt25b3m5I82O1Onxyg_VyKrIsxg5r4FchwAtwbO9hbfDslmMioRX65A6TCCovkeCi-HS3qcY483WN_LrcC_Vv_a7MZYkUmFKKsM_2Avld6wq3MeS2Zd7Pk3dhnCZT0SMPJcbU8fvMy7mXUhZgJl15Md3B2CQuIALLIbJVTspj9mFvIwqRBCkMYidqEy7yXQQkQn9ffZnXs&quot;);"></div>
+<div class="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/50 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-white text-[48px]" style="font-variation-settings: &quot;FILL&quot; 1;">play_circle</span>
+</div>
+</div>
+<!-- Text Card 1 -->
+<div class="flex-none w-64 p-md rounded-xl bg-surface-container-high/60 backdrop-blur-md border border-white/10 flex flex-col justify-between shadow-lg">
+<p class="font-body-md text-body-md italic text-on-surface">"The morning delivery is my favorite ritual. Pure energy in a bottle!"</p>
+<div class="flex items-center gap-3 mt-4">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border border-white/20" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuDkc5ivV5WfUZTKAFSN3Q58Svw6mxl9tsYfB4b6WVjAC7PdKaiB8A0vcz_fl7yAEc_PT5uDRe7bkYN19h7cpnEK3AD6czY1iQK5BhJRe5mY5fcjsCBqbO9MWdVNL1Re21LctH1IEXNntxWix7hHNaM2I53hXU4snf2SlwwTspv0SMcF7uvbsEqhIlBe03KyDqmLxkrD9KzdW8m5MlC9J_GyVoXpoBoEWVQ_mgT8Fq5fNBvU7iM_Eqe-&quot;);"></div>
+<span class="font-title-lg text-[16px] text-primary-container">Sarah M.</span>
+</div>
+</div>
+<!-- Text Card 2 -->
+<div class="flex-none w-64 p-md rounded-xl bg-surface-container-high/60 backdrop-blur-md border border-white/10 flex flex-col justify-between shadow-lg">
+<p class="font-body-md text-body-md italic text-on-surface">"Finally found juices that actually taste fresh and organic. No hidden sugars."</p>
+<div class="flex items-center gap-3 mt-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary-container border border-white/20">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</div>
+<span class="font-title-lg text-[16px] text-primary-container">David R.</span>
+</div>
+</div>
+</div>
+</section><section class="col-span-full mb-4 mt-4 px-md"><h2 class="font-headline-md text-headline-md text-on-surface mb-4 px-1">Trending Now</h2><div class="flex gap-4 overflow-x-auto hide-scrollbar pb-2"><div class="min-w-[280px] bg-surface-container-high/60 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden relative group"><span class="absolute top-2 left-2 z-10 bg-primary text-on-primary text-[10px] font-bold px-2 py-1 rounded-full shadow-lg">TRENDING</span><div class="h-32 w-full bg-surface-container-low"><img alt="Trending Juice" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoXW91mkbgD7IoSobvztJPu_ugY7h4YzKkHUg6aE5mmElDAvebX5omiy5GWrRAtdB3aXmVw9_ISO9GhNu-f6v_l-p_3Y9ksh2tYX5TK5VQw-JnJfo8SR9msoFlEoK3ACQVF2BHXLV9K9nMLJRV9HaqPPVVxDqyYbPltWT7h-fDwLfb4QTUGNGrvbFbr9qCZa9g8HZOIoZrQqV68ns7qn7est2FW4PA_DDJWsUIGpUoV9DtmhdVn48k"></div><div class="p-3"><h3 class="font-title-lg text-title-lg text-on-surface">Zesty Morning</h3><p class="text-body-md text-on-surface-variant">Orange, Ginger, Honey</p></div></div><div class="min-w-[280px] bg-surface-container-high/60 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden relative group"><span class="absolute top-2 left-2 z-10 bg-primary text-on-primary text-[10px] font-bold px-2 py-1 rounded-full shadow-lg">TRENDING</span><div class="h-32 w-full bg-surface-container-low"><img alt="Trending Juice" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCscJb0CqoljnXlF6XMv-GpBgBIGqUsyDUSCPUrlfk1bNJY_6VyGoTl-KiC66QnZmI7vR8E41FbYRzyxrRDAzInWpFfYJXMm6F1YXaKzvaThZKWvQ6MqJzOSdm3unmLTZ1xcfJnBMDq8v8aHVfOEJR_QaUfreDSnM-Skh04dyuGmvfxTQsPPK2Q-PIHHhVQWmQYcmnz_NRL8wU3cWa_Fxfk9L1d21HLIz-jchYgKL6HBW8xeWUmCHv9"></div><div class="p-3"><h3 class="font-title-lg text-title-lg text-on-surface">Ruby Glow</h3><p class="text-body-md text-on-surface-variant">Beetroot, Apple, Mint</p></div></div></div></section>
+<!-- Trending Juices Grid -->
+<section class="sticky top-16 z-10 px-md py-sm bg-background/80 backdrop-blur-xl border-b border-white/5">
+    <div class="flex flex-col gap-4 p-md rounded-xl bg-surface-container-high/60 backdrop-blur-md border border-white/10 shadow-lg">
+        <div class="flex flex-col gap-2">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wide">Category</span>
+            <div class="flex gap-2 overflow-x-auto hide-scrollbar">
+                <button class="flex-none px-4 py-1.5 rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg">Delight</button>
+                <button class="flex-none px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-on-surface font-label-lg text-label-lg hover:bg-white/10">Signature</button>
+                <button class="flex-none px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-on-surface font-label-lg text-label-lg hover:bg-white/10">Premium</button>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wide">Bottle Size</span>
+            <div class="flex gap-2">
+                <button class="flex-1 py-1.5 rounded-lg bg-white/5 border border-white/10 text-on-surface font-label-lg text-label-lg hover:bg-white/10">200ml</button>
+                <button class="flex-1 py-1.5 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg">300ml</button>
+                <button class="flex-1 py-1.5 rounded-lg bg-white/5 border border-white/10 text-on-surface font-label-lg text-label-lg hover:bg-white/10">500ml</button>
+            </div>
+        </div>
+    </div>
+</section><section class="px-md py-md"><h3 class="font-headline-md text-headline-md mb-md">Our Menu</h3><div class="grid grid-cols-2 gap-gutter"><article class="bg-surface-container-high/60 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden flex flex-col group relative"><div class="h-32 w-full relative bg-surface-container-low overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoXW91mkbgD7IoSobvztJPu_ugY7h4YzKkHUg6aE5mmElDAvebX5omiy5GWrRAtdB3aXmVw9_ISO9GhNu-f6v_l-p_3Y9ksh2tYX5TK5VQw-JnJfo8SR9msoFlEoK3ACQVF2BHXLV9K9nMLJRV9HaqPPVVxDqyYbPltWT7h-fDwLfb4QTUGNGrvbFbr9qCZa9g8HZOIoZrQqV68ns7qn7est2FW4PA_DDJWsUIGpUoV9DtmhdVn48k"></div><div class="p-3 flex-1 flex flex-col justify-between"><div><h2 class="font-title-lg text-title-lg text-on-surface mb-1">Mix Punch</h2><p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Orange, Pineapple, Beetroot</p></div><div class="mt-4 space-y-2"><div class="w-full flex items-center justify-between bg-surface-container rounded-lg border border-white/5 overflow-hidden"><button class="w-full py-2 px-3 text-on-surface font-label-sm text-label-sm flex justify-between items-center hover:bg-white/5 transition-colors"><span class="">Add to Cart</span><span class="font-stat-num">$8</span></button></div><button class="w-full py-2 px-3 rounded-lg bg-primary-container text-white font-label-sm text-label-sm flex justify-between items-center shadow-[0_0_12px_rgba(249,115,22,0.4)] active:scale-95 transition-transform"><span class="">Subscribe &amp; Save</span><span class="font-stat-num">$6.50</span></button></div></div></article><article class="bg-surface-container-high/60 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden flex flex-col group relative"><div class="h-32 w-full relative bg-surface-container-low overflow-hidden"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCscJb0CqoljnXlF6XMv-GpBgBIGqUsyDUSCPUrlfk1bNJY_6VyGoTl-KiC66QnZmI7vR8E41FbYRzyxrRDAzInWpFfYJXMm6F1YXaKzvaThZKWvQ6MqJzOSdm3unmLTZ1xcfJnBMDq8v8aHVfOEJR_QaUfreDSnM-Skh04dyuGmvfxTQsPPK2Q-PIHHhVQWmQYcmnz_NRL8wU3cWa_Fxfk9L1d21HLIz-jchYgKL6HBW8xeWUmCHv9"></div><div class="p-3 flex-1 flex flex-col justify-between"><div><h2 class="font-title-lg text-title-lg text-on-surface mb-1">ABC Detox</h2><p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Apple, Beetroot, Carrot</p></div><div class="mt-4 space-y-2"><div class="w-full flex items-center justify-between bg-surface-container rounded-lg border border-white/5 overflow-hidden"><button class="w-full py-2 px-3 text-on-surface font-label-sm text-label-sm flex justify-between items-center hover:bg-white/5 transition-colors"><span class="">Add to Cart</span><span class="font-stat-num">$9</span></button></div><button class="w-full py-2 px-3 rounded-lg bg-primary-container text-white font-label-sm text-label-sm flex justify-between items-center shadow-[0_0_12px_rgba(249,115,22,0.4)] active:scale-95 transition-transform"><span class="">Subscribe &amp; Save</span><span class="font-stat-num">$7.50</span></button></div></div></article></div></section>
+<!-- Get it Instantly Section -->
+<section class="px-md py-sm">
+<div class="relative overflow-hidden rounded-xl bg-surface-container-high/60 backdrop-blur-md border border-white/10 p-md flex flex-col gap-sm">
+<!-- Ambient Glow -->
+<div class="absolute -bottom-10 -left-10 w-32 h-32 bg-primary-container opacity-20 blur-2xl rounded-full pointer-events-none"></div>
+<div class="z-10">
+<h3 class="font-title-lg text-title-lg text-on-surface">Get it Instantly</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 mb-4">Craving a boost right now? We're on Zomato and Swiggy for instant delivery. App orders are delivered fresh every morning.</p>
+<div class="flex gap-3">
+<div class="px-3 py-1.5 rounded-lg bg-[#E23744]/20 border border-[#E23744]/50 flex items-center justify-center">
+<span class="font-bold text-[12px] tracking-wide text-[#E23744]">ZOMATO</span>
+</div>
+<div class="px-3 py-1.5 rounded-lg bg-[#FC8019]/20 border border-[#FC8019]/50 flex items-center justify-center">
+<span class="font-bold text-[12px] tracking-wide text-[#FC8019]">SWIGGY</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (from JSON) -->
+<nav class="bg-surface-container/60 backdrop-blur-2xl fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-[390px] rounded-full border border-white/10 shadow-[0_0_20px_rgba(249,115,22,0.15)] z-50 h-16 flex justify-around items-center px-2"><button class="flex flex-col items-center justify-center text-primary-container bg-zest-glow rounded-full px-4 py-1 hover:text-primary transition-colors active:scale-90 duration-150 relative"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">home</span><span class="font-label-sm text-label-sm mt-1">Home</span></button><button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-150"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">restaurant_menu</span><span class="font-label-sm text-label-sm mt-1">Menu</span></button><button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-150"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">receipt_long</span><span class="font-label-sm text-label-sm mt-1">Plans</span></button><button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-150 relative"><div class="relative"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">shopping_cart</span><span class="absolute -top-1 -right-2 bg-primary-container text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span></div><span class="font-label-sm text-label-sm mt-1">Cart</span></button></nav>
+</div>
+
+
+</body></html>

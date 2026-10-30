@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Email Signup - Book My Juice</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-bright": "#dfe4e0",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "surface-tint": "#ffb690",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-surface": "#f6ded3",
+                        "inverse-on-surface": "#3c2d26",
+                        "outline": "#a78b7d",
+                        "on-tertiary-container": "#003936",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "on-surface-variant": "#e0c0b1",
+                        "surface": "#1c110b",
+                        "on-primary-fixed-variant": "#783200",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "tertiary-container": "#1caca3",
+                        "inverse-primary": "#9d4300",
+                        "tertiary": "#5dd9d0",
+                        "on-secondary-fixed-variant": "#005321",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed": "#ffdbca",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-primary-container": "#582200",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-primary": "#552100",
+                        "on-secondary-fixed": "#002109",
+                        "surface-container-low": "#251913",
+                        "surface-variant": "#40322a",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "neon-lime": "#4be277",
+                        "surface-deep": "#0f1412",
+                        "surface-bright": "#45362f",
+                        "background": "#1c110b",
+                        "surface-container-high": "#352720",
+                        "surface-container-lowest": "#160c06",
+                        "secondary-fixed": "#6bff8f",
+                        "primary": "#ffb690",
+                        "primary-container": "#f97316",
+                        "secondary": "#4ae176",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "surface-container-highest": "#40322a",
+                        "inverse-surface": "#f6ded3",
+                        "outline-variant": "#584237",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-tertiary": "#003734"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "max-width-container": "430px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(28, 17, 11, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .input-glass {
+            background: #1c211e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .input-glass:focus {
+            border-color: #f97316;
+            outline: none;
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+        }
+        .btn-primary {
+            background-color: #f97316;
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.45);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+        
+        /* Step transition logic */
+        .step { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .step.active { display: block; opacity: 1; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-white/10 shadow-sm z-50">
+<div class="max-w-[430px] mx-auto flex justify-between items-center px-md py-sm">
+<button class="text-primary-container dark:text-primary hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h1 class="font-display-md text-display-md text-primary-container tracking-tighter">Book My Juice</h1>
+<div class="w-6"></div> <!-- Spacer for balance -->
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow w-full max-w-max-width-container mx-auto px-margin-mobile md:px-margin-desktop py-lg relative flex flex-col justify-center min-h-[calc(100vh-64px)]">
+<!-- Decorative Background Elements -->
+<div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+<div class="absolute top-[-10%] left-[-20%] w-[300px] h-[300px] rounded-full bg-primary-container/20 blur-[100px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[250px] h-[250px] rounded-full bg-secondary/10 blur-[80px]"></div>
+</div>
+<div class="glass-panel rounded-xl p-lg w-full relative" id="signup-container">
+<!-- Step 1: Email & Password -->
+<div class="step active space-y-6" id="step1">
+<div class="text-center mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Create Account</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Join the vitalizing wellness platform.</p>
+</div>
+<form class="space-y-md" id="form-step1">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-base uppercase tracking-wider" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">mail</span>
+<input class="input-glass w-full rounded-lg py-sm pl-[40px] pr-sm font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50" id="email" placeholder="zesty@example.com" required="" type="email"/>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-base uppercase tracking-wider" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">lock</span>
+<input class="input-glass w-full rounded-lg py-sm pl-[40px] pr-sm font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50" id="password" minlength="8" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary-container transition-colors" type="button">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">visibility</span>
+</button>
+</div>
+<p class="mt-2 font-label-sm text-label-sm text-on-surface-variant/70">Must be at least 8 characters.</p>
+</div>
+<button class="btn-primary w-full rounded-full py-sm px-lg font-label-lg text-label-lg text-on-primary-container mt-lg flex items-center justify-center gap-sm" onclick="nextStep()" type="button">
+                        Continue
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</form>
+<div class="mt-lg text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">Already have an account? <a class="text-primary-container hover:underline font-title-lg text-[14px]" href="#">Log in</a></p>
+</div>
+</div>
+<!-- Step 2: Verification -->
+<div class="step space-y-6" id="step2">
+<button class="absolute top-md left-md text-on-surface-variant hover:text-primary-container transition-colors" onclick="prevStep()" type="button">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="text-center mb-xl mt-sm">
+<div class="w-16 h-16 mx-auto bg-surface-variant rounded-full flex items-center justify-center mb-md border border-white/10">
+<span class="material-symbols-outlined text-primary-container text-3xl" style="font-variation-settings: 'FILL' 1;">mark_email_read</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Verify Email</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">We sent a 6-digit code to <span class="font-bold text-on-surface" id="display-email"></span></p>
+</div>
+<form class="space-y-md" id="form-step2">
+<div class="flex justify-between gap-2 mb-md" id="otp-container">
+<!-- Generative JS will handle these inputs, but keeping static structure for fallback/UI -->
+<input autocomplete="off" class="w-12 h-14 input-glass rounded-lg text-center font-display-md text-display-md text-on-surface p-0" maxlength="1" type="text"/>
+<input autocomplete="off" class="w-12 h-14 input-glass rounded-lg text-center font-display-md text-display-md text-on-surface p-0" maxlength="1" type="text"/>
+<input autocomplete="off" class="w-12 h-14 input-glass rounded-lg text-center font-display-md text-display-md text-on-surface p-0" maxlength="1" type="text"/>
+<input autocomplete="off" class="w-12 h-14 input-glass rounded-lg text-center font-display-md text-display-md text-on-surface p-0" maxlength="1" type="text"/>
+<input autocomplete="off" class="w-12 h-14 input-glass rounded-lg text-center font-display-md text-display-md text-on-surface p-0" maxlength="1" type="text"/>
+<input autocomplete="off" class="w-12 h-14 input-glass rounded-lg text-center font-display-md text-display-md text-on-surface p-0" maxlength="1" type="text"/>
+</div>
+<button class="btn-primary w-full rounded-full py-sm px-lg font-label-lg text-label-lg text-on-primary-container mt-lg flex items-center justify-center gap-sm" type="button">
+                        Verify &amp; Continue
+                    </button>
+</form>
+<div class="mt-lg text-center flex flex-col items-center">
+<p class="font-body-md text-body-md text-on-surface-variant mb-xs">Didn't receive the code?</p>
+<button class="font-label-lg text-label-lg text-primary-container disabled:text-on-surface-variant/50 disabled:cursor-not-allowed transition-colors" disabled="" id="resend-btn">
+                        Resend in <span id="timer">0:30</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Suppressed BottomNavBar & FAB as per rules for linear/transactional intent -->
+<script>
+        // Basic Navigation Logic
+        function nextStep() {
+            const emailInput = document.getElementById('email').value;
+            if(emailInput) {
+                document.getElementById('display-email').innerText = emailInput;
+                document.getElementById('step1').classList.remove('active');
+                setTimeout(() => document.getElementById('step2').classList.add('active'), 50);
+                startTimer();
+                setupOtpInputs();
+            }
+        }
+
+        function prevStep() {
+            document.getElementById('step2').classList.remove('active');
+            setTimeout(() => document.getElementById('step1').classList.add('active'), 50);
+        }
+
+        // OTP Input Logic
+        function setupOtpInputs() {
+            const inputs = document.querySelectorAll('#otp-container input');
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
+            if(inputs.length > 0) inputs[0].focus();
+        }
+
+        // Timer Logic
+        let timerInterval;
+        function startTimer() {
+            clearInterval(timerInterval);
+            let timeLeft = 30;
+            const timerDisplay = document.getElementById('timer');
+            const resendBtn = document.getElementById('resend-btn');
+            
+            resendBtn.disabled = true;
+            timerDisplay.parentElement.classList.add('disabled:text-on-surface-variant/50');
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = `0:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.innerText = '';
+                    resendBtn.innerHTML = 'Resend Code';
+                    resendBtn.disabled = false;
+                }
+            }, 1000);
+        }
+    </script>
+</body></html>

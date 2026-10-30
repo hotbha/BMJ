@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Google Sign-Up &amp; Phone Binding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-bright": "#dfe4e0",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "surface-tint": "#ffb690",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-surface": "#f6ded3",
+                        "inverse-on-surface": "#3c2d26",
+                        "outline": "#a78b7d",
+                        "on-tertiary-container": "#003936",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "on-surface-variant": "#e0c0b1",
+                        "surface": "#1c110b",
+                        "on-primary-fixed-variant": "#783200",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "tertiary-container": "#1caca3",
+                        "inverse-primary": "#9d4300",
+                        "tertiary": "#5dd9d0",
+                        "on-secondary-fixed-variant": "#005321",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed": "#ffdbca",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-primary-container": "#582200",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-primary": "#552100",
+                        "on-secondary-fixed": "#002109",
+                        "surface-container-low": "#251913",
+                        "surface-variant": "#40322a",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "neon-lime": "#4be277",
+                        "surface-deep": "#0f1412",
+                        "surface-bright": "#45362f",
+                        "background": "#1c110b",
+                        "surface-container-high": "#352720",
+                        "surface-container-lowest": "#160c06",
+                        "secondary-fixed": "#6bff8f",
+                        "primary": "#ffb690",
+                        "primary-container": "#f97316",
+                        "secondary": "#4ae176",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "surface-container-highest": "#40322a",
+                        "inverse-surface": "#f6ded3",
+                        "outline-variant": "#584237",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-tertiary": "#003734"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "max-width-container": "430px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(41, 29, 22, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .input-field {
+            background: #1c211e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.2s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #f97316;
+        }
+        .zest-button {
+            background-color: #f97316;
+            color: white;
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.45);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .zest-button:hover {
+            opacity: 0.9;
+        }
+        .zest-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md antialiased overflow-x-hidden flex items-center justify-center">
+<!-- Top Navigation (Transactional, minimal) -->
+<nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-md max-w-max-width-container mx-auto">
+<button class="w-12 h-12 flex items-center justify-center rounded-full glass-panel text-on-surface-variant hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="font-display-md text-display-md text-primary-container tracking-tighter">
+            Book My Juice
+        </div>
+<div class="w-12 h-12"></div> <!-- Spacer for balance -->
+</nav>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-max-width-container mx-auto px-margin-mobile pt-24 pb-32 relative">
+<!-- Decorative Ambient Background -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden z-[-1]">
+<div class="absolute top-[10%] left-[-20%] w-[300px] h-[300px] bg-primary-container/10 rounded-full blur-[80px]"></div>
+<div class="absolute bottom-[20%] right-[-10%] w-[250px] h-[250px] bg-tertiary-container/10 rounded-full blur-[60px]"></div>
+</div>
+<div class="glass-panel rounded-[24px] p-lg flex flex-col items-center relative overflow-hidden">
+<!-- Profile Picture -->
+<div class="relative mb-6 group">
+<div class="w-24 h-24 rounded-full overflow-hidden border-2 border-primary-container shadow-[0_0_20px_rgba(249,115,22,0.3)] z-10 relative">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A portrait of a healthy, energetic professional smiling warmly. The image is brightly lit, showcasing a modern, active lifestyle aesthetic consistent with a premium wellness brand. High-contrast lighting with subtle orange undertones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrh5Og6Gq9ET_LtYGP_D0tB-lu9e-WVWqqJmhSZX955eeSwBthWS4qyJh4yaiZM0fg-gWyfJ_tdZJE3bWunQpBJhJxrsjoFUG0GhsebTfFeTC51pQZN2r9ilaB2LrJuAfnvSsThSzoWfgY66Hk51_ErPPJDunSnmWMdijh9aB7sX5sgIJhe7Zl1Vzcfrnp6SVVuoUqKhpWVCmI-48e9sY08F4XmfGEy5bw7QOLGjKHsSk8e4d7ZAu8"/>
+</div>
+<!-- Google Icon Badge -->
+<div class="absolute bottom-0 right-0 bg-surface rounded-full p-1 border border-white/10 z-20 shadow-md">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn0ETDpzXgvVr04MUe3kF4apZNKsF2Ras1c8P5MulKwHKew39lmX7m-h-p9w0S0EQepF1f04Qfy0NBC3-pcmlL1PppSMr7iV-ApkbzZUJoJIvG0VgQ3jJ-aFdaYUkAcZz-Ga-Fn1PS8ohUOKYzwjRbIZZOZ5Q4R8Bq_c6pBoC---gRBDHeJnnKuQayEd7fnTET_BWwYvwnhF6w2EByyt4Bcr4Jp_WEPlbbFsweihGa8z1k-AkwGvTC"/>
+</div>
+</div>
+<!-- Welcome Text -->
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2 text-center">
+                Welcome, Alex!
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant text-center mb-8 px-sm">
+                One last step! Please provide your phone number to complete your registration and start booking your juice.
+            </p>
+<!-- Phone Form -->
+<form class="w-full space-y-6">
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface-variant block ml-1" for="phone">Phone Number</label>
+<div class="flex relative">
+<!-- Country Code Dropdown (Simulated) -->
+<button class="absolute left-0 top-0 bottom-0 px-4 flex items-center justify-center input-field rounded-l-lg border-r-0 border-white/10 text-on-surface hover:bg-surface-variant transition-colors group" type="button">
+<span class="mr-1">🇺🇸</span>
+<span class="font-body-md text-body-md mr-1">+1</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary transition-colors" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+<!-- Input -->
+<input class="w-full input-field rounded-lg h-14 pl-[110px] pr-4 font-body-lg text-body-lg text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0" id="phone" name="phone" placeholder="(555) 000-0000" type="tel"/>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant/60 ml-1 mt-1">
+                        We'll send a code to verify this number.
+                    </p>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-14 rounded-full zest-button font-title-lg text-title-lg flex items-center justify-center space-x-2 mt-4" type="button">
+<span>Complete Signup</span>
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</button>
+</form>
+<div class="mt-8 text-center">
+<button class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors underline decoration-white/20 underline-offset-4">
+                     Cancel &amp; Return to Login
+                 </button>
+</div>
+</div>
+</main>
+</body></html>

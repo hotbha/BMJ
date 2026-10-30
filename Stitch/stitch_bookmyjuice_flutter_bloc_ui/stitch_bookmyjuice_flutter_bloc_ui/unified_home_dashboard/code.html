@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Book My Juice - Home</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-bright": "#dfe4e0",
+                        "zest-glow": "rgba(249, 115, 22, 0.45)",
+                        "surface-tint": "#ffb690",
+                        "tertiary-fixed": "#7cf6ec",
+                        "on-tertiary-fixed": "#00201e",
+                        "on-surface": "#f6ded3",
+                        "inverse-on-surface": "#3c2d26",
+                        "outline": "#a78b7d",
+                        "on-tertiary-container": "#003936",
+                        "error": "#ffb4ab",
+                        "on-background": "#f6ded3",
+                        "on-surface-variant": "#e0c0b1",
+                        "surface": "#1c110b",
+                        "on-primary-fixed-variant": "#783200",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#004119",
+                        "tertiary-fixed-dim": "#5dd9d0",
+                        "surface-container": "#291d16",
+                        "tertiary-container": "#1caca3",
+                        "inverse-primary": "#9d4300",
+                        "tertiary": "#5dd9d0",
+                        "on-secondary-fixed-variant": "#005321",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed": "#ffdbca",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#00b954",
+                        "on-primary-container": "#582200",
+                        "secondary-fixed-dim": "#4ae176",
+                        "on-primary": "#552100",
+                        "on-secondary-fixed": "#002109",
+                        "surface-container-low": "#251913",
+                        "surface-variant": "#40322a",
+                        "surface-dim": "#1c110b",
+                        "on-secondary": "#003915",
+                        "neon-lime": "#4be277",
+                        "surface-deep": "#0f1412",
+                        "surface-bright": "#45362f",
+                        "background": "#1c110b",
+                        "surface-container-high": "#352720",
+                        "surface-container-lowest": "#160c06",
+                        "secondary-fixed": "#6bff8f",
+                        "primary": "#ffb690",
+                        "primary-container": "#f97316",
+                        "secondary": "#4ae176",
+                        "on-tertiary-fixed-variant": "#00504b",
+                        "surface-container-highest": "#40322a",
+                        "inverse-surface": "#f6ded3",
+                        "outline-variant": "#584237",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-tertiary": "#003734"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "max-width-container": "430px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "stat-num": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-md": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "700" }],
+                        "stat-num": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-white">
+<!-- Mobile Container Constraint -->
+<div class="max-w-max-width-container mx-auto min-h-screen relative pb-24 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+<!-- TopAppBar (from JSON) -->
+<header class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky max-w-[430px] mx-auto flex justify-between items-center px-md py-sm z-50">
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 0;">bubble_chart</span>
+</button>
+<h1 class="font-display-md text-display-md text-primary-container tracking-tighter">Book My Juice</h1>
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 0;">shopping_cart</span>
+</button>
+</header>
+<main>
+<!-- Welcome Header -->
+<section class="px-md pt-lg pb-sm">
+<p class="font-body-md text-body-md text-on-surface-variant">Good morning,</p>
+<h2 class="font-headline-lg text-headline-lg mt-1">Welcome back, Alex</h2>
+</section>
+<!-- Active Subscription Status Card (Glassmorphism) -->
+<section class="px-md py-sm">
+<div class="relative overflow-hidden rounded-xl bg-surface-container-high/60 backdrop-blur-md border border-white/10 p-md flex flex-col gap-sm">
+<!-- Ambient Glow -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary-container opacity-20 blur-2xl rounded-full pointer-events-none"></div>
+<div class="flex justify-between items-start z-10">
+<div>
+<span class="inline-block px-2 py-1 rounded bg-secondary-container/20 border border-secondary/30 font-label-sm text-label-sm text-secondary mb-2">Active Subscription</span>
+<h3 class="font-title-lg text-title-lg">Vitality Pack</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Next delivery: Tomorrow, 8 AM</p>
+</div>
+<div class="text-right">
+<span class="font-stat-num text-stat-num block">12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Bottles</span>
+</div>
+</div>
+<div class="mt-2 z-10">
+<!-- Secondary Action Button -->
+<button class="w-full py-2 rounded-lg bg-white/5 border border-primary-container text-primary-container font-label-lg text-label-lg hover:bg-primary-container/10 transition-colors">
+                            Manage Delivery
+                        </button>
+</div>
+</div>
+</section>
+<!-- Quick Stats Strip -->
+<section class="py-sm">
+<div class="flex gap-gutter overflow-x-auto px-md hide-scrollbar pb-2">
+<div class="flex-none w-28 p-sm rounded-lg bg-surface-container-lowest border border-white/5 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-primary-container mb-1" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+<span class="font-stat-num text-stat-num block">48</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Juices Consumed</span>
+</div>
+<div class="flex-none w-28 p-sm rounded-lg bg-surface-container-lowest border border-white/5 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-secondary mb-1" style="font-variation-settings: 'FILL' 1;">recycling</span>
+<span class="font-stat-num text-stat-num block">36</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bottles Returned</span>
+</div>
+<div class="flex-none w-28 p-sm rounded-lg bg-surface-container-lowest border border-white/5 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-primary-container mb-1" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-stat-num text-stat-num block">12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Day Streak</span>
+</div>
+</div>
+</section>
+<!-- Trending Juices Grid -->
+<section class="px-md py-md">
+<h3 class="font-headline-md text-headline-md mb-md">Trending Juices</h3>
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Product Card 1 -->
+<div class="rounded-xl overflow-hidden bg-surface-container-low border border-white/10 group flex flex-col h-full">
+<div class="relative h-32 w-full bg-surface-deep">
+<div class="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A striking, high-contrast product shot of a glowing orange juice bottle against a deep charcoal background, dramatic rim lighting highlighting condensation drops, vibrant zest energy." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCK80uyH5UvYHbr0RreJ9FKplDJGKsm8_0RNG5TAZ2sFkU6JZ8PsqHGViZEC4gU1fZml9rzSxKd6LrjaqRpV46WZ1l7w2ALJemeJVZyxPKwagEfuzPwXEqJrPVLVzkSJDYHvQ0gbMaVvBmHplqm6T4UppHW7YMmSSAMoWzvN-hSuwKmOX5jc5xxt5Mz-pMjbNIY9bW7LLcmSmr_V9g7mUpC9KlV5Q2xzoaDY4cqz_vxsIifZx5wF2dL')"></div>
+<!-- FAB -->
+<button class="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-primary-container text-white shadow-[0_0_15px_rgba(249,115,22,0.6)] flex items-center justify-center hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="p-sm flex-1 flex flex-col justify-between bg-surface-container-low/80 backdrop-blur-sm">
+<div>
+<h4 class="font-title-lg text-[16px] leading-tight">Citrus Surge</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Orange, Ginger, Turmeric</p>
+</div>
+<span class="font-label-lg text-label-lg text-primary mt-2 block">$8.50</span>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="rounded-xl overflow-hidden bg-surface-container-low border border-white/10 group flex flex-col h-full">
+<div class="relative h-32 w-full bg-surface-deep">
+<div class="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A striking, high-contrast product shot of a dark green detox juice bottle against a deep charcoal background, subtle dramatic lighting, premium organic athletic aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAdwnKnoKCkRnaI24Kik9_TABVywGYdjkhd3YNL43AEiDtxDpLOUXqhR19maKDhA7umV3uN3N9hMNJhiWPFC9cklcFM3kToHEx-z3Tfp4PQxEPPAWPPfSwiVa4gKKFIh8C56Ql0YaAxIKo8vGjZemrb4mNBu-v68RZW8lpb-LNeO7viZPP-ZJHvOZKktkJXanYPIRfdANDmMVUmtP9h97RVDUt1qnFSQU-_iEYmYGWgFubGyDTMDJMk')"></div>
+<button class="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-primary-container text-white shadow-[0_0_15px_rgba(249,115,22,0.6)] flex items-center justify-center hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div class="p-sm flex-1 flex flex-col justify-between bg-surface-container-low/80 backdrop-blur-sm">
+<div>
+<h4 class="font-title-lg text-[16px] leading-tight">Deep Greens</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Kale, Spinach, Apple</p>
+</div>
+<span class="font-label-lg text-label-lg text-primary mt-2 block">$9.00</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (from JSON) -->
+<nav class="bg-surface-container/60 backdrop-blur-2xl fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-[390px] rounded-full border border-white/10 shadow-[0_0_20px_rgba(249,115,22,0.15)] z-50 h-16 flex justify-around items-center px-2">
+<!-- Active: Home -->
+<button class="flex flex-col items-center justify-center text-primary-container bg-zest-glow rounded-full px-4 py-1 hover:text-primary transition-colors active:scale-90 duration-150 relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu_book</span>
+<span class="font-label-sm text-label-sm mt-1">Catalog</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-1">Orders</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</button>
+</nav>
+</div>
+</body></html>

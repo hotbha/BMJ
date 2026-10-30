@@ -68,6 +68,13 @@ def call_tool(session_id, method_name, arguments, timeout=120):
 def build_catalog():
     """Build the complete BMJ product catalog manually"""
     
+    # ⚠️ HISTORICAL ARTEFACT — NOT A PRICE SOURCE (see ADR-005).
+    # These 9 values were a one-off import input on 2026-05-25 and are not authoritative:
+    # per ADR-005, 8 of the 9 disagree with the approved matrix
+    # (verified example: delight 500ml is 22900 here, 22000 approved).
+    # Chargebee Product Catalog 2.0 is the sole pricing source, populated from
+    # docs/business-requirements/pricing-table.xlsx and verified against
+    # CHARGEBEE_FINAL_PRICE_MATRIX.md. Do not extend this dict with new price data.
     # Pricing data: {category: {size: paise_price_per_bottle}}
     bottle_prices = {
         "delight":    {"200ml": 12900, "300ml": 15900, "500ml": 22900},
