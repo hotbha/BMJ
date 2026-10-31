@@ -57,7 +57,7 @@ Weighted over the 20 checks that make up the engineering scope (5 points each). 
 
 | # | Blocker | Owner | Unblocks when | Evidence |
 | :-: | :--- | :--- | :--- | :--- |
-| **B1** | **Chargebee Price Variants not enabled** — absorbs the 45-row one-time rollout (2 of 45 prices exist) | Chargebee support | `preflight` prints AVAILABLE, then run the rollout | `preflight` → *"This API operation is not enabled for this site"* |
+| **B1** | **Chargebee Price Variants not enabled** — absorbs the 45-row one-time rollout (2 of 45 prices exist) | Chargebee support | `preflight` prints AVAILABLE, then run the rollout | `preflight` → *"This API operation is not enabled for this site"* (run 2026-10-31); last full census 2026-10-31: `charge` 7, `addon` 9, `plan` 300 |
 | **B2** | **Production `API_BASE_URL` undecided** — app defaults to `http://localhost:8080` | Product/ops | a beta HTTPS host is chosen and injected at build time | `PRODUCTION_ENDPOINT_AUDIT.md` §5 |
 | **B3** | **Production Chargebee credentials missing** — code defaults to the TEST site; no prod key in the repo | Ops | `CHARGEBEE_SITE=bookmyjuice` + prod API key in the environment | `application.properties:5` |
 | **B4** | **OTP / checkout validation** — the last unproven business paths | QA | see the *requires* list below | `DEVICE_QA_RESULTS.md` §6.5 |
@@ -124,6 +124,7 @@ H1–H3 are the substance of blocker **B5** (security rotations); H4–H5 are th
 | M7 | `AD_ID` permission present (Firebase) | declare advertising-ID usage in the Play data-safety form |
 | M8 | Orphan `delivery_schedule` rows accumulate | Option A cleanup job proposed, not implemented (`ORPHAN_SCHEDULE_REMEDIATION.md`) |
 | M9 | Subscription plan reference wraps to two lines | cosmetic, no data change possible without a short-id policy |
+| M10 | **`chargebee_catalog_check.py` is currently unrunnable** | it imports `_captures/mcp_call.py`, which was deleted in the security pass because it contained a hardcoded MCP key. `chargebee_price_rollout.py preflight` still works. Restore the census by re-creating the helper to read the key from the environment. |
 
 ## READY — do not re-open
 
