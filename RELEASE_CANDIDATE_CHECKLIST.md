@@ -38,7 +38,7 @@ Subscription checkout is **commercially ready** (300 plan prices) and does not d
 
 | # | Risk | Detail | Mitigation |
 | :-: | :--- | :--- | :--- |
-| H1 | **Two signing keystores tracked in git** | `lush/keystore_name.jks` (alias `your_alias`), `lush/clientkeystore` (alias `client`), both PKCS12, **both open with password `android`** | `git rm --cached` both, delete, rotate; the new upload key is already outside the repo |
+| H1 | **Two signing keystores were committed to git** — now untracked | `lush/keystore_name.jks` (alias `your_alias`) and `lush/clientkeystore` (alias `client`), both PKCS12, both opened with password `android`. Removed from tracking in commit `d4e0ec0` and matched by `.gitignore`; they remain in git history and on disk | **rotate both keys** (they are public forever) and delete the local copies; the new upload key lives outside the repo |
 | H2 | **Chargebee MCP keys committed** | `.clinerules/cline-guardrails.md:10,15,17`, `.vscode/mcp.json:20,27`, `docs/CHARGEBEE_MCP.md:15,16` — all **tracked** | rotate both keys in Chargebee, replace with placeholders, decide on history rewrite |
 | H3 | **Upload key has no backup** | `X:/BMJ/_secrets/bmj-upload.jks` + `android/key.properties` exist only on this machine | copy both into a password manager today; losing them blocks all future updates |
 | H4 | **CI has no release build** | `.github/workflows/ci-cd.yml:222` builds a *debug* APK against `localhost` | add a release job that injects `API_BASE_URL` and asserts the manifest |
@@ -72,7 +72,7 @@ Subscription checkout is **commercially ready** (300 plan prices) and does not d
 | # | Action | Owner | Blocks | How you know it is done |
 | :-: | :--- | :--- | :--- | :--- |
 | 1 | Copy `bmj-upload.jks` + `key.properties` values into the team password manager | Release owner | H3 | a second person can restore the file |
-| 2 | `git rm --cached keystore_name.jks clientkeystore` in `lush`, delete the files, rotate | App dev | H1 | `git ls-files \| grep jks` is empty |
+| 2 | ~~`git rm --cached keystore_name.jks clientkeystore`~~ **done in `d4e0ec0`** — remaining: rotate both legacy keys and delete the local copies | App dev | H1 | the old keys are revoked in the console and the files are gone from disk |
 | 3 | Rotate both Chargebee MCP keys; replace the literals in the three tracked files | App dev | H2 | `git grep test_ai_` returns nothing |
 | 4 | Decide the beta API host and inject it: `flutter build appbundle --release --dart-define=API_BASE_URL=https://…` | Product/ops | B2, H5 | `aapt2 dump` build + a device reaches the API |
 | 5 | Open the Chargebee Price Variants request (`CHARGEBEE_VARIANT_PRICING_SUPPORT_REQUEST.md`) | Ops | B1, B5 | `preflight` prints AVAILABLE |

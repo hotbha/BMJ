@@ -4,7 +4,7 @@
 
 ## 1. `lush` (Flutter app) — `github.com/bookmyjuice/lush`
 
-**Branch:** `main` · **Range:** `e1d11e6..28357c1` · **Status:** ✅ pushed, `origin/main` = `28357c1`
+**Branch:** `main` · **Range:** `e1d11e6..d4e0ec0` · **Status:** ✅ pushed, `origin/main` = `d4e0ec0` (9 commits)
 
 | Hash | Commit | Group |
 | :--- | :--- | :--- |
@@ -16,8 +16,9 @@
 | `b4f694a` | feat(subscription): day-wise delivery schedule and nextDeliveryAt | C6 |
 | `9146410` | test(qa): extend widget, integration and device coverage | C7 |
 | `28357c1` | chore(build): untrack generated Gradle report artifact | cleanup |
+| `d4e0ec0` | chore(security): untrack legacy signing keystores | follow-up |
 
-**Files changed:** 142 · **+17,218 / −16,258**
+**Files changed:** 144 · **+17,219 / −16,258**
 
 Commit order is C1 → C3 → C2 → … (design system before auth) so that **every commit compiles on its own**; the brief's suggested order would have made C2 reference untracked widgets. Each commit's body names its strategy group.
 
@@ -61,13 +62,13 @@ The branch was local-only before this pass; it now exists on the remote with the
 | `BEGIN PRIVATE KEY`, `sk_live` | none |
 | `*.jks`, `key.properties` in the diff | none |
 
-**Still exposed in history (not introduced by this pass):** Chargebee MCP keys in `.clinerules/cline-guardrails.md`, `.vscode/mcp.json`, `docs/CHARGEBEE_MCP.md`, and the two `android`-password keystores. Both are recorded as H1/H2 in `RELEASE_CANDIDATE_CHECKLIST.md`; rotation is a human step and history rewriting is a separate decision.
+**Still exposed in history (not introduced by this pass):** Chargebee MCP keys in `.clinerules/cline-guardrails.md`, `.vscode/mcp.json`, `docs/CHARGEBEE_MCP.md`. The two legacy keystores were **untracked** in `d4e0ec0`, but they too remain in history. Both are recorded as H1/H2 in `RELEASE_CANDIDATE_CHECKLIST.md`; rotation is a human step and history rewriting is a separate decision.
 
 ## 5. Post-push state
 
 | Check | Value |
 | :--- | :--- |
-| `lush` working tree | clean, `main` == `origin/main` |
+| `lush` working tree | clean, `main` == `origin/main` at **`d4e0ec0`** |
 | `bmjServer` working tree | clean, `main` == `origin/main` |
 | `BMJ` working tree | clean, `feat/v1-launch-freeze` == `origin/feat/v1-launch-freeze` |
 | Tests | 418/418 |
