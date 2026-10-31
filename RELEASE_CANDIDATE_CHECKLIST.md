@@ -29,7 +29,7 @@
 | **B1** | **Chargebee Price Variants not enabled** on `bookmyjuice-test` | Chargebee support | API returns variants; `preflight` prints AVAILABLE | `preflight` → `"This API operation is not enabled for this site"` |
 | **B2** | **Production `API_BASE_URL` undecided** — app defaults to `http://localhost:8080` | Product/ops | a beta HTTPS host is chosen and injected at build time | `PRODUCTION_ENDPOINT_AUDIT.md` §5 |
 | **B3** | **Production Chargebee credentials missing** — app/server default to the TEST site and no prod key exists in the repo | Ops | `CHARGEBEE_SITE=bookmyjuice` + prod API key in the environment | `application.properties:5` |
-| **B4** | **Real-device validation incomplete** — 1 of 10 scenarios verified | QA | a network-enabled device or emulator + running backend | `DEVICE_QA_RESULTS.md` §1 |
+| **B4** | **Real-device validation incomplete** — the offline+stub device path now passes (install, launch, permissions, catalog fetch/parse, Home, PDP, size sheet, add-to-cart, cart persistence, cart render, subscription empty state); the six auth/checkout scenarios remain unverified | QA | a running backend with network egress on the device | `DEVICE_QA_RESULTS.md` §5 |
 | **B5** | **One-time purchase rollout not executed** — 2 of 45 prices exist | Chargebee/ops | B1 resolved → run the 45-row rollout | census: `charge` prices = 7 |
 
 Subscription checkout is **commercially ready** (300 plan prices) and does not depend on B1.
