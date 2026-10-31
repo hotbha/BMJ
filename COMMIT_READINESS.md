@@ -24,7 +24,7 @@ Everything in the app repo: 141 files, each matched to a C-group by the classifi
 
 Server repo: 61 files — 30 log files, `app.jar`, `fix_bom.py`, `Java.gitignore`, `startup.log` (deletions), `.gitignore`, then AuthController, payload requests, EmailVerificationService, JwtUtils, WebSecurityConfig, DeliverySchedule*, Subscription*, CatalogController, controllers and tests.
 
-Parent repo: the 29 archive moves, the 43 new/relocated documents, and the `_captures` screenshot set.
+Parent repo: the 29 archive moves, the 43 new/relocated documents, and the `_captures` **tooling and XML dumps**. Note: the parent repo's `.gitignore` excludes `*.png`, so screenshots are deliberately **not** versioned — they live on disk and are catalogued in `SCREENSHOT_INDEX.md`.
 
 ## NEEDS REVIEW (committed, but a human should look)
 
