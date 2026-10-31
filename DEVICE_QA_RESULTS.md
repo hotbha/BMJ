@@ -104,12 +104,89 @@ The debug build was used because release builds block cleartext HTTP; the releas
 
 **Artifacts:** `_captures/qa/emu_01_home.png` … `emu_07_subscription.png` (7 screenshots) and `perm_dialog.xml`.
 
-## 6. Conclusion (updated after the 2026-10-31 run)
+## 6. 2026-10-31 physical device + real backend (first true device validation)
+
+This is the first run against a **real handset and a real backend** — not the stub, not an emulator.
+
+| Item | Value |
+| :--- | :--- |
+| Device | **Samsung SM‑G973W** (Galaxy S20 5G), Android **12 / API 31**, 1440×3040 (1080×2280 override) |
+| Transport | adb over Wi‑Fi at `192.168.1.7:5555` |
+| Host | `192.168.1.10` (device ↔ host RTT 4.3 ms) |
+| Database | MySQL 8.0 container `bmj-smoke-mysql`, host port 3307, schema `bmj_db` (**31 tables**) |
+| App build | debug APK, `--dart-define=API_BASE_URL=http://192.168.1.10:8081` |
+
+### 7.1 Two blockers that had to be fixed to get here
+
+| Problem | Evidence | Fix |
+| :--- | :--- | :--- |
+| Port 8080 unavailable | `PortInUseException: Port 8080 is already in use` — the IDE's `AgentService` listens on `::8080` | backend moved to **8081** |
+| Device TCP timed out while ICMP worked | `SocketException: Connection timed out (errno 110), address = 192.168.1.10, port = 33686` + Tomcat listening on **`::`** only | restarted with `-Djava.net.preferIPv4Stack=true` and `SERVER_ADDRESS=0.0.0.0` → listener confirmed as **`0.0.0.0:8081`** |
+
+Windows Firewall was checked and is **disabled on all profiles**, so it was never the cause.
+
+### 7.2 Results — backend topology matrix
+
+| Topology | Result | Evidence |
+| :--- | :--- | :--- |
+| **Host** (`mvn spring-boot:run`, `192.168.1.10:8081`) | **PASS** | `Started bmjServer in 9.361 seconds`; `/api/health` → `{"status":"UP"}`; catalog endpoint **200, 8003 bytes** from both localhost and the LAN IP |
+| **Docker** (`bmj-backend:local`, built from the repo Dockerfile, 503 MB) | **PASS** | container `Up (healthy)`, `0.0.0.0:8081->8080`, health `{"status":"UP"}`, datasource → `host.docker.internal:3307` |
+
+**The same APK, unchanged, worked against both** — host-run and containerised backends are interchangeable from the device's point of view.
+
+### 7.3 Results — app behaviour on the physical device
+
+| Check | Result | Evidence |
+| :--- | :--- | :--- |
+| Install + cold launch | **PASS** | `Starting: Intent …MainActivity`; `App initialization completed successfully` |
+| Catalog fetch (host backend) | **PASS** | `🛒 Fetching charge items from: http://192.168.1.10:8081/api/v1/catalog/charge-items` → `Successfully fetched 15 items` → `Converted to 15 catalog items` |
+| Catalog fetch (Docker backend) | **PASS** | same APK, after switching topologies → `Successfully fetched 15 items` |
+| Catalog parsing | **PASS** | full JSON body logged and mapped to 15 `CatalogItem`s |
+| Home render | **PASS** | widget tree contains the real product names (`Wheatgrass Juice`, `Beat the Heat`, `Colon Cleanser`, `Detox Smoothie`) and 20 px/700 section header `Trending Juices` |
+| Theme | **PASS** | device is in dark mode and the app rendered the dark palette (`onSurface #F6DED3`) |
+| **Google Sign‑In (full OAuth flow)** | **PASS** | native picker "Choose an account to continue to BookMyjuice" → consent "Allow Google to sign you in to BookMyjuice" → `✅ Signed in: pbharat.hotwani@gmail.com` / `👤 Display Name: Bharat Hotwani` → `GoogleSignIn()` → **`GoogleLinkRequired(pbharat.hotwani@gmail.com, Bharat, Hotwani, …)`** |
+| Backend received the OAuth handshake | **PASS** | server log: `Writing [{googleLastName=Hotwani, googleEmail=pbharat.hotwani@gmail.com, mess…` |
+| Auto-login on fresh install | **PASS (expected failure)** | `AutoLoginFailed(AutoLogin Failed!, Please login again or register)` — no stored session yet |
+
+`GoogleLinkRequired` is the **designed** outcome for a Google identity that is not yet linked to a BMJ account; the app routed to the link/sign-up screen.
+
+### 7.4 Findings that are product truth, not defects
+
+| Finding | Detail |
+| :--- | :--- |
+| **One-time prices are missing** | the API returns `"prices": 0` for most items and the UI renders the em dash for every trending product — this is blocker **B5/B1** (2 of 45 Chargebee prices) reproduced on real hardware |
+| **FCM on a debug build** | `FCM initialization error: … FIS_AUTH_ERROR` — the debug signing SHA‑1 is not registered in Firebase. The **release SHA‑1 must be registered** before beta |
+
+### 7.5 Not verifiable in this session
+
+| Scenario | Requires |
+| :--- | :--- |
+| Phone OTP verification | an SMS delivery path (Fast2SMS credits) or the dev OTP route |
+| Address capture | a completed sign-in (blocked behind the link step) |
+| Checkout completion | a linked account + Chargebee hosted session |
+| Subscription purchase | same as checkout |
+| Google existing-user and collision paths | a Google identity already linked to a BMJ account |
+
+### 7.6 Tooling note for future device runs
+
+Flutter debug builds expose **no semantics** to UI Automator, and Samsung blocks enabling TalkBack through `adb` (`accessibility_enabled` stays 0), so the usual dump-and-tap loop is unavailable. This run used the **Dart VM service** instead — `ext.flutter.debugDumpApp` for the live widget tree and logcat BLoC transitions as the oracle — plus coordinate sweeps validated by screenshot hashes. Retained artifacts: `phys_01_home.png`, `phys_02_profile.png`, `phys_03_login.png`, `phys_04_after_google.png`, `phys_google_ui*.xml`, `phys_profile_ui.xml`, and the reusable `flutter_tapmap.py` helper. The multi-megabyte widget/render tree dumps were inspected and discarded (regenerable at any time from the VM service).
+
 
 The picture is materially better than §2's first pass, and still incomplete:
 
-- **Verified on a device:** install, cold launch, notification permission, catalog fetch + parse, Home render, PDP navigation, size sheet, add-to-cart, cart persistence across a restart, cart render, subscription empty state, and session-wide stability (no fatal errors, no overflows).
-- **Still blocked:** the six scenarios that need real authentication and external egress — phone OTP (T1/T2), Google new/existing/collision (T3–T5), address capture (T6), and checkout completion (T7–T9).
+### 6.7 Conclusion — final device status (2026-10-31)
 
-So: **5 device-side behaviours pass outright** (T10 plus the install/render/cart path), and the rest remain environment gates rather than product findings. Everything that could be exercised without a backend has now been exercised.
+**Verified across two devices (emulator API 34 + physical SM‑G973W):** install, cold launch, notification permission, catalog fetch and parse (15 real items from MySQL), Home render, PDP render, size sheet, add-to-cart, cart persistence across a restart, cart render, subscription screen, full Google OAuth handshake, and session-wide stability (**no fatal exceptions, no render overflows**).
+
+**Still blocked — and each needs a specific external resource, not code:**
+
+| Blocked scenario | Requires |
+| :--- | :--- |
+| OTP verification | an SMS delivery path (Fast2SMS credits) or the dev OTP route |
+| Address flow | a completed sign-in |
+| Checkout completion | a Chargebee hosted session + linked account |
+| Subscription purchase completion | same as checkout |
+| Google existing-user path | a Google identity already linked to a BMJ account |
+| Google collision path | two identities colliding on the same phone/email |
+
 
