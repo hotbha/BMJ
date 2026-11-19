@@ -1,0 +1,83 @@
+# BMJ backend stack for the VPS.
+#
+# Deliberate choices:
+#  * MySQL lives on a named volume, never on a bind mount inside the repo.
+#  * The API port is published on 127.0.0.1 ONLY. Nginx is the single public entry
+#    point (HTTPS on 443). Nothing reaches Tomcat directly from the internet.
+#  * Secrets come from /home/bmj/bmj/.env (mode 600), never from this file.
+#  * Restart policy is `unless-stopped` so a reboot brings the stack back.
+#
+# Usage:
+#   docker compose --env-file /home/bmj/bmj/.env -f docker-compose.prod.yml up -d
+
+services:
+  bmj-sql:
+    image: mysql:8.0
+    container_name: bmj-sql
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=caching_sha2_password
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      TZ: Asia/Kolkata
+    volumes:
+      - bmj-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "${DB_USERNAME}", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    networks:
+      - bmj
+    # Not published to the host at all: only the API container can reach MySQL.
+
+  bmj-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.runtime
+    image: bmj-backend:vps
+    container_name: bmj-api
+    restart: unless-stopped
+    depends_on:
+      bmj-sql:
+        condition: service_healthy
+    environment:
+      DB_HOSTNAME: bmj-sql
+      DB_PORT: "3306"
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      CHARGEBEE_SITE: ${CHARGEBEE_SITE}
+      CHARGEBEE_API_KEY: ${CHARGEBEE_API_KEY}
+      WEBHOOK_USERNAME: ${WEBHOOK_USERNAME}
+      WEBHOOK_PASSWORD: ${WEBHOOK_PASSWORD}
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Required by JwtUtils (@Value("${JWT_SECRET}") has no default).
+      JWT_SECRET: ${JWT_SECRET}
+      # Required by the mail configuration; a placeholder disables email rather
+      # than blocking startup.
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SERVER_ADDRESS: 0.0.0.0
+      SERVER_PORT: "8080"
+      # IPv4-only listener: the Android client and nginx both connect over IPv4.
+      JAVA_TOOL_OPTIONS: "-Djava.net.preferIPv4Stack=true"
+    ports:
+      # Loopback only — nginx terminates TLS and proxies /api/ here.
+      - "127.0.0.1:8080:8080"
+    networks:
+      - bmj
+
+volumes:
+  bmj-mysql-data:
+    name: bmj-mysql-data
+
+networks:
+  bmj:
+    name: bmj-net

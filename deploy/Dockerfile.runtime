@@ -1,0 +1,23 @@
+# Runtime image for the BMJ backend.
+# The application JAR is built on the workstation (mvn -o -DskipTests package) and
+# copied in, so the server never needs a JDK, Maven or repository credentials.
+FROM eclipse-temurin:17-jre
+
+LABEL org.opencontainers.image.title="bmj-backend" \
+      org.opencontainers.image.description="BookMyJuice Spring Boot API" \
+      org.opencontainers.image.source="https://github.com/bookmyjuice/bmjServer"
+
+WORKDIR /app
+
+# app.jar is uploaded next to this Dockerfile by the deployment runbook.
+COPY app.jar /app/app.jar
+
+ENV TZ=Asia/Kolkata
+EXPOSE 8080
+
+ENTRYPOINT ["java", \
+    "-XX:MaxRAMPercentage=70", \
+    "-XX:+ExitOnOutOfMemoryError", \
+    "-Djava.net.preferIPv4Stack=true", \
+    "-Duser.timezone=Asia/Kolkata", \
+    "-jar", "/app/app.jar"]

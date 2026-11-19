@@ -1,0 +1,22 @@
+[Unit]
+Description=BMJ backend stack (MySQL + Spring Boot API, managed by docker compose)
+Documentation=file:/home/bmj/bmj/VPS_DEPLOYMENT_RUNBOOK.md
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/bmj/bmj
+# `up -d` returns once containers are started; health is checked by the
+# container healthcheck, not by systemd.
+ExecStart=/usr/bin/docker compose --env-file /home/bmj/bmj/.env -f docker-compose.prod.yml up -d --remove-orphans
+ExecStop=/usr/bin/docker compose --env-file /home/bmj/bmj/.env -f docker-compose.prod.yml down
+# Image rebuilds can take minutes; do not let systemd time out.
+TimeoutStartSec=0
+TimeoutStopSec=120
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

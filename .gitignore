@@ -345,3 +345,11 @@ Redis-*.exe
 
 
 # ============ END OF GITIGNORE ============
+
+# Never commit captured credentials or scratch payloads
+_captures/qa/*.cred
+_captures/qa/jwt.txt
+_captures/qa/*_req.json
+_captures/qa/__pycache__/
+_secrets/
+_vps.cred
