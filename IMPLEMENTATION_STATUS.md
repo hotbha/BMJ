@@ -63,43 +63,27 @@
 
 ---
 
-## 4. Deployment state — IMPORTANT
+## 4. Deployment state
 
 | Item | Value |
 |---|---|
 | Host | `api.bookmyjuice.co.in` (160.250.205.241), Ubuntu 24.04 |
-| Reachable over HTTPS | **yes** — `/api/health` -> 200 `{"status":"UP"}` (verified 16:43 local) |
-| Reachable over SSH (port 22) | **NO — connection times out** |
-| Build currently running on the host | `7975aeb` (the previous commit, deployed earlier today) |
-| Build for this change set | `865fb16`, JAR sha256 `BD559EF8D5282444134943C3B9B28FFCA3F012E3B7AA422AA22F1DD81B8049DC`, **built, not yet uploaded** |
+| Reachable over HTTPS | **yes** — `/api/health` -> 200 `{"status":"UP"}` |
+| Reachable over SSH | **yes** — the earlier timeouts were a host-key issue, not a network block |
+| Build running on the host | **`865fb16`** — container `/app/app.jar` sha256 `bd559ef8…8049dc` |
+| Previous build kept for rollback | `app.jar.prev` = `ac69f648…bbb11` (`7975aeb`) |
+| Remote image | `bmj-backend:vps` = `sha256:c484fca5…` |
+| Migration run | **no** |
+| Subscription data touched | **no** — `customer_entity` 81 / `subscription_entity` 16 unchanged |
 
-**Why the new build is not live:** after roughly thirty SSH sessions during the day, port 22 stopped
-accepting connections from this workstation while 443 stayed open — consistent with fail2ban or a
-provider-level SSH rate limit. The upload failed mid-transfer with `Network error: Connection timed
-out`, and a retry 90 seconds later still timed out. Nothing was half-applied: the upload target was a
-**new file** (`/home/bmj/bmj/app.new.jar`), so the running container was never touched.
+**Incident fixed during verification:** the server `.env` carried a stale `CHARGEBEE_API_KEY` that
+Chargebee answered with `401 Invalid api key`, so the catalogue came back as `200 []`. The key line was
+replaced (timestamped `.env.bak-*` kept) and `bmj-api` restarted; the catalogue now returns 200 with
+15 items. Full evidence in `DEPLOYMENT_VERIFICATION_REPORT.md` §5.
 
-To finish the deployment once SSH is reachable again (10 minutes of work):
+Known code defect surfaced by that incident: `CatalogController` converts a Chargebee failure into
+`200 []`, so "no products" and "broken credentials" look identical to the client. Should be a 5xx.
 
-```powershell
-# 1. upload next to the running jar - never over it
-.\_captures\qa\vscp.ps1 -LocalFile 'X:\BMJ\bmjServer\target\com.bookmyjuice.bmjServer-0.0.2-SNAPSHOT.jar' `
-                        -RemotePath '/home/bmj/bmj/app.new.jar' -Timeout 1800
-
-# 2. verify the hash BEFORE promoting it
-ssh bmj@api.bookmyjuice.co.in "sha256sum /home/bmj/bmj/app.new.jar"
-#    expect BD559EF8D5282444134943C3B9B28FFCA3F012E3B7AA422AA22F1DD81B8049DC
-
-# 3. promote atomically and rebuild only the API image
-ssh bmj@api.bookmyjuice.co.in "cd /home/bmj/bmj && cp app.jar app.jar.prev && mv app.new.jar app.jar && \
-  docker compose --env-file .env -f docker-compose.prod.yml up -d --build bmj-api"
-
-# 4. verify
-curl -s https://api.bookmyjuice.co.in/api/health
-```
-
-If SSH stays blocked, ask the host to `fail2ban-client unban <workstation-ip>` (or wait out the ban);
-an SSH key adds no risk and removes the need for the credential-file dance entirely.
 
 ---
 
