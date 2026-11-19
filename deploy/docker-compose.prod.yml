@@ -55,8 +55,20 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       CHARGEBEE_SITE: ${CHARGEBEE_SITE}
       CHARGEBEE_API_KEY: ${CHARGEBEE_API_KEY}
+      # Google client ids (used by the backend for token verification)
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_WEB_CLIENT_ID: ${GOOGLE_WEB_CLIENT_ID}
       WEBHOOK_USERNAME: ${WEBHOOK_USERNAME}
       WEBHOOK_PASSWORD: ${WEBHOOK_PASSWORD}
+      # SMS delivery (OTP). Without this the app falls back to logging the OTP.
+      FAST2SMS_API_KEY: ${FAST2SMS_API_KEY}
+      FAST2SMS_SENDER_ID: ${FAST2SMS_SENDER_ID}
+      FAST2SMS_BASE_URL: ${FAST2SMS_BASE_URL}
+      # SMTP
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_FROM: ${MAIL_FROM}
       ADMIN_USER: ${ADMIN_USER}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       # Required by JwtUtils (@Value("${JWT_SECRET}") has no default).
