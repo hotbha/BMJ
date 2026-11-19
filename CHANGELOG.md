@@ -1,5 +1,57 @@
 # Changelog
 
+## [2026-11-19] Backend deployed to the VPS + identity self-heal and webhook hardening
+
+**Deployment** - the BMJ backend now runs on `api.bookmyjuice.co.in` (Ubuntu 24.04), nginx + TLS in
+front, MySQL 8 and the API as Docker Compose services under a systemd unit. Details and the two
+failures encountered are in `VPS_DEPLOYMENT_RUNBOOK.md`.
+
+- Verified `https://api.bookmyjuice.co.in/api/health` -> `200 {"status":"UP"}` and
+  `/api/catalog/charge-items` -> `200` with 15 items.
+- Tomcat is bound to `127.0.0.1:8080` only; MySQL publishes no host port. nginx is the single entry.
+- `bmj-stack.service` enabled, so the stack returns after a reboot.
+- Required env vars turned out to be ten (not eight): `JWT_SECRET` and `MAIL_PASSWORD` have no
+  defaults and are the ones that crash-loop the container when missing.
+
+**Identity self-heal on login** (`feat(sync)`, `051ee6b`) - `IdentityLinker.linkUser()` derives the
+link in the user -> customer direction, is idempotent, repairs dangling links and prefers the
+Chargebee-shaped customer id over a legacy numeric twin. Wired into `signin`, `googleSignIn`,
+`linkGoogleAccount`, `loginViaOtp`, `jwtFor` (phone + Google signup) and both registration returns.
+It never throws, so a linking failure cannot lock a user out.
+
+**Subscription event coverage** (`feat(sync)`, `00e2a19`) - handlers for `subscription_activated`,
+`subscription_started` and `subscription_deleted`, which the live Chargebee subscription endpoint
+subscribes but the processor rejected. `WebhookEventCoverage` is now the single map of event type ->
+handling component, and a test asserts all **29** subscribed types are covered.
+
+**Malformed webhook payloads** (`fix(webhooks)`, `fd07e48`) - a body without `id` used to raise a
+`NullPointerException` that the controllers' catch-all turned into a **500**, which Chargebee retried
+forever. A filter now answers **400** with `{"error":"malformed_webhook_payload"}` and replays the
+buffered body so controllers are unaffected. It runs after Spring Security, so unauthenticated
+callers still get 401 first.
+
+**Webhook credentials** (`fix(security)`, `865fb16`) - `WEBHOOK_USERNAME`/`WEBHOOK_PASSWORD`
+defaulted to empty, so Spring built an in-memory user with a blank password and `/api/webhooks/**`
+accepted any `Basic` header: the endpoint **failed open**. Startup now aborts with a message naming
+the missing variable; `webhook.auth.optional=true` is the documented local-only escape hatch.
+
+**Tests** - 61 new/updated cases across 9 suites, all passing. `bmjServer` pushed to
+`origin/main` (`865fb16`).
+
+**Chargebee status** - unchanged and still disabled: `subscription` and `Customer` endpoints are
+switched off, every URL is `http://...:8080` (now loopback-only) and one endpoint points at an ngrok
+tunnel. `WEBHOOK_ACTIVATION_CHECKLIST.md` carries the ordered procedure and the code prerequisites.
+
+
+
+- **Drawer (one system, newly wired):** `lib/widgets/app_drawer.dart` rebuilt and attached to the tab shell (`dashboard.dart`) via the shared header's leading slot. Exactly four destinations — **Profile** (`/user-profile`), **Subscription plans** (`/plan-selection`), **Menu** (`/catalog`), and **Logout** (authenticated, confirmed) or **Sign in** (guest) in the same slot. The previous drawer existed but was unused, required a signed-in `User`, and carried seven unrelated entries.
+- **Subscription plans:** `plan_selection_screen.dart` now opens with a **current plan** card (status, plan name, deliveries left, next delivery) when the customer is subscribed, followed by the existing plan chooser. Existing screen reused — no new page.
+- **Menu:** the drawer item opens the existing catalog screen (category filters + per-item size sheet). No new page.
+- **Guest access:** `login_page.dart` gains **Continue without signing in**, which replaces the auth route with the dashboard so the app is browsable without an account.
+- **Hosted checkout chrome:** `_ChargebeeCheckoutWebView` now matches the order-checkout contract — explicit back button, back walks the hosted page's own history first, leave-confirmation for an unfinished payment, and a loading progress bar. Payment remains fully in-app (no external browser hand-off).
+- **Docs:** `docs/functional-specs/FUNCTIONAL_SPEC.md` §12.5 (navigation, drawer, session entry) and §12.6 (hosted checkout presentation); `docs/ARCHITECTURE_OVERVIEW.md` § Client Navigation & Session.
+- **Verification:** `flutter analyze` 0 errors, `flutter test` 418/418. Drawer, Menu, plans page and the guest entry were exercised on the Android emulator against the live backend.
+
 ## [2026-10-31] Physical Device Validation
 
 - **Device**: Samsung **SM‑G973W** (Galaxy S20 5G), Android 12 (API 31), 1440×3040, adb over Wi‑Fi at `192.168.1.7:5555`
